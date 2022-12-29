@@ -1,0 +1,91 @@
+/* 既存ファイル入力　UIの削除 */
+@media screen { #howto { display: none; } }
+@media screen { #atention { display: none; } }
+@media screen { #chara { display: none; } }
+@media screen { #sheet { display: none; } }
+@media screen { #save { display: none; } }
+@media screen { #twitter { display: none; } }
+@media screen { #exp { display: none; } }
+@media screen { #maker { display: none; } }
+
+
+
+
+
+.head{
+    display:flex;    
+}
+
+.app_body > .container{
+    background-color: #e6fae6;
+    margin-top: 75px;
+    padding-top: 25px;
+    height: auto;
+}
+
+.app_info > .container{
+    background-color: #e6fae6;
+    padding-top: 25px;
+    height: 300px;
+}
+
+.icon_btn{    
+    margin-left: 20px;
+    margin-right: 20px;
+    border-bottom: 2px solid rgb(251, 201, 145);
+}
+
+.info{
+    font-size: 18px;
+}
+
+.infop{
+    margin-top:10px;
+    margin-bottom:10px;
+    margin-left:10px;
+}
+
+/* ボタン装飾 */
+.bottuns{
+    margin-top:25px;
+    margin-left:15px;
+}
+.chara_btn {
+    display:inline-block;
+    width: 120px;
+    background: rgb(251, 201, 145);
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.sheet_btn {
+    display:inline-block;
+    width: 120px;
+    background: rgb(251, 201, 145);
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.save_btn {
+    display:inline-block;
+    width: 120px;
+    background: rgb(251, 201, 145);
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.export_btn {
+    display:inline-block;
+    width: 120px;
+    background: rgb(251, 201, 145);
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.img_sheet{
+    margin-left:10px;
+}

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../../design.css" />
+  <link rel="stylesheet" type="text/css" href="design.css" />
+  <title>Dyna Note ノート作成</title>
+</head>
+<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="../../header.js"></script>
+<div id="header_link"></div>
+<body>
+  <div class="area_titles">
+    <div class="container">
+      <p class="big_title">ノート作成</p>
+    </div>
+  </div>
+  <div class="area_info">
+    <div class="container">
+        <div class="unit">
+            <p class="sub_title">経緯</p>
+            <p class="text">自分の製作に関して他のひとにも見せられる形で残したいなぁと思った。
+              就職でポートフォリオ的な物が必要とされる中、特になにも出せるものがないのは哀しい！
+              思い立ったらすぐ行動ということで元々作り直していたホームページに新項目を追加した。
+            </p>
+        </div>
+
+        <div class="unit">
+            <p class="sub_title">計画</p>
+            <p class="text">今回のノートに求める機能
+              ・ノートをリストにして表示できる
+              ・各ノートごとにリンクを付けたりデザインをいじれる
+              
+              1つのフォルダ内にページをストックしていけばJSで情報を取得してリスト化し、HTMLで表示できる。
+              内容をcsvに書いて表示する方法も考えたが2つ目のページの自由度が下がるため却下。
+                
+              結論　1つのフォルダ内にページを作り、その情報をJSで取得しリスト化する。
+            </p>
+        </div>
+
+        <div class="unit">
+            <p class="sub_title">HTMLの構成</p>
+            <p class="text">基本的なHTMLの構成を考える。デザインのしやすさを考えつつHP全体のデザインも使える形で。
+              HTML
+              ＞header_link (他にも使ってるヘッダー付与)
+              ＞body
+              　＞area_info(エリア指定＋containerにデザインしやすくするため)
+              　　＞container(他にも使ってる薄緑部分　共通にすることでデザイン転用)
+              　　　＞unit(単元)
+              　　　　＞sub_title(単元のタイトル)
+              　　　　＞text(単元文章)
+            </p>
+        </div>
+
+        <div class="unit">
+            <p class="sub_title">デザイン</p>
+            <p class="text">デザインを考える。先にデザインを考えてHTMLの構成を考えたので難しくない。
+              ・HP全体に使っているCSSを適用
+              ・ノートページ用のデザインを1つ作る
+              ・ページ1つに対するCSS(必要に応じて)
+              デザインは考えるけどQiitaを参考にする！
+            </p>
+        </div>
+
+        <div class="unit">
+          <p class="sub_title">ここまでつくって</p>
+          <p class="text">思ったことをメモってお
+            ・brがめんどくさい　→　text内はエンターでも改行してほしい
+            ・Qiitaリスペクトの目次あってもいいかも　→　その場合JSで自動生成したい。
+            ・なんか読みにくい。　→　原因を究明する。
+          </p>
+      </div>
+      <div class="unit">
+        <p class="sub_title">改行が面倒</p>
+        <p class="text">調べたところCSSでいじれるらしい
+          ＜参考＞<a class="text_link" href="https://qiita.com/mikan3rd/items/dd73a853814c11a5a89d">https://qiita.com/mikan3rd/items/dd73a853814c11a5a89d</a>
+          ただVSCの関係で改行すると位置調整で半角スペースが入る。これが悪さしてなんだか嫌なことになる。またdivで囲むとき最初に改行するしないようにするで対応してもいいけど出来れば別の方法を考えたい。
+          
+          さらに調べた結果先に使用してみたwhite-spaceの指定先は様々ありpre-lineが今回はよさそうなので使うとかなり理想通りに作用してくれた。改行を反映、半角スペースを無視、ブロック幅に応じて自動改行をしてくれる。全角スペースは無視されないの有効活用したい。
+          ＜参考＞<a class="text_link" href="https://creive.me/archives/13350/#i-8">https://creive.me/archives/13350/#i-8</a>
+          (なおdiv後の改行は対策してないので問題なくなるようCSSのマージンとかをいじるとかします。)
+          
+          ひとまずここまでで最低限のことは出来ている。また突き詰めたくなったら突き詰める。
+        </p>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

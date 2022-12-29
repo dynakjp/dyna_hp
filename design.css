@@ -1,0 +1,169 @@
+@charset "utf-8";
+
+
+html{
+    background: rgba(255,240,212);
+    min-width: 750px;
+}
+
+a{
+    color: #000;
+    text-decoration: none;
+}
+
+.container{
+    max-width: 1200px;
+    min-width: 750px;
+    padding: 0 40px;
+    margin: 0 auto;
+}
+
+header{
+    width: 100%;
+    height: 75px;
+    position: fixed;
+    z-index: 10;
+    top:0;
+    left:0;
+    background-color: #fbb06a;
+}
+
+li{
+    list-style: none;
+    display: inline;
+}
+
+h2{
+    margin:0;
+}
+
+header > .container{
+    display: flex;
+    align-items: center;
+}
+
+.area_logo_header{
+    text-align: left;
+    margin-right: 25px;
+}
+
+.img_logo_header{
+    height: 55px;
+    width: auto;
+}
+
+.icon_header{
+    width: 100%;
+    text-align: right;
+}
+
+.img_icon_header{
+    margin-right: 10px;
+    width: 125px;
+    height: 50px;
+}
+
+.area_home_face > .container{
+    background-color: #e6fae6;
+    margin-top: 75px;
+    padding-top: 25px;
+    height: 500px;
+}
+
+.area_home_face > .body_home{
+    display: table;
+    margin-top: 100px;
+}
+
+[class*="twotab"]{
+    width: 50%;
+}
+
+.face{
+    display: flex;
+    margin-left: 50px;
+}
+
+.img_dyna{
+    height: 410px;
+    width: auto;
+}
+
+.dyna_name{
+    font-size: 84px;
+    margin: 0;
+    margin-top: 150px;
+    margin-bottom: -20px;
+}
+
+.small_info{
+    font-size: 12px;
+    margin: 0;
+    text-align: center;
+}
+
+.area_home_link > .container{
+    padding-top: 100px;
+    margin-top: 0;
+    background-color: #e6fae6;
+    height: auto;
+    padding-bottom: 50px;
+}
+
+.list_home_link{
+    
+    margin-top: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    height: auto;
+}
+
+.lb_div{
+    position: relative;
+    display: flex;
+    border: solid 5px #fbb06a;
+    border-radius:50px/50px;
+    background: rgba(255,250,227);
+    width: 400px;
+    height: 150px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-top:40px;
+}
+
+.lb_img{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left:25px;
+    max-width: 130px;
+    max-width: 130px;
+}
+
+.lb_title{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-top: 10px;
+    margin-left:190px;
+    max-width: 185px;
+    font-size: 24px;
+}
+
+.lb_text{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin-top: 50px;
+    margin-left:190px;
+    max-width: 185px;
+}

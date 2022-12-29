@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" type="text/css" href="../design.css" />
+  <link rel="stylesheet" type="text/css" href="sheet01.css" />
+  <title>CooKal</title>
+</head>
+<script src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="../header.js"></script>
+<div id="header_link"></div>
+<body>
+    <div class="area_input">
+        <div class="container">
+            <label>まとめ入力<input id="url_input" type="text" size="40"></label>
+            <input type="button" value="取得" onclick="get_url()"/>
+            <label><input id="pep_input" type="number" size="1" value="1" min="1">人</label>
+            <br>
+            <label>材料名　　<input id="name_input" type="text" size="20"></label>
+            <label>分量<input id="amount_input" type="text" size="9"></label>
+            <input type="button" value="追加" onclick="add_ing()"/>
+            <input type="button" value="再計算" onclick="push_but()"/>
+            <br>
+            <label id="log">＞ここに進捗等が表示されます</label>
+        </div>
+    </div>
+    
+    <div class="area_result">
+        <div class="container">
+            <label class="dat_ing">材料名</label>
+            <label class="dat_amo">分量</label>
+            <label class="dat_kal">kal/g</label>
+            <label class="dat_gra">重さ(g)</label>
+            <label class="dat_sum">カロリー</label>
+            <div id="datas">
+            </div>
+        </div>
+    </div>
+
+    <div class="app_info">
+        <div class="container">
+            <div id="icon" class="icon">
+                <label for="howto">
+                    <span id="howto_text" class="icon_btn">使い方</span><input type="button" name="howto" id="howto">
+                </label>
+                <label for="atention">
+                    <span id="atention_text" class="icon_btn">注意事項</span><input type="button" name="atention" id="atention">
+                </label>
+                <label for="maker">
+                    <span id="maker_text" class="icon_btn">制作者</span><input type="button" name="maker" id="maker">
+                </label>
+            </div>
+        </div>
+    </div>
+    <script src="icon.js"></script>
+    <script src="make_data2.js"></script>
+</body>
+</html>

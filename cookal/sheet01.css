@@ -1,0 +1,82 @@
+/* 既存ファイル入力　UIの削除 */
+@media screen { #howto { display: none; } }
+@media screen { #atention { display: none; } }
+@media screen { #maker { display: none; } }
+
+.body{
+    padding-top: 200px;
+}
+.area_input > .container{
+    padding-top: 80px;
+    margin-top: 0;
+    background-color: #e6fae6;
+    height: auto;
+}
+
+.area_result > .container{
+    margin-top: 0;
+    background-color: #e6fae6;
+    min-height: 300px;
+    padding-bottom: 50px;
+    position: relative;
+}
+
+.app_info > .container{
+    background-color: #e6fae6;
+    padding-top: 25px;
+    height: 300px;
+}
+
+.icon_btn{    
+    margin-left: 20px;
+    margin-right: 20px;
+    border-bottom: 2px solid rgb(230, 230, 230);
+}
+
+.info{
+    font-size: 18px;
+}
+
+.infop{
+    margin-top:10px;
+    margin-bottom:10px;
+    margin-left:　10px;
+}
+
+#pep_input{
+    width: 30px;
+}
+
+.dat_group{
+    padding-top:5px;
+}
+
+.dat_ing{
+    margin-top:10px;
+    margin-bottom:10px;
+    position: absolute;left: 50px
+}
+
+.dat_amo{
+    margin-top:10px;
+    margin-bottom:10px;
+    position: absolute;left: 250px;
+}
+
+.dat_kal{
+    margin-top:10px;
+    margin-bottom:10px;
+    position: absolute;left: 350px;
+}
+
+.dat_gra{
+    margin-top:10px;
+    margin-bottom:10px;
+    position: absolute;left: 450px;
+}
+
+.dat_sum{
+    margin-top:10px;
+    margin-bottom:10px;
+    position: absolute;left: 550px;
+}
