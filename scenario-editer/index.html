@@ -2,13 +2,87 @@
 
 <html lang="ja">
 <head>
-    <meta charset="utf-8">
-    <title>dyna_hp</title>
-    <link rel="stylesheet" type="text/css" href="../design.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dyna_scenario_editer</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Hello, Rakus!</h1>
-    
+<body> 
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="border-right">
+                    <div id="file-title" class="text-center" style="font-size: 28px;">Call me HERO</div>
+                    <div id="surch-name">
+                        <div  class="input-group">
+                            <input type="text" class="form-control" placeholder="検索">
+                            <button class="btn btn-outline-success" type="button" id="button-name-surch"><i class="fas fa-search"></i> 検索</button>
+                        </div>
+                    </div>
+                    <div id="surch-tag">
+                        <div  class="input-group">
+                            <input type="text" class="form-control" placeholder="タグ検索">
+                            <button class="btn btn-outline-success" type="button" id="button-tag-surch"><i class="fas fa-search"></i> 検索</button>
+                        </div>
+                    </div>
+                    <div id="new-block-button">
+                        <div  class="input-group">
+                            <input type="text" class="form-control" placeholder="ブロック作成">
+                            <button class="btn btn-outline-success" type="button" id="button-make-text"><i class="fas fa-search"></i> text</button>
+                            <button class="btn btn-outline-success" type="button" id="button-make-map"><i class="fas fa-search"></i> map</button>
+                        </div>
+                    </div>
+                    <div id="tree" class="overflow-auto">
+                        <ul>
+                            <li>Item #1</li>
+                            <li>Item #2</li>
+                            <li>Item #3</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id="editer_heder">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div id="block_title">
+                                <div  class="input-group">
+                                    <input type="text" class="form-control" placeholder="タイトル">
+                                </div>
+                            </div>
+                            <div id="editer_button">
+                                <div  class="input-group">
+                                    <button class="btn btn-outline-success" type="button" id="button-add-link"><i class="fas fa-search"></i> link</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div id="add-tag">
+                                <div  class="input-group">
+                                    <input type="text" class="form-control" placeholder="タグ名">
+                                    <button class="btn btn-outline-success" type="button" id="button-add-tag"><i class="fas fa-search"></i> 追加</button>
+                                </div>
+                            </div>
+                            <div id="tag_list">
+                                <div  class="input-group">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected>タグ一覧予定</option>
+                                        <option value="1">test_tag1</option>
+                                        <option value="2">test_tag2</option>
+                                        <option value="3">test_tag3</option>
+                                    </select>
+                                    <button class="btn btn-outline-success" type="button" id="button-select-tag"><i class="fas fa-search"></i> 削除</button>
+                                </div>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="editer_content">
+                    <a>test text ホゲホゲ</a>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 </body>
