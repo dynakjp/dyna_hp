@@ -20,6 +20,6 @@ document.getElementById("lb_3").onclick = function() {
 
 document.getElementById("lb_4").onclick = function() {
     let link = document.createElement("a");
-    link.href = "cookal/";
+    link.href = "scenario-editer/";
     link.click();
 };
