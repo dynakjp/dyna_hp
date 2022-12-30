@@ -47,7 +47,7 @@
                         <div class="col-md-7">
                             <div id="block_title">
                                 <div  class="input-group">
-                                    <input type="text" class="form-control" placeholder="タイトル">
+                                    <input type="text" class="form-control" placeholder="タイトル" id="input_block_title">
                                 </div>
                             </div>
                             <div id="editer_button">
@@ -59,17 +59,13 @@
                         <div class="col-md-5">
                             <div id="add-tag">
                                 <div  class="input-group">
-                                    <input type="text" class="form-control" placeholder="タグ名">
+                                    <input type="text" class="form-control" placeholder="タグ名" id="input_add_tag">
                                     <button class="btn btn-outline-success" type="button" id="button-add-tag"><i class="fas fa-search"></i> 追加</button>
                                 </div>
                             </div>
                             <div id="tag_list">
                                 <div  class="input-group">
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>タグ一覧予定</option>
-                                        <option value="1">test_tag1</option>
-                                        <option value="2">test_tag2</option>
-                                        <option value="3">test_tag3</option>
+                                    <select class="form-select" aria-label="Default select example" id="select_tag_list">
                                     </select>
                                     <button class="btn btn-outline-success" type="button" id="button-select-tag"><i class="fas fa-search"></i> 削除</button>
                                 </div>                                
@@ -85,5 +81,6 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="javascript/save_block.js"></script>
 </body>
 </html>
