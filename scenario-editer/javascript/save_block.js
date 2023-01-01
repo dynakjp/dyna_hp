@@ -74,13 +74,13 @@ function label_edit()
 
     //文字の長さを測り実装
     input_keybord.oninput = function()
-    {        
-        
+    {
         if(!composition)
         {
             if(event.target.previousElementSibling == null)
             {
                 element = document.createElement("a")
+                element.onclick = label_edit
                 event.target.befor(element)
             }
 
@@ -138,6 +138,18 @@ function label_edit()
         event.target.value = ""
         event.target.style.width = "0px"
     });
+
+    //カーソルが外れたらinputを削除
+    input_keybord.onblur = function()
+    {
+        if(event.target.nextElementSibling.textContent != null)
+        {
+            event.target.previousElementSibling.textContent += event.target.nextElementSibling.textContent
+            event.target.parentElement.removeChild(event.target.nextElementSibling)
+        }
+        event.target.parentElement.removeChild(event.target);
+    }
+
     str = selected.focusNode.textContent
     points = [Math.min(selected.focusOffset, selected.anchorOffset), Math.max(selected.focusOffset, selected.anchorOffset)]
     event.target.textContent = str.slice(0, points[0])
