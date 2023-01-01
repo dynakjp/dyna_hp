@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dyna_scenario_editer</title>
+    <title>dyna_scenario_editor</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="design.css" rel="stylesheet">
 </head>
 <body> 
     <div class="container-fluid">
@@ -42,7 +43,7 @@
                 </div>
             </div>
             <div class="col-md-9">
-                <div id="editer_heder">
+                <div id="editor_heder">
                     <div class="row">
                         <div class="col-md-7">
                             <div id="block_title">
@@ -50,7 +51,7 @@
                                     <input type="text" class="form-control" placeholder="タイトル" id="input_block_title">
                                 </div>
                             </div>
-                            <div id="editer_button">
+                            <div id="editor_button">
                                 <div  class="input-group">
                                     <button class="btn btn-outline-success" type="button" id="button-add-link"><i class="fas fa-search"></i> link</button>
                                 </div>
@@ -73,8 +74,9 @@
                         </div>
                     </div>
                 </div>
-                <div id="editer_content">
-                    <a>test text ホゲホゲ</a>
+                <div id="editor-content">
+                    <ul id="editor-content-list">
+                    </ul>
                 </div>
             </div>
         </div>
