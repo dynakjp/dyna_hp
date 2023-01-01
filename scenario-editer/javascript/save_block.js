@@ -197,14 +197,6 @@ function label_edit()
     {
         input_keybord.style.width = "0px";
     }
-
-    // focusNodeを利用
-    // console.log(selected.focusNode)
-    // console.log(strIns(selected.focusNode.textContent, selected.focusOffset, "!"))
-    // selected.focusNode.textContent = strIns(selected.focusNode.textContent, selected.focusOffset, "!")
-    
-    // console.log(selected.focusOffset)
-    // console.log(selected.anchorOffset)
 }
 
 //コンテンツの初期作成
@@ -221,45 +213,45 @@ function editer_content_start()
 }
 
 
-// $(document).keydown(function(event){
-//     // クリックされたキーのコード
-//     var keyCode = event.keyCode;
-//     // Ctrlキーがクリックされたか (true or false)
-//     var ctrlClick = event.ctrlKey;
-//     // Altキーがクリックされたか (true or false)
-//     var altClick = event.altKey;
-//     // キーイベントが発生した対象のオブジェクト
-//     var obj = event.target;
+$(document).keydown(function(event){
+    // クリックされたキーのコード
+    var keyCode = event.keyCode;
+    // Ctrlキーがクリックされたか (true or false)
+    var ctrlClick = event.ctrlKey;
+    // Altキーがクリックされたか (true or false)
+    var altClick = event.altKey;
+    // キーイベントが発生した対象のオブジェクト
+    var obj = event.target;
     
-//     console.log(selected)
-//     // バックスペースキーを制御する
-//     if(keyCode == 8)
-//     {
-//         console.log("back")
-//         if(selected != undefined)
-//         {
-//             if(selected_index[0] == selected_index[1])
-//             {
-//                 selected.focusNode.textContent = strDel(selected.focusNode.textContent, [selected_index[0], selected_index[0] + 1])
-//                 num = Math.min(...selected_index) - 1
-//                 selected_index = [num, num]
-//             }
-//             else
-//             {
-//                 selected.focusNode.textContent = strDel(selected.focusNode.textContent, selected_index);
-//                 num = Math.min(...selected_index) - 1
-//                 selected_index = [num, num]
-//             }
-//         }
-//     }
-//     else if(keyCode == 13)
-//     {
-//         console.log("enter")
-//     }
-//     else if(ctrlClick && keyCode == 90)
-//     {
-//         console.log("ctrl + Z")
-//     }
-// });
+    console.log(selected)
+    // バックスペースキーを制御する
+    if(keyCode == 8)
+    {
+        console.log("back")
+        if(selected != undefined)
+        {
+            if(selected_index[0] == selected_index[1])
+            {
+                selected.focusNode.textContent = strDel(selected.focusNode.textContent, [selected_index[0], selected_index[0] + 1])
+                num = Math.min(...selected_index) - 1
+                selected_index = [num, num]
+            }
+            else
+            {
+                selected.focusNode.textContent = strDel(selected.focusNode.textContent, selected_index);
+                num = Math.min(...selected_index) - 1
+                selected_index = [num, num]
+            }
+        }
+    }
+    else if(keyCode == 13)
+    {
+        console.log("enter")
+    }
+    else if(ctrlClick && keyCode == 90)
+    {
+        console.log("ctrl + Z")
+    }
+});
 
 editer_content_start()
