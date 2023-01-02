@@ -1,9 +1,8 @@
-var tag_list = []
-var selected
-var selected_index = [0,0]
-var input_keybord
-var composition
-// document.addEventListener('keypress', keypress_ivent);
+let tag_list = []
+let selected
+let selected_index = [0,0]
+let input_keybord
+let composition
 
 function strIns(str, idx, val)
 {
@@ -144,7 +143,7 @@ function label_edit()
     //実装　カーソルが外れたらinputを削除
     input_keybord.onblur = function()
     {
-        if(event.target.nextElementSibling != null)
+        if(event.target.nextElementSibling != null && event.target.previousElementSibling != null)
         {
             event.target.previousElementSibling.textContent += event.target.nextElementSibling.textContent
             event.target.parentElement.removeChild(event.target.nextElementSibling)
@@ -234,7 +233,7 @@ $(document).keydown(function(event){
             console.log("back")
             if(input_keybord.previousElementSibling == undefined)
             {
-                console.log("行削除")
+                console.log(input_keybord.parentElement.previousElementSibling)
             }
             else
             {
