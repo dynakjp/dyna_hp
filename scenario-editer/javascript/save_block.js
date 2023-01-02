@@ -63,16 +63,18 @@ function tag_list_update()
 //クリック時の処理
 function label_edit()
 {
+    //選択部分の確認
     selected = window.getSelection();
     selected_index = [selected.focusOffset, selected.anchorOffset]
     selected_index = [selected.focusOffset - Math.min(...selected_index), selected.anchorOffset - Math.min(...selected_index)]
+    
+    //入力部分の作成
     input_keybord = document.createElement("input")
     input_keybord.type = "text"
     input_keybord.classList.add("editor_input")
-    
     event.target.after(input_keybord)
 
-    //文字の長さを測り実装
+    //実装　文字の長さ調節
     input_keybord.oninput = function()
     {
         if(!composition)
@@ -118,7 +120,7 @@ function label_edit()
         }
     }
 
-    //変換待ち検知用
+    //実装　変換待ち検知
     input_keybord.addEventListener('compositionstart', function(){
         //console.log("入力開始");
         composition = true
@@ -139,10 +141,10 @@ function label_edit()
         event.target.style.width = "0px"
     });
 
-    //カーソルが外れたらinputを削除
+    //実装　カーソルが外れたらinputを削除
     input_keybord.onblur = function()
     {
-        if(event.target.nextElementSibling.textContent != null)
+        if(event.target.nextElementSibling != null)
         {
             event.target.previousElementSibling.textContent += event.target.nextElementSibling.textContent
             event.target.parentElement.removeChild(event.target.nextElementSibling)
@@ -150,15 +152,16 @@ function label_edit()
         event.target.parentElement.removeChild(event.target);
     }
 
+    //前方部分作成
     str = selected.focusNode.textContent
     points = [Math.min(selected.focusOffset, selected.anchorOffset), Math.max(selected.focusOffset, selected.anchorOffset)]
     event.target.textContent = str.slice(0, points[0])
-
+    //後方部分作成
     text_after = document.createElement("a")
     text_after.textContent = str.slice(points[1], str.length)
     text_after.onclick = label_edit
     input_keybord.after(text_after) 
-
+    //inputの文字登録、フォーカスと選択
     input_keybord.value = str.slice(...points);
     input_keybord.focus();
     input_keybord.setSelectionRange(0, input_keybord.value.length);
@@ -223,7 +226,6 @@ $(document).keydown(function(event){
     // キーイベントが発生した対象のオブジェクト
     var obj = event.target;
     
-    console.log(selected)
     // バックスペースキーを制御する
     if(keyCode == 8)
     {
@@ -246,7 +248,32 @@ $(document).keydown(function(event){
     }
     else if(keyCode == 13)
     {
-        console.log("enter")
+        if(!composition && input_keybord != null)
+        {
+            console.log("enter")
+            //　新しい行を作成
+            str = input_keybord.nextElementSibling.textContent
+            element_li = document.createElement("li")
+            console.log(input_keybord.parentElement)
+            input_keybord.parentElement.after(element_li)
+
+            element_a = document.createElement("a")
+            element_a.textContent = str
+            element_a.onclick = label_edit
+            element_li.appendChild(element_a)
+
+            input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
+            input_keybord.blur()
+
+            select = new Range();
+            select.setStart(element_a, 0)
+            select.setEnd(element_a, 0)
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+
+            element_a.click();
+
+        }
     }
     else if(ctrlClick && keyCode == 90)
     {
