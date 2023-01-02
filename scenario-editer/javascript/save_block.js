@@ -70,7 +70,7 @@ function label_edit()
     //入力部分の作成
     input_keybord = document.createElement("input")
     input_keybord.type = "text"
-    input_keybord.classList.add("editor_input")
+    input_keybord.classList.add("editor-input")
     event.target.after(input_keybord)
 
     //実装　文字の長さ調節
@@ -132,7 +132,7 @@ function label_edit()
         if(event.target.previousElementSibling == null)
         {
             element = document.createElement("a")
-            event.target.befor(element)
+            event.target.before(element)
         }
 
         event.target.previousElementSibling.textContent +=  event.target.value
@@ -149,6 +149,7 @@ function label_edit()
             event.target.parentElement.removeChild(event.target.nextElementSibling)
         }
         event.target.parentElement.removeChild(event.target);
+        input_keybord = undefined
     }
 
     //前方部分作成
@@ -214,6 +215,28 @@ function editer_content_start()
     element_li.appendChild(element_a)
 }
 
+//ラベルの合成
+function label_synthesis(element_li)
+{
+    i = 0
+    str = ""
+    while(i < element_li.childElementCount)
+    {
+        if(element_li.children[i].tagName == "A")
+        {
+            str += element_li.children[i].textContent
+            element_li.removeChild(element_li.children[i])
+        }
+        else
+        {
+            i++
+        }
+    }
+    element_a = document.createElement("a")
+    element_a.textContent = str
+    element_a.onclick = label_edit
+    element_li.appendChild(element_a)
+}
 
 $(document).keydown(function(event){
     // クリックされたキーのコード
@@ -228,15 +251,42 @@ $(document).keydown(function(event){
     // バックスペースキーを制御する
     if(keyCode == 8)
     {
-        if(input_keybord.value == "")
+        if(input_keybord != undefined && input_keybord.value == "")
         {
-            console.log("back")
-            if(input_keybord.previousElementSibling == undefined)
+            if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
             {
-                console.log(input_keybord.parentElement.previousElementSibling)
+                before_li = input_keybord.parentElement.previousElementSibling
+                before_li.removeChild(before_li.children[before_li.childElementCount - 1])
+                index = input_keybord.nextElementSibling.textContent.length
+                if(input_keybord.previousElementSibling != null)
+                {
+                    input_keybord.parentElement.removeChild(input_keybord.previousElementSibling)
+                }
+                before_li.appendChild(input_keybord.nextElementSibling);
+                input_keybord.parentElement.parentElement.removeChild(input_keybord.parentElement)
+                label_synthesis(before_li)
+                //新しい行で入力状態にする
+                element_a = before_li.children[0]
+                select = new Range();
+                if(element_a.firstChild != null)
+                {
+                    select.setStart(element_a.firstChild, element_a.textContent.length - index)
+                    select.setEnd(element_a.firstChild, element_a.textContent.length - index)
+                }
+                else
+                {
+                    select.setStart(element_a, 0)
+                    select.setEnd(element_a, 0)
+                }
+
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+                element_a.click();
             }
             else
             {
+                //前方にテキストがある
+                console.log("Back")
                 str = input_keybord.previousElementSibling.textContent;
                 if(str.slice(0,str.length - 1) != "")
                 {
@@ -254,28 +304,52 @@ $(document).keydown(function(event){
         if(!composition && input_keybord != undefined)
         {
             console.log("enter")
-            //　新しい行を作成
-            str = input_keybord.nextElementSibling.textContent
-            element_li = document.createElement("li")
-            console.log(input_keybord.parentElement)
-            input_keybord.parentElement.after(element_li)
-            
-            element_a = document.createElement("a")
-            element_a.textContent = str
-            element_a.onclick = label_edit
-            element_li.appendChild(element_a)
+            if(input_keybord.nextElementSibling != null)
+            {
+                //　新しい行を作成
+                str = input_keybord.nextElementSibling.textContent
+                element_li = document.createElement("li")
+                input_keybord.parentElement.after(element_li)
+                
+                element_a = document.createElement("a")
+                element_a.textContent = str
+                element_a.onclick = label_edit
+                element_li.appendChild(element_a)
 
-            input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
-            input_keybord.blur()
-            
-            //新しい行で入力状態にする
-            select = new Range();
-            select.setStart(element_a, 0)
-            select.setEnd(element_a, 0)
-            document.getSelection().removeAllRanges();
-            document.getSelection().addRange(select);
+                input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
+                input_keybord.blur()
+                br = document.createElement("br")
+                element_li.previousElementSibling.appendChild(br);
 
-            element_a.click();
+                //新しい行で入力状態にする
+                select = new Range();
+                select.setStart(element_a, 0)
+                select.setEnd(element_a, 0)
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+
+                element_a.click();
+            }
+            else
+            {
+                //後ろに要素がない場合
+                element_li = document.createElement("li")
+                input_keybord.parentElement.after(element_li)
+                
+                element_a = document.createElement("a")
+                element_a.onclick = label_edit
+                element_li.appendChild(element_a)
+
+                input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
+                input_keybord.blur()
+                
+                //新しい行で入力状態にする
+                select = new Range();
+                select.setStart(element_a, 0)
+                select.setEnd(element_a, 0)
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+            }
         }
     }
     else if(ctrlClick && keyCode == 90)
