@@ -87,7 +87,7 @@ function label_edit()
 
             event.target.previousElementSibling.textContent +=  event.target.value
             event.target.value = ""
-            event.target.style.width = "0px"
+            event.target.style.width = "5px"
         }
         else
         {
@@ -137,7 +137,7 @@ function label_edit()
 
         event.target.previousElementSibling.textContent +=  event.target.value
         event.target.value = ""
-        event.target.style.width = "0px"
+        event.target.style.width = "5px"
     });
 
     //実装　カーソルが外れたらinputを削除
@@ -198,7 +198,7 @@ function label_edit()
     }
     else
     {
-        input_keybord.style.width = "0px";
+        input_keybord.style.width = "5px";
     }
 }
 
@@ -390,6 +390,67 @@ $(document).keydown(function(event){
     else if(ctrlClick && keyCode == 90)
     {
         console.log("ctrl + Z")
+    }
+    else if(keyCode == 37)
+    {
+        if(input_keybord != undefined && input_keybord.value == "")
+        {
+            if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
+            {
+                if(input_keybord.parentElement.previousElementSibling != null)
+                {
+                    destination = input_keybord.parentElement.previousElementSibling
+                    input_keybord.blur()
+                    destination.click()
+                }
+            }
+            else
+            {
+                index = input_keybord.previousElementSibling.textContent.length - 1
+                destination = input_keybord.parentElement
+                input_keybord.blur()
+
+                select = new Range();
+                select.setStart(destination.children[0].firstChild, index)
+                select.setEnd(destination.children[0].firstChild, index)
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+                destination.children[0].click()
+            }
+        }
+    }
+    else if(keyCode == 39)
+    {
+        if(input_keybord != undefined && input_keybord.value == "")
+        {
+            if(input_keybord.nextElementSibling == null || input_keybord.nextElementSibling.textContent == "")
+            {
+                if(input_keybord.parentElement.nextElementSibling != null)
+                {
+                    destination = input_keybord.parentElement.nextElementSibling
+                    input_keybord.blur()
+                    select = new Range();
+                    select.setStart(destination.children[0], 0)
+                    select.setEnd(destination.children[0], 0)
+                    document.getSelection().removeAllRanges();
+                    document.getSelection().addRange(select);
+                    destination.children[0].click()
+                }
+            }
+            else
+            {
+                index = input_keybord.previousElementSibling.textContent.length + 1
+                destination = input_keybord.parentElement
+                input_keybord.blur()
+
+                select = new Range();
+                select.setStart(destination.children[0].firstChild, index)
+                select.setEnd(destination.children[0].firstChild, index)
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+                destination.children[0].click()
+            }
+        }
     }
 });
 

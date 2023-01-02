@@ -8,6 +8,7 @@ ul
 {
     border: none;
     outline: none;
+    margin-right: -4px;
 }
 
 .editor-row{
