@@ -9,3 +9,7 @@ ul
     border: none;
     outline: none;
 }
+
+.editor-row{
+    cursor: text;
+}

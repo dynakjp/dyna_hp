@@ -59,7 +59,7 @@ function tag_list_update()
     }
 }
 
-//クリック時の処理
+//ラベルクリック時の処理
 function label_edit()
 {
     //選択部分の確認
@@ -202,11 +202,42 @@ function label_edit()
     }
 }
 
+function li_click()
+{
+    parent = event.target
+    i = parent.childElementCount - 1
+    select = new Range();
+    while(0 <= i)
+    {
+        if(parent.children[i].tagName == "A")
+        {
+            if(parent.children[i].firstChild == null)
+            {
+                select.setStart(parent.children[i], 0)
+                select.setEnd(parent.children[i], 0)
+            }
+            else
+            {
+                select.setStart(parent.children[i].firstChild, parent.children[i].firstChild.length)
+                select.setEnd(parent.children[i].firstChild, parent.children[i].firstChild.length)
+            }
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+            parent.children[i].click();
+            break
+        }
+        i--
+    }
+
+}
+
 //コンテンツの初期作成
 function editer_content_start()
 {
     editor_content_list = document.getElementById("editor-content-list")
     element_li = document.createElement("li")
+    element_li.onclick = li_click
+    element_li.classList.add("editor-row")
     editor_content_list.appendChild(element_li)
 
     element_a = document.createElement("a")
@@ -309,6 +340,8 @@ $(document).keydown(function(event){
                 //　新しい行を作成
                 str = input_keybord.nextElementSibling.textContent
                 element_li = document.createElement("li")
+                element_li.onclick = li_click
+                element_li.classList.add("editor-row")
                 input_keybord.parentElement.after(element_li)
                 
                 element_a = document.createElement("a")
@@ -334,6 +367,8 @@ $(document).keydown(function(event){
             {
                 //後ろに要素がない場合
                 element_li = document.createElement("li")
+                element_li.onclick = li_click
+                element_li.classList.add("editor-row")
                 input_keybord.parentElement.after(element_li)
                 
                 element_a = document.createElement("a")
