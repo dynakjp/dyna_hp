@@ -83,7 +83,7 @@ function label_edit()
             {
                 element = document.createElement("a")
                 element.onclick = label_edit
-                event.target.befor(element)
+                event.target.before(element)
             }
 
             event.target.previousElementSibling.textContent +=  event.target.value
@@ -229,26 +229,30 @@ $(document).keydown(function(event){
     // バックスペースキーを制御する
     if(keyCode == 8)
     {
-        console.log("back")
-        if(selected != undefined)
+        if(input_keybord.value == "")
         {
-            if(selected_index[0] == selected_index[1])
+            console.log("back")
+            if(input_keybord.previousElementSibling == undefined)
             {
-                selected.focusNode.textContent = strDel(selected.focusNode.textContent, [selected_index[0], selected_index[0] + 1])
-                num = Math.min(...selected_index) - 1
-                selected_index = [num, num]
+                console.log("行削除")
             }
             else
             {
-                selected.focusNode.textContent = strDel(selected.focusNode.textContent, selected_index);
-                num = Math.min(...selected_index) - 1
-                selected_index = [num, num]
+                str = input_keybord.previousElementSibling.textContent;
+                if(str.slice(0,str.length - 1) != "")
+                {
+                    input_keybord.previousElementSibling.textContent = str.slice(0,str.length - 1);
+                }
+                else
+                {
+                    input_keybord.parentElement.removeChild(input_keybord.previousElementSibling);
+                }
             }
         }
     }
     else if(keyCode == 13)
     {
-        if(!composition && input_keybord != null)
+        if(!composition && input_keybord != undefined)
         {
             console.log("enter")
             //　新しい行を作成
@@ -256,7 +260,7 @@ $(document).keydown(function(event){
             element_li = document.createElement("li")
             console.log(input_keybord.parentElement)
             input_keybord.parentElement.after(element_li)
-
+            
             element_a = document.createElement("a")
             element_a.textContent = str
             element_a.onclick = label_edit
@@ -264,7 +268,8 @@ $(document).keydown(function(event){
 
             input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
             input_keybord.blur()
-
+            
+            //新しい行で入力状態にする
             select = new Range();
             select.setStart(element_a, 0)
             select.setEnd(element_a, 0)
@@ -272,7 +277,6 @@ $(document).keydown(function(event){
             document.getSelection().addRange(select);
 
             element_a.click();
-
         }
     }
     else if(ctrlClick && keyCode == 90)
