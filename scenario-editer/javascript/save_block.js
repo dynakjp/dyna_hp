@@ -452,6 +452,57 @@ $(document).keydown(function(event){
             }
         }
     }
+    else if(keyCode == 38)
+    {
+        if(input_keybord != undefined && input_keybord.value == "")
+        {
+            if(input_keybord.parentElement.previousElementSibling != null)
+            {
+                destination = input_keybord.parentElement.previousElementSibling
+                input_keybord.blur()
+                select = new Range();
+                if(destination.children[0].firstChild == null)
+                {
+                    select.setStart(destination.children[0], 0)
+                    select.setEnd(destination.children[0], 0)
+                }
+                else
+                {
+                    select.setStart(destination.children[0].firstChild, Math.min(index, destination.children[0].firstChild.length))
+                    select.setEnd(destination.children[0].firstChild,  Math.min(index, destination.children[0].firstChild.length))
+                }
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+                destination.children[0].click()
+            }
+        }
+    }
+    else if(keyCode == 40)
+    {
+        if(input_keybord != undefined && input_keybord.value == "")
+        {
+            if(input_keybord.parentElement.nextElementSibling != null)
+            {
+                destination = input_keybord.parentElement.nextElementSibling
+                index = input_keybord.previousElementSibling.textContent.length
+                input_keybord.blur()
+                select = new Range();
+                if(destination.children[0].firstChild == null)
+                {
+                    select.setStart(destination.children[0], 0)
+                    select.setEnd(destination.children[0], 0)
+                }
+                else
+                {
+                    select.setStart(destination.children[0].firstChild, Math.min(index, destination.children[0].firstChild.length))
+                    select.setEnd(destination.children[0].firstChild,  Math.min(index, destination.children[0].firstChild.length))
+                }
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+                destination.children[0].click()
+            }
+        }
+    }
 });
 
 editer_content_start()
