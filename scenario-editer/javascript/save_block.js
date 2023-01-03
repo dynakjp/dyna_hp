@@ -1,6 +1,5 @@
 let tag_list = []
 let selected
-let selected_index = [0,0]
 let input_keybord
 let composition
 
@@ -64,8 +63,6 @@ function label_edit()
 {
     //選択部分の確認
     selected = window.getSelection();
-    selected_index = [selected.focusOffset, selected.anchorOffset]
-    selected_index = [selected.focusOffset - Math.min(...selected_index), selected.anchorOffset - Math.min(...selected_index)]
     
     //入力部分の作成
     input_keybord = document.createElement("input")
@@ -74,7 +71,7 @@ function label_edit()
     event.target.after(input_keybord)
 
     //実装　文字の長さ調節
-    input_keybord.oninput = function()
+    input_keybord.oninput = function(event)
     {
         if(!composition)
         {
@@ -141,7 +138,7 @@ function label_edit()
     });
 
     //実装　カーソルが外れたらinputを削除
-    input_keybord.onblur = function()
+    input_keybord.onblur = function(event)
     {
         if(event.target.nextElementSibling != null && event.target.previousElementSibling != null)
         {
@@ -286,33 +283,36 @@ $(document).keydown(function(event){
         {
             if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
             {
-                before_li = input_keybord.parentElement.previousElementSibling
-                before_li.removeChild(before_li.children[before_li.childElementCount - 1])
-                index = input_keybord.nextElementSibling.textContent.length
-                if(input_keybord.previousElementSibling != null)
+                if(input_keybord.parentElement.previousElementSibling != null)
                 {
-                    input_keybord.parentElement.removeChild(input_keybord.previousElementSibling)
-                }
-                before_li.appendChild(input_keybord.nextElementSibling);
-                input_keybord.parentElement.parentElement.removeChild(input_keybord.parentElement)
-                label_synthesis(before_li)
-                //新しい行で入力状態にする
-                element_a = before_li.children[0]
-                select = new Range();
-                if(element_a.firstChild != null)
-                {
-                    select.setStart(element_a.firstChild, element_a.textContent.length - index)
-                    select.setEnd(element_a.firstChild, element_a.textContent.length - index)
-                }
-                else
-                {
-                    select.setStart(element_a, 0)
-                    select.setEnd(element_a, 0)
-                }
+                    before_li = input_keybord.parentElement.previousElementSibling
+                    before_li.removeChild(before_li.children[before_li.childElementCount - 1])
+                    index = input_keybord.nextElementSibling.textContent.length
+                    if(input_keybord.previousElementSibling != null)
+                    {
+                        input_keybord.parentElement.removeChild(input_keybord.previousElementSibling)
+                    }
+                    before_li.appendChild(input_keybord.nextElementSibling);
+                    input_keybord.parentElement.parentElement.removeChild(input_keybord.parentElement)
+                    label_synthesis(before_li)
+                    //新しい行で入力状態にする
+                    element_a = before_li.children[0]
+                    select = new Range();
+                    if(element_a.firstChild != null)
+                    {
+                        select.setStart(element_a.firstChild, element_a.textContent.length - index)
+                        select.setEnd(element_a.firstChild, element_a.textContent.length - index)
+                    }
+                    else
+                    {
+                        select.setStart(element_a, 0)
+                        select.setEnd(element_a, 0)
+                    }
 
-                document.getSelection().removeAllRanges();
-                document.getSelection().addRange(select);
-                element_a.click();
+                    document.getSelection().removeAllRanges();
+                    document.getSelection().addRange(select);
+                    element_a.click();
+                }
             }
             else
             {
@@ -439,7 +439,14 @@ $(document).keydown(function(event){
             }
             else
             {
-                index = input_keybord.previousElementSibling.textContent.length + 1
+                if(input_keybord.previousElementSibling == null)
+                {
+                    index = 1
+                }
+                else
+                {
+                    index = input_keybord.previousElementSibling.textContent.length + 1
+                }
                 destination = input_keybord.parentElement
                 input_keybord.blur()
 
