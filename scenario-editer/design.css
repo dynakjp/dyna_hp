@@ -1,16 +1,20 @@
 ul
 {
+    /* 点を消す */
     list-style: none;
     padding: 0;
 }
 
 .editor-input
 {
+    /* 枠を常に表示しない */
     border: none;
     outline: none;
-    margin-right: -4px;
+    /* 入力中でも文が自然になるように */
+    margin-right: -3px;
 }
 
 .editor-row{
+    /* 行のどこに触れていてもカーソルがテキストモードになるように */
     cursor: text;
 }
