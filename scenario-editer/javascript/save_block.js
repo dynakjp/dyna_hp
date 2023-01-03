@@ -5,13 +5,13 @@ let composition
 
 function strIns(str, idx, val)
 {
-    var res = str.slice(0, idx) + val + str.slice(idx);
+    let res = str.slice(0, idx) + val + str.slice(idx);
     return res;
 };
 
 function strDel(str, index)
 {
-    var res = str.slice(0, Math.min(...index)) + str.slice(Math.max(...index))
+    let res = str.slice(0, Math.min(...index)) + str.slice(Math.max(...index))
     return res;
 };
 
@@ -138,23 +138,19 @@ function label_edit()
     });
 
     //実装　カーソルが外れたらinputを削除
-    input_keybord.onblur = function(event)
+    input_keybord.onblur = function()
     {
-        if(event.target.nextElementSibling != null && event.target.previousElementSibling != null)
-        {
-            event.target.previousElementSibling.textContent += event.target.nextElementSibling.textContent
-            event.target.parentElement.removeChild(event.target.nextElementSibling)
-        }
-        event.target.parentElement.removeChild(event.target);
+        label_synthesis(input_keybord.parentElement)
+        input_keybord.parentElement.removeChild(input_keybord);
         input_keybord = undefined
     }
 
     //前方部分作成
-    str = selected.focusNode.textContent
-    points = [Math.min(selected.focusOffset, selected.anchorOffset), Math.max(selected.focusOffset, selected.anchorOffset)]
+    let str = selected.focusNode.textContent
+    let points = [Math.min(selected.focusOffset, selected.anchorOffset), Math.max(selected.focusOffset, selected.anchorOffset)]
     event.target.textContent = str.slice(0, points[0])
     //後方部分作成
-    text_after = document.createElement("a")
+    let text_after = document.createElement("a")
     text_after.textContent = str.slice(points[1], str.length)
     text_after.onclick = label_edit
     input_keybord.after(text_after) 
@@ -201,8 +197,8 @@ function label_edit()
 
 function li_click()
 {
-    parent = event.target
-    i = parent.childElementCount - 1
+    let parent = event.target
+    let i = parent.childElementCount - 1
     select = new Range();
     while(0 <= i)
     {
@@ -255,15 +251,22 @@ function label_synthesis(element_li)
             str += element_li.children[i].textContent
             element_li.removeChild(element_li.children[i])
         }
+        else if(element_li.children[i].tagName == "BR")
+        {
+            element_li.removeChild(element_li.children[i])
+        }
         else
         {
             i++
         }
     }
-    element_a = document.createElement("a")
+    let element_a = document.createElement("a")
     element_a.textContent = str
     element_a.onclick = label_edit
-    element_li.appendChild(element_a)
+    element_li.prepend(element_a)
+    
+    let element_br = document.createElement("br")
+    element_li.appendChild(element_br)
 }
 
 $(document).keydown(function(event){
@@ -276,7 +279,7 @@ $(document).keydown(function(event){
     // キーイベントが発生した対象のオブジェクト
     var obj = event.target;
     
-    // バックスペースキーを制御する
+    // キーを制御する
     if(keyCode == 8)
     {
         if(input_keybord != undefined && input_keybord.value == "")
@@ -330,11 +333,76 @@ $(document).keydown(function(event){
             }
         }
     }
+    else if(keyCode == 46)
+    {
+        if(input_keybord != undefined && input_keybord.value == "")
+        {
+            if(input_keybord.nextElementSibling == null || input_keybord.nextElementSibling.textContent == "")
+            {
+                if(input_keybord.parentElement.nextElementSibling != null)
+                {
+                    after_li = input_keybord.parentElement.nextElementSibling
+                    input_keybord.parentElement.removeChild(input_keybord.parentElement.children[input_keybord.parentElement.childElementCount - 1])
+                    index = input_keybord.previousElementSibling.textContent.length
+                    if(input_keybord.nextElementSibling != null)
+                    {
+                        input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
+                    }
+                    i = 0
+                    while(after_li.childElementCount > i)
+                    {
+                        if(after_li.children[i].tagName == "input")
+                        {
+                            i++
+                        }
+                        else
+                        {
+                            input_keybord.parentElement.appendChild(after_li.children[i]);
+                        }
+                    }
+                    after_li.parentElement.removeChild(after_li)
+                    element_li = input_keybord.parentElement
+                    input_keybord.blur()
+                    label_synthesis(element_li)
+                    //新しい行で入力状態にする
+                    element_a = element_li.children[0]
+                    select = new Range();
+                    if(element_a.firstChild != null)
+                    {
+                        select.setStart(element_a.firstChild, index)
+                        select.setEnd(element_a.firstChild, index)
+                    }
+                    else
+                    {
+                        select.setStart(element_a, 0)
+                        select.setEnd(element_a, 0)
+                    }
+
+                    document.getSelection().removeAllRanges();
+                    document.getSelection().addRange(select);
+                    element_a.click();
+                }
+            }
+            else
+            {
+                //後方にテキストがある
+                console.log("delete")
+                str = input_keybord.nextElementSibling.textContent;
+                if(str.length >= 2)
+                {
+                    input_keybord.nextElementSibling.textContent = str.slice(1,str.length);
+                }
+                else
+                {
+                    input_keybord.parentElement.removeChild(input_keybord.nextElementSibling);
+                }
+            }
+        }
+    }
     else if(keyCode == 13)
     {
         if(!composition && input_keybord != undefined)
         {
-            console.log("enter")
             if(input_keybord.nextElementSibling != null)
             {
                 //　新しい行を作成
@@ -351,8 +419,6 @@ $(document).keydown(function(event){
 
                 input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
                 input_keybord.blur()
-                br = document.createElement("br")
-                element_li.previousElementSibling.appendChild(br);
 
                 //新しい行で入力状態にする
                 select = new Range();
@@ -375,7 +441,6 @@ $(document).keydown(function(event){
                 element_a.onclick = label_edit
                 element_li.appendChild(element_a)
 
-                input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
                 input_keybord.blur()
                 
                 //新しい行で入力状態にする
@@ -384,6 +449,8 @@ $(document).keydown(function(event){
                 select.setEnd(element_a, 0)
                 document.getSelection().removeAllRanges();
                 document.getSelection().addRange(select);
+
+                element_a.click();
             }
         }
     }
@@ -466,6 +533,7 @@ $(document).keydown(function(event){
             if(input_keybord.parentElement.previousElementSibling != null)
             {
                 destination = input_keybord.parentElement.previousElementSibling
+                index = input_keybord.previousElementSibling.textContent.length
                 input_keybord.blur()
                 select = new Range();
                 if(destination.children[0].firstChild == null)
