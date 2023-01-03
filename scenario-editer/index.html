@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dyna_scenario_editer</title>
+    <title>dyna_scenario_editor</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="design.css" rel="stylesheet">
 </head>
 <body> 
     <div class="container-fluid">
@@ -42,15 +43,15 @@
                 </div>
             </div>
             <div class="col-md-9">
-                <div id="editer_heder">
+                <div id="editor_heder">
                     <div class="row">
                         <div class="col-md-7">
                             <div id="block_title">
                                 <div  class="input-group">
-                                    <input type="text" class="form-control" placeholder="タイトル">
+                                    <input type="text" class="form-control" placeholder="タイトル" id="input_block_title">
                                 </div>
                             </div>
-                            <div id="editer_button">
+                            <div id="editor_button">
                                 <div  class="input-group">
                                     <button class="btn btn-outline-success" type="button" id="button-add-link"><i class="fas fa-search"></i> link</button>
                                 </div>
@@ -59,17 +60,13 @@
                         <div class="col-md-5">
                             <div id="add-tag">
                                 <div  class="input-group">
-                                    <input type="text" class="form-control" placeholder="タグ名">
+                                    <input type="text" class="form-control" placeholder="タグ名" id="input_add_tag">
                                     <button class="btn btn-outline-success" type="button" id="button-add-tag"><i class="fas fa-search"></i> 追加</button>
                                 </div>
                             </div>
                             <div id="tag_list">
                                 <div  class="input-group">
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>タグ一覧予定</option>
-                                        <option value="1">test_tag1</option>
-                                        <option value="2">test_tag2</option>
-                                        <option value="3">test_tag3</option>
+                                    <select class="form-select" aria-label="Default select example" id="select_tag_list">
                                     </select>
                                     <button class="btn btn-outline-success" type="button" id="button-select-tag"><i class="fas fa-search"></i> 削除</button>
                                 </div>                                
@@ -77,13 +74,15 @@
                         </div>
                     </div>
                 </div>
-                <div id="editer_content">
-                    <a>test text ホゲホゲ</a>
+                <div id="editor-content">
+                    <ul id="editor-content-list">
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="javascript/save_block.js"></script>
 </body>
 </html>
