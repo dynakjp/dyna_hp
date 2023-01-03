@@ -3,31 +3,17 @@ let selected
 let input_keybord
 let composition
 
-function strIns(str, idx, val)
-{
-    let res = str.slice(0, idx) + val + str.slice(idx);
-    return res;
-};
-
-function strDel(str, index)
-{
-    let res = str.slice(0, Math.min(...index)) + str.slice(Math.max(...index))
-    return res;
-};
-
-
-
 // ブロックタイトルの入力がされた
 document.getElementById("input_block_title").onchange = function()
 {
-    element = document.getElementById("input_block_title");
+    let element = document.getElementById("input_block_title");
     console.log(element.value);
 }
 
 // タグの追加ボタン
 document.getElementById("button-add-tag").onclick = function()
 {
-    element = document.getElementById("input_add_tag");
+    let element = document.getElementById("input_add_tag");
     tag_list.push(element.value);
     element.value = ""
     tag_list_update();
@@ -36,7 +22,7 @@ document.getElementById("button-add-tag").onclick = function()
 // タグの削除ボタン
 document.getElementById("button-select-tag").onclick = function()
 {
-    element = document.getElementById("select_tag_list");
+    let element = document.getElementById("select_tag_list");
     tag_list.splice(element.value, 1);
     tag_list_update();
 }
@@ -44,40 +30,42 @@ document.getElementById("button-select-tag").onclick = function()
 // タグリストの更新
 function tag_list_update()
 {
-    select = document.getElementById("select_tag_list");
+    let select = document.getElementById("select_tag_list");
     while(select.childElementCount != 0)
     {
         select.removeChild(select.firstChild)
     }
     for(let i = 0; i < tag_list.length; ++i)
     {
-        element = document.createElement("option")
+        let element = document.createElement("option")
         element.value = i
         element.textContent = tag_list[i]
         select.appendChild(element);
     }
 }
 
-//ラベルクリック時の処理
+// ラベルクリック時の処理
 function label_edit()
 {
-    //選択部分の確認
+    // 選択部分の更新
     selected = window.getSelection();
     
-    //入力部分の作成
+    // キーボード入力部の作成
     input_keybord = document.createElement("input")
     input_keybord.type = "text"
     input_keybord.classList.add("editor-input")
     event.target.after(input_keybord)
 
-    //実装　文字の長さ調節
+    // 文字が変わった時
     input_keybord.oninput = function(event)
     {
         if(!composition)
         {
+            // 変換前でないなら前のラベルに文字追加
             if(event.target.previousElementSibling == null)
             {
-                element = document.createElement("a")
+                // ラベルがないなら作成する
+                let element = document.createElement("a")
                 element.onclick = label_edit
                 event.target.before(element)
             }
@@ -88,47 +76,40 @@ function label_edit()
         }
         else
         {
-            // spanを生成.
-            span = document.createElement('span');
+            // 変換前ならinputの長さを調節
+            // spanを生成し配置することで文字の横幅を得る
+            let span = document.createElement('span');
 
-            // 現在の表示要素に影響しないように、画面外に飛ばしておく.
+            // 画面外に折り返しなしで配置
             span.style.position = 'absolute';
             span.style.top = '-1000px';
             span.style.left = '-1000px';
 
-            // 折り返しさせない.
             span.style.whiteSpace = 'nowrap';
-
-            // 計測したい文字を設定する.
             span.innerHTML = event.target.value;
-
-            // 必要に応じてスタイルを適用する.
-
-            // DOMに追加する（追加することで、ブラウザで領域が計算されます）
             document.body.appendChild(span);
 
-            // 横幅を取得します.
+            // 横幅を取得
             width = span.clientWidth;
             event.target.style.width = (width + 4) + "px";
 
-            // 終わったらDOMから削除します.
+            // 終わったら削除
             span.parentElement.removeChild(span);
         }
     }
 
-    //実装　変換待ち検知
+    // 変換前であることを記録
     input_keybord.addEventListener('compositionstart', function(){
-        //console.log("入力開始");
         composition = true
     });
-    input_keybord.addEventListener('compositionend', function(){
-        //console.log("入力終了");
+    // 変換完了時　記録とラベルに反映
+    input_keybord.addEventListener('compositionend', function(event){
         composition = false
         
         //反映しラベルに追加
         if(event.target.previousElementSibling == null)
         {
-            element = document.createElement("a")
+            let element = document.createElement("a")
             event.target.before(element)
         }
 
@@ -137,24 +118,25 @@ function label_edit()
         event.target.style.width = "5px"
     });
 
-    //実装　カーソルが外れたらinputを削除
+    // カーソルが外れた時　ラベルの合成とinputの削除
     input_keybord.onblur = function()
     {
         label_synthesis(input_keybord.parentElement)
         input_keybord.parentElement.removeChild(input_keybord);
+        // 入力していないことを記録
         input_keybord = undefined
     }
 
-    //前方部分作成
+    // 前方ラベルの文字を選択部分より前のみに
     let str = selected.focusNode.textContent
     let points = [Math.min(selected.focusOffset, selected.anchorOffset), Math.max(selected.focusOffset, selected.anchorOffset)]
     event.target.textContent = str.slice(0, points[0])
-    //後方部分作成
+    // 後方ラベルを作成し選択部分以降を表示
     let text_after = document.createElement("a")
     text_after.textContent = str.slice(points[1], str.length)
     text_after.onclick = label_edit
     input_keybord.after(text_after) 
-    //inputの文字登録、フォーカスと選択
+    // input内に選択した文字を入れ、フォーカスとinput内全選択
     input_keybord.value = str.slice(...points);
     input_keybord.focus();
     input_keybord.setSelectionRange(0, input_keybord.value.length);
@@ -162,31 +144,24 @@ function label_edit()
     //初期のinputの長さを調整
     if(input_keybord.value.length != 0)
     {
-        // spanを生成.
-        span = document.createElement('span');
+        // 変換前ならinputの長さを調節
+        // spanを生成し配置することで文字の横幅を得る
+        let span = document.createElement('span');
 
-        // 現在の表示要素に影響しないように、画面外に飛ばしておく.
+        // 画面外に折り返しなしで配置
         span.style.position = 'absolute';
         span.style.top = '-1000px';
         span.style.left = '-1000px';
 
-        // 折り返しさせない.
         span.style.whiteSpace = 'nowrap';
-
-        // 計測したい文字を設定する.
         span.innerHTML = input_keybord.value;
-
-        // 必要に応じてスタイルを適用する.
-
-        // DOMに追加する（追加することで、ブラウザで領域が計算されます）
         document.body.appendChild(span);
 
-        // 横幅を取得します.
+        // 横幅を取得
         width = span.clientWidth;
-        console.log(width)
         input_keybord.style.width = (width + 4) + "px";
 
-        // 終わったらDOMから削除します.
+        // 終わったら削除
         span.parentElement.removeChild(span);
     }
     else
@@ -195,15 +170,19 @@ function label_edit()
     }
 }
 
+// 行のラベルのない部分をクリックした時
 function li_click()
 {
+    // その行の一番最後のラベルの一番後ろにカーソルを合わせる
     let parent = event.target
     let i = parent.childElementCount - 1
     select = new Range();
+    // 後ろから前に生きつつ<a>を探す
     while(0 <= i)
     {
         if(parent.children[i].tagName == "A")
         {
+            // <a>の最後尾にカーソルを合わせクリックする
             if(parent.children[i].firstChild == null)
             {
                 select.setStart(parent.children[i], 0)
@@ -224,7 +203,7 @@ function li_click()
 
 }
 
-//コンテンツの初期作成
+// コンテンツの初期作成　テスト用
 function editer_content_start()
 {
     editor_content_list = document.getElementById("editor-content-list")
@@ -242,6 +221,9 @@ function editer_content_start()
 //ラベルの合成
 function label_synthesis(element_li)
 {
+    // 行のコンテンツを1つずつ見て以下の処理
+    // <a> 内容をまとめながら削除
+    // <br> 削除
     i = 0
     str = ""
     while(i < element_li.childElementCount)
@@ -260,11 +242,12 @@ function label_synthesis(element_li)
             i++
         }
     }
+    // まとめた文字列をラベルにして行の最初に配置
     let element_a = document.createElement("a")
     element_a.textContent = str
     element_a.onclick = label_edit
     element_li.prepend(element_a)
-    
+    // 行の最後に改行を追加
     let element_br = document.createElement("br")
     element_li.appendChild(element_br)
 }
@@ -276,25 +259,30 @@ $(document).keydown(function(event){
     var ctrlClick = event.ctrlKey;
     // Altキーがクリックされたか (true or false)
     var altClick = event.altKey;
-    // キーイベントが発生した対象のオブジェクト
-    var obj = event.target;
     
     // キーを制御する
     if(keyCode == 8)
     {
+        // 削除（back sapace）
         if(input_keybord != undefined && input_keybord.value == "")
         {
+            // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
             {
                 if(input_keybord.parentElement.previousElementSibling != null)
                 {
+                    //　前方にラベルがなく　前の行があるなら前の行と合成する
                     before_li = input_keybord.parentElement.previousElementSibling
+                    //　前の行の<br>を削除する
                     before_li.removeChild(before_li.children[before_li.childElementCount - 1])
+                    //　現在の行の文字数を数えておく
                     index = input_keybord.nextElementSibling.textContent.length
+                    // 空のラベルは削除
                     if(input_keybord.previousElementSibling != null)
                     {
                         input_keybord.parentElement.removeChild(input_keybord.previousElementSibling)
                     }
+                    //前の行に現在の行のラベルを追加し、現在の行を消す
                     before_li.appendChild(input_keybord.nextElementSibling);
                     input_keybord.parentElement.parentElement.removeChild(input_keybord.parentElement)
                     label_synthesis(before_li)
@@ -319,8 +307,7 @@ $(document).keydown(function(event){
             }
             else
             {
-                //前方にテキストがある
-                console.log("Back")
+                //前方にテキストがある場合　前のラベルの文字を1つ消す
                 str = input_keybord.previousElementSibling.textContent;
                 if(str.slice(0,str.length - 1) != "")
                 {
@@ -328,6 +315,7 @@ $(document).keydown(function(event){
                 }
                 else
                 {
+                    //　ラベルの文字数が0になるならラベルを削除
                     input_keybord.parentElement.removeChild(input_keybord.previousElementSibling);
                 }
             }
@@ -335,20 +323,25 @@ $(document).keydown(function(event){
     }
     else if(keyCode == 46)
     {
+        // 削除(Delete)
         if(input_keybord != undefined && input_keybord.value == "")
         {
+            // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.nextElementSibling == null || input_keybord.nextElementSibling.textContent == "")
             {
                 if(input_keybord.parentElement.nextElementSibling != null)
                 {
-                    after_li = input_keybord.parentElement.nextElementSibling
+                    // 後ろにラベルがない、または空のラベルの場合　改行を削除する
+                    // 後ろの行の取得、現在の行の<br>の削除、カーソルの位置を記憶、空のラベルは削除
+                    let after_li = input_keybord.parentElement.nextElementSibling
                     input_keybord.parentElement.removeChild(input_keybord.parentElement.children[input_keybord.parentElement.childElementCount - 1])
-                    index = input_keybord.previousElementSibling.textContent.length
+                    let index = input_keybord.previousElementSibling.textContent.length
                     if(input_keybord.nextElementSibling != null)
                     {
                         input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
                     }
-                    i = 0
+                    // 後ろの行の要素を現在の行に移していく
+                    let i = 0
                     while(after_li.childElementCount > i)
                     {
                         if(after_li.children[i].tagName == "input")
@@ -361,12 +354,13 @@ $(document).keydown(function(event){
                         }
                     }
                     after_li.parentElement.removeChild(after_li)
-                    element_li = input_keybord.parentElement
+                    // ラベルの要素を合成
+                    let element_li = input_keybord.parentElement
                     input_keybord.blur()
                     label_synthesis(element_li)
                     //新しい行で入力状態にする
-                    element_a = element_li.children[0]
-                    select = new Range();
+                    let element_a = element_li.children[0]
+                    let select = new Range();
                     if(element_a.firstChild != null)
                     {
                         select.setStart(element_a.firstChild, index)
@@ -385,9 +379,8 @@ $(document).keydown(function(event){
             }
             else
             {
-                //後方にテキストがある
-                console.log("delete")
-                str = input_keybord.nextElementSibling.textContent;
+                //後方にテキストがあるなら1文字削除
+                let str = input_keybord.nextElementSibling.textContent;
                 if(str.length >= 2)
                 {
                     input_keybord.nextElementSibling.textContent = str.slice(1,str.length);
@@ -401,27 +394,30 @@ $(document).keydown(function(event){
     }
     else if(keyCode == 13)
     {
+        // 改行(Enter)
         if(!composition && input_keybord != undefined)
         {
+            // 変換中でない　＋　入力中
             if(input_keybord.nextElementSibling != null)
             {
-                //　新しい行を作成
-                str = input_keybord.nextElementSibling.textContent
-                element_li = document.createElement("li")
+                // 後ろに要素がある
+                // 新しい行を作成
+                let str = input_keybord.nextElementSibling.textContent
+                let element_li = document.createElement("li")
                 element_li.onclick = li_click
                 element_li.classList.add("editor-row")
                 input_keybord.parentElement.after(element_li)
-                
-                element_a = document.createElement("a")
+                // 後ろの要素を次の行に引き継ぐ
+                let element_a = document.createElement("a")
                 element_a.textContent = str
                 element_a.onclick = label_edit
                 element_li.appendChild(element_a)
-
+                // 元の行の要らばい部分を削除
                 input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
                 input_keybord.blur()
 
-                //新しい行で入力状態にする
-                select = new Range();
+                // 新しい行で入力状態にする
+                let select = new Range();
                 select.setStart(element_a, 0)
                 select.setEnd(element_a, 0)
                 document.getSelection().removeAllRanges();
@@ -431,20 +427,21 @@ $(document).keydown(function(event){
             }
             else
             {
-                //後ろに要素がない場合
-                element_li = document.createElement("li")
+                // 後ろに要素がない場合
+                // 新しい行を作る
+                let element_li = document.createElement("li")
                 element_li.onclick = li_click
                 element_li.classList.add("editor-row")
                 input_keybord.parentElement.after(element_li)
                 
-                element_a = document.createElement("a")
+                let element_a = document.createElement("a")
                 element_a.onclick = label_edit
                 element_li.appendChild(element_a)
 
                 input_keybord.blur()
                 
                 //新しい行で入力状態にする
-                select = new Range();
+                let select = new Range();
                 select.setStart(element_a, 0)
                 select.setEnd(element_a, 0)
                 document.getSelection().removeAllRanges();
@@ -454,30 +451,31 @@ $(document).keydown(function(event){
             }
         }
     }
-    else if(ctrlClick && keyCode == 90)
-    {
-        console.log("ctrl + Z")
-    }
     else if(keyCode == 37)
     {
+        // ←（左キー）
         if(input_keybord != undefined && input_keybord.value == "")
         {
+            // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
             {
                 if(input_keybord.parentElement.previousElementSibling != null)
                 {
-                    destination = input_keybord.parentElement.previousElementSibling
+                    // 前に移動できる要素がなく、前の行があるならば前の行の末尾に移る
+                    let destination = input_keybord.parentElement.previousElementSibling
                     input_keybord.blur()
                     destination.click()
                 }
             }
             else
             {
-                index = input_keybord.previousElementSibling.textContent.length - 1
-                destination = input_keybord.parentElement
+                // 前に1つ進む
+                // 移動先の確認
+                let index = input_keybord.previousElementSibling.textContent.length - 1
+                let destination = input_keybord.parentElement
                 input_keybord.blur()
-
-                select = new Range();
+                // 移動
+                let select = new Range();
                 select.setStart(destination.children[0].firstChild, index)
                 select.setEnd(destination.children[0].firstChild, index)
                 document.getSelection().removeAllRanges();
@@ -488,15 +486,19 @@ $(document).keydown(function(event){
     }
     else if(keyCode == 39)
     {
+        // →（右キー）
         if(input_keybord != undefined && input_keybord.value == "")
         {
+            // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.nextElementSibling == null || input_keybord.nextElementSibling.textContent == "")
             {
+                // 後ろに移動先の要素がない場合
                 if(input_keybord.parentElement.nextElementSibling != null)
                 {
-                    destination = input_keybord.parentElement.nextElementSibling
+                    // 後ろに行が存在するなら後ろの行の先頭に移動
+                    let destination = input_keybord.parentElement.nextElementSibling
                     input_keybord.blur()
-                    select = new Range();
+                    let select = new Range();
                     select.setStart(destination.children[0], 0)
                     select.setEnd(destination.children[0], 0)
                     document.getSelection().removeAllRanges();
@@ -506,6 +508,8 @@ $(document).keydown(function(event){
             }
             else
             {
+                // 後ろに要素があるなら1つ後ろに移動
+                let index = 0
                 if(input_keybord.previousElementSibling == null)
                 {
                     index = 1
@@ -514,10 +518,10 @@ $(document).keydown(function(event){
                 {
                     index = input_keybord.previousElementSibling.textContent.length + 1
                 }
-                destination = input_keybord.parentElement
+                let destination = input_keybord.parentElement
                 input_keybord.blur()
 
-                select = new Range();
+                let select = new Range();
                 select.setStart(destination.children[0].firstChild, index)
                 select.setEnd(destination.children[0].firstChild, index)
                 document.getSelection().removeAllRanges();
@@ -528,14 +532,19 @@ $(document).keydown(function(event){
     }
     else if(keyCode == 38)
     {
+        // ↑（上キー）
         if(input_keybord != undefined && input_keybord.value == "")
         {
+            // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.parentElement.previousElementSibling != null)
             {
-                destination = input_keybord.parentElement.previousElementSibling
-                index = input_keybord.previousElementSibling.textContent.length
+                // 上に要素があるならば上に移動
+                // 移動先の設定と元の行の整理
+                let destination = input_keybord.parentElement.previousElementSibling
+                let index = input_keybord.previousElementSibling.textContent.length
                 input_keybord.blur()
-                select = new Range();
+                // 移動
+                let select = new Range();
                 if(destination.children[0].firstChild == null)
                 {
                     select.setStart(destination.children[0], 0)
@@ -543,6 +552,7 @@ $(document).keydown(function(event){
                 }
                 else
                 {
+                    // 出来る限り元と同じX軸(文字数)を残す
                     select.setStart(destination.children[0].firstChild, Math.min(index, destination.children[0].firstChild.length))
                     select.setEnd(destination.children[0].firstChild,  Math.min(index, destination.children[0].firstChild.length))
                 }
@@ -554,14 +564,19 @@ $(document).keydown(function(event){
     }
     else if(keyCode == 40)
     {
+        // ↓（下キー）
         if(input_keybord != undefined && input_keybord.value == "")
         {
+            // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.parentElement.nextElementSibling != null)
             {
-                destination = input_keybord.parentElement.nextElementSibling
-                index = input_keybord.previousElementSibling.textContent.length
+                // 下に行があるなら移動
+                // 移動先の設定と元の行の整理
+                let destination = input_keybord.parentElement.nextElementSibling
+                let index = input_keybord.previousElementSibling.textContent.length
                 input_keybord.blur()
-                select = new Range();
+                // 移動
+                let select = new Range();
                 if(destination.children[0].firstChild == null)
                 {
                     select.setStart(destination.children[0], 0)
@@ -569,6 +584,7 @@ $(document).keydown(function(event){
                 }
                 else
                 {
+                    // 出来る限り元と同じX軸(文字数)を残す
                     select.setStart(destination.children[0].firstChild, Math.min(index, destination.children[0].firstChild.length))
                     select.setEnd(destination.children[0].firstChild,  Math.min(index, destination.children[0].firstChild.length))
                 }
@@ -580,4 +596,5 @@ $(document).keydown(function(event){
     }
 });
 
+// テスト用自動で1行作る
 editer_content_start()
