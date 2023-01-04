@@ -185,6 +185,7 @@ function name_search()
             let icon = document.createElement("a")
             let element_a = document.createElement("a")
             let block_no = document.createElement("a")
+            let parent = document.createElement("a")
     
             icon.style.marginLeft = 10 * data[1] + "px"
             element_a.textContent = data[3]
@@ -206,10 +207,23 @@ function name_search()
                 const data = get_data(block_no)
                 read_data(data)
             }
+
+            if(data[1] != 0)
+            {
+                let index = i
+                while(data_array[index][1] >= data[1])
+                {
+                    index--
+                }
+                parent.textContent = "(" + data_array[index][3] + ")"
+                parent.style.color = "gray"
+                parent.style.fontSize = "14px"
+            }
     
             element_li.appendChild(icon)
             element_li.appendChild(element_a)
             element_li.appendChild(block_no)
+            element_li.appendChild(parent)
             tree.appendChild(element_li)
         }
 
