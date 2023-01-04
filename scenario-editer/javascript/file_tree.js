@@ -72,14 +72,20 @@ function get_data(block_no)
     return data_array[i]
 }
 
+function reset_tree()
+{
+    let tree = document.getElementById("tree").children[0]
+    while(tree.childElementCount > 0)
+    {
+        tree.removeChild(tree.children[0])
+    }
+}
+
 function make_tree()
 {
     //ツリーを取得　リセット
     let tree = document.getElementById("tree").children[0]
-    while(tree.childElementCount != 0)
-    {
-        tree.removeChild(tree.children[0])
-    }
+    reset_tree()
     for(let i = 0; i < data_array.length; i++)
     {
         let data = data_array[i]
@@ -157,6 +163,58 @@ function make_tree()
         element_li.appendChild(block_no)
         tree.appendChild(element_li)
     }
+}
+
+document.getElementById("search-name-input").onchange = name_search
+function name_search()
+{
+    const search_name = document.getElementById("search-name-input").value
+    let tree = document.getElementById("tree").children[0]
+    reset_tree()
+    if(search_name == "")
+    {
+        make_tree()
+        return
+    }
+    for(i = 0; i < data_array.length; i++)
+    {
+        let data = data_array[i]
+        if(data[3].indexOf(search_name) != -1)
+        {
+            let element_li = document.createElement("li")
+            let icon = document.createElement("a")
+            let element_a = document.createElement("a")
+            let block_no = document.createElement("a")
+    
+            icon.style.marginLeft = 10 * data[1] + "px"
+            element_a.textContent = data[3]
+            element_li.classList.add("can-push")
+            block_no.textContent = data[0]
+            block_no.style.display = "none"
+    
+            // アイコンは一定幅で中央ぞろえにする
+            icon.style.display  = "inline-block"
+            icon.style.width = "25px"
+            icon.style.textAlign = "center"
+    
+            icon.textContent = "・"
+            
+            // treeタイトルを押すと右のエディタに内容を表示する
+            element_a.onclick = function(event){
+                let own = event.target.parentElement
+                const block_no = Number(own.children[2].textContent)
+                const data = get_data(block_no)
+                read_data(data)
+            }
+    
+            element_li.appendChild(icon)
+            element_li.appendChild(element_a)
+            element_li.appendChild(block_no)
+            tree.appendChild(element_li)
+        }
+
+    }
+    
 }
 
 import_file()
