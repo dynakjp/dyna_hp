@@ -217,5 +217,71 @@ function name_search()
     
 }
 
+document.getElementById("search-tag-input").onchange = tag_search
+function tag_search()
+{
+    const search_tag = document.getElementById("search-tag-input").value
+    let tree = document.getElementById("tree").children[0]
+    reset_tree()
+    if(search_tag == "")
+    {
+        make_tree()
+        return
+    }
+    for(i = 0; i < data_array.length; i++)
+    {
+        let data = data_array[i]
+        if(data[4].includes(search_tag))
+        {
+            let element_li = document.createElement("li")
+            let icon = document.createElement("a")
+            let element_a = document.createElement("a")
+            let block_no = document.createElement("a")
+            let parent = document.createElement("a")
+    
+            icon.style.marginLeft = 10 * data[1] + "px"
+            element_a.textContent = data[3]
+            element_li.classList.add("can-push")
+            block_no.textContent = data[0]
+            block_no.style.display = "none"
+    
+            // アイコンは一定幅で中央ぞろえにする
+            icon.style.display  = "inline-block"
+            icon.style.width = "25px"
+            icon.style.textAlign = "center"
+    
+            icon.textContent = "・"
+            
+            // treeタイトルを押すと右のエディタに内容を表示する
+            element_a.onclick = function(event){
+                let own = event.target.parentElement
+                const block_no = Number(own.children[2].textContent)
+                const data = get_data(block_no)
+                read_data(data)
+            }
+
+            if(data[1] != 0)
+            {
+                let index = i
+                while(data_array[index][1] >= data[1])
+                {
+                    index--
+                }
+                parent.textContent = "(" + data_array[index][3] + ")"
+                parent.style.color = "gray"
+                parent.style.fontSize = "14px"
+            }
+    
+            element_li.appendChild(icon)
+            element_li.appendChild(element_a)
+            element_li.appendChild(block_no)
+            element_li.appendChild(parent)
+            tree.appendChild(element_li)
+        }
+
+    }
+    
+}
+
 import_file()
 make_tree()
