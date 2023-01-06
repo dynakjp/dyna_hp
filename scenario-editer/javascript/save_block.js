@@ -203,6 +203,24 @@ function li_click()
 
 }
 
+function reset_editor()
+{
+    let input_block_title = document.getElementById("input_block_title");
+    input_block_title.value = ""
+
+    let select_tag_list = document.getElementById("select_tag_list")
+    while(select_tag_list.childElementCount != 0)
+    {
+        select_tag_list.removeChild(select_tag_list.firstChild)
+    }
+    
+    let editor_content_list = document.getElementById("editor-content-list")
+    while(editor_content_list.childElementCount != 0)
+    {
+        editor_content_list.removeChild(editor_content_list.firstChild)
+    }
+}
+
 // コンテンツの初期作成　テスト用
 function editer_content_start()
 {
@@ -214,6 +232,40 @@ function editer_content_start()
 
     element_a = document.createElement("a")
     element_a.textContent = "test abcdefghi"
+    element_a.onclick = label_edit
+    element_li.appendChild(element_a)
+}
+
+function read_data(data)
+{
+    reset_editor()
+    let title = document.getElementById("input_block_title")
+    title.value = data[3]
+    
+    tag_list = data[4]
+    tag_list_update()
+
+    let i = 5
+    while(i < data.length)
+    {
+        if(data[i].indexOf("<text") == 0)
+        {
+            create_row_text(data[i].slice(6, data[i].length))
+        }
+        i++;
+    }
+}
+
+function create_row_text(str)
+{
+    let editor_content_list = document.getElementById("editor-content-list")
+    let element_li = document.createElement("li")
+    element_li.onclick = li_click
+    element_li.classList.add("editor-row")
+    editor_content_list.appendChild(element_li)
+
+    let element_a = document.createElement("a")
+    element_a.textContent = str
     element_a.onclick = label_edit
     element_li.appendChild(element_a)
 }

@@ -5,6 +5,12 @@ ul
     padding: 0;
 }
 
+.can-push
+{
+    /* カーソルを通常に固定 */
+    cursor: default;
+}
+
 .editor-input
 {
     /* 枠を常に表示しない */
