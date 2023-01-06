@@ -1,9 +1,13 @@
 let file = ""
 let data_array = []
+let max_blok_no = 0
 
 function import_file()
 {
     let file_array = file.split("\n")
+    const file_status = file_array[0].split(",")
+    document.getElementById("file-title").textContent = file_status[0]
+    max_blok_no = Number(file_status[1])
     let i = 1
     while(i < file_array.length)
     {
@@ -299,14 +303,14 @@ async function save_file()
         accept: {'text/plain': ['.txt']},
         }],
     };
-    let file = ""
+    let file = document.getElementById("file-title").textContent + "," + max_blok_no
     for(const data of data_array)
     {
+        file += "\n"
         file += data[0] + "," + data[1] + "," + data[2] + "," + data[3] + "\n"
         file += array_to_string(data[4], ",")
         file += "\n"
         file += array_to_string(data.slice(5), "\n")
-        file += "\n"
     }
     const handle = await window.showSaveFilePicker(opts);
     const writable = await handle.createWritable()
