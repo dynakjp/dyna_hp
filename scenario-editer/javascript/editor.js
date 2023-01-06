@@ -268,6 +268,9 @@ function create_row_text(str)
     element_a.textContent = str
     element_a.onclick = label_edit
     element_li.appendChild(element_a)
+
+    let element_br = document.createElement("br")
+    element_li.appendChild(element_br)
 }
 
 //ラベルの合成
