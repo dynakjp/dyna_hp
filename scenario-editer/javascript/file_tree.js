@@ -297,5 +297,47 @@ function tag_search()
     
 }
 
+function array_to_string(array, separator)
+{
+    let string = ""
+    string += array[0]
+    i = 1
+    while(i < array.length)
+    {
+        string += separator
+        string += array[i]
+        i++
+    }
+    return string
+}
+
+document.getElementById("button-file-save").onclick = save_file
+async function save_file()
+{
+    
+    const opts = {
+        suggestedName: 'example',
+        types: [{
+        description: 'Text file',
+        accept: {'text/plain': ['.txt']},
+        }],
+    };
+    let file = ""
+    for(const data of data_array)
+    {
+        file += data[0] + "," + data[1] + "," + data[2] + "," + data[3] + "\n"
+        file += array_to_string(data[4], ",")
+        file += "\n"
+        file += array_to_string(data.slice(5), "\n")
+        file += "\n"
+    }
+    const handle = await window.showSaveFilePicker(opts);
+    const writable = await handle.createWritable()
+    await writable.write(file)
+    await writable.close()
+    await console.log("saved")
+}
+
+
 import_file()
 make_tree()
