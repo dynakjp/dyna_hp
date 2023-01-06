@@ -3,31 +3,6 @@ let data_array = []
 
 function import_file()
 {
-    file = ""
-    file += "World Overlap,3\n"
-    file += "0,0,text,最初の部屋\n"
-    file += "stage\n"
-    file += "<text>探索者が目覚める部屋。よく探すと意外と情報がある。\n"
-    file += "1,1,text,導入\n"
-    file += "event,main\n"
-    file += "<text>瞼がゆっくりと持ち上がる。\n"
-    file += "<text>体のけだるさに対し以外にもそれは容易ににできた。\n"
-    file += "<text>知らない天上。少し硬いベッドは病院のそれを感じさせる。\n"
-    file += "4,1,text,探索\n"
-    file += "event,main\n"
-    file += "<text>瞼がゆっくりと持ち上がる。\n"
-    file += "<text>体のけだるさに対し以外にもそれは容易ににできた。\n"
-    file += "<text>知らない天上。少し硬いベッドは病院のそれを感じさせる。\n"
-    file += "2,2,text,小瓶\n"
-    file += "item\n"
-    file += "<text>棚の下を覗き込むと何か落ちている。\n"
-    file += "<text>それは手の中に納まるほどの小さな小瓶だ\n"
-    file += "<text>聞き耳　匂いを嗅ぐ　＞　甘いリンゴのような匂いがする\n"
-    file += "3,2,text,手紙\n"
-    file += "item\n"
-    file += "<text>棚の上には1枚の便箋があった。\n"
-    file += "<text>表面には金色でお客様へと書かれている\n"
-    file += "<text>中を見る　＞　中の手紙には禁断の果実は真実を映し出すと書かれている"   
     let file_array = file.split("\n")
     let i = 1
     while(i < file_array.length)
@@ -48,6 +23,7 @@ function import_file()
         }
         data_array.push(data)
     }
+    console.log("import")
 }
 
 function get_hierarchy(icon)
@@ -85,6 +61,7 @@ function make_tree()
 {
     //ツリーを取得　リセット
     let tree = document.getElementById("tree").children[0]
+    console.log(data_array)
     reset_tree()
     for(let i = 0; i < data_array.length; i++)
     {
@@ -338,6 +315,35 @@ async function save_file()
     await console.log("saved")
 }
 
+document.getElementById("button-file-open").onclick = open_file
+function open_file()
+{
+    const showOpenFileDialog = () => {
+        return new Promise(resolve => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.txt, text/plain';
+            input.onchange = event => { resolve(event.target.files[0]); };
+            input.click();
+        });
+    };
+    
+    const readAsText = file => {
+        return new Promise(resolve => {
+            const reader = new FileReader();
+            reader.readAsText(file);
+            reader.onload = () => { resolve(reader.result); };
+        });
+    };
+    
+    (async () => {
+        const file_data = await showOpenFileDialog();
+        file = await readAsText(file_data);
+        // 内容表示
+        // console.log(file);
+        import_file()
+        make_tree()
+    })();
+}
 
-import_file()
-make_tree()
+reset_tree()
