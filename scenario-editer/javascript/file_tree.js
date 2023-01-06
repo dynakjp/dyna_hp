@@ -1,13 +1,14 @@
 let file = ""
 let data_array = []
-let max_blok_no = 0
+let max_block_no = 0
+let select_block_no = -1
 
 function import_file()
 {
     let file_array = file.split("\n")
     const file_status = file_array[0].split(",")
     document.getElementById("file-title").textContent = file_status[0]
-    max_blok_no = Number(file_status[1])
+    max_block_no = Number(file_status[1])
     let i = 1
     while(i < file_array.length)
     {
@@ -135,6 +136,7 @@ function make_tree()
         element_a.onclick = function(event){
             let own = event.target.parentElement
             const block_no = Number(own.children[2].textContent)
+            select_block_no = block_no
             const data = get_data(block_no)
             read_data(data)
         }
@@ -278,6 +280,35 @@ function tag_search()
     
 }
 
+document.getElementById("button-make-text").onclick = make_text
+function make_text()
+{
+    let select_block_index = 0
+    while(data_array[select_block_index][0] != select_block_no)
+    {
+        select_block_index++
+    }
+    const select_block_layer = data_array[select_block_index][1]
+    let target_index = select_block_index + 1
+    while(target_index < data_array.length && select_block_layer < data_array[target_index][1])
+    {
+        target_index++
+    }
+    let data = []
+    data.push(++max_block_no)
+    data.push(select_block_layer + 1)
+    data.push("text")
+    data.push(document.getElementById("new-block-input").value)
+    data.push([])
+    data.push("<text> ")
+    console.log(data)
+    console.log(max_block_no)
+    console.log(select_block_index)
+    console.log(target_index)
+    data_array.splice(target_index, 0, data)
+    make_tree()
+}
+
 function array_to_string(array, separator)
 {
     let string = ""
@@ -303,7 +334,7 @@ async function save_file()
         accept: {'text/plain': ['.txt']},
         }],
     };
-    let file = document.getElementById("file-title").textContent + "," + max_blok_no
+    let file = document.getElementById("file-title").textContent + "," + max_block_no
     for(const data of data_array)
     {
         file += "\n"
