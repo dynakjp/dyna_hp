@@ -8,6 +8,7 @@ document.getElementById("input_block_title").onchange = function()
 {
     let element = document.getElementById("input_block_title");
     console.log(element.value);
+    save_data()
 }
 
 // タグの追加ボタン
@@ -42,6 +43,7 @@ function tag_list_update()
         element.textContent = tag_list[i]
         select.appendChild(element);
     }
+    save_data()
 }
 
 // ラベルクリック時の処理
@@ -125,6 +127,7 @@ function label_edit()
         input_keybord.parentElement.removeChild(input_keybord);
         // 入力していないことを記録
         input_keybord = undefined
+        save_data()
     }
 
     // 前方ラベルの文字を選択部分より前のみに
