@@ -53,6 +53,27 @@ function get_data(block_no)
     return data_array[i]
 }
 
+function save_data()
+{
+    let i
+    for(i = 0; i < data_array.length; i++)
+    {
+        if(select_block_no == data_array[i][0])
+        {
+            break
+        }
+    }
+    if(i == data_array.length)
+    {
+        console.log("dont select error!")
+        return
+    }
+
+    let data = export_data()
+    data.unshift(...data_array[i].slice(0, 3))
+    data_array[i] = data
+}
+
 function reset_tree()
 {
     let tree = document.getElementById("tree").children[0]
