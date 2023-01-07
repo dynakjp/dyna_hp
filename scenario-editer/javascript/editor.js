@@ -8,6 +8,7 @@ document.getElementById("input_block_title").onchange = function()
 {
     let element = document.getElementById("input_block_title");
     console.log(element.value);
+    save_data()
 }
 
 // タグの追加ボタン
@@ -42,6 +43,7 @@ function tag_list_update()
         element.textContent = tag_list[i]
         select.appendChild(element);
     }
+    save_data()
 }
 
 // ラベルクリック時の処理
@@ -125,6 +127,7 @@ function label_edit()
         input_keybord.parentElement.removeChild(input_keybord);
         // 入力していないことを記録
         input_keybord = undefined
+        save_data()
     }
 
     // 前方ラベルの文字を選択部分より前のみに
@@ -256,6 +259,28 @@ function read_data(data)
     }
 }
 
+function export_data()
+{
+    let data = []
+    data.push(document.getElementById("input_block_title").value)
+    data.push(tag_list)
+
+    if(input_keybord != undefined)
+    {
+        input_keybord.blur()
+    }
+    contents = document.getElementById("editor-content-list").children
+    for(let i = 0; i < contents.length; i++)
+    {
+        let row = contents[i]
+        if(row.children[0].tagName == "A")
+        {
+            data.push("<text>" + row.children[0].textContent)
+        }
+    }
+    return data
+}
+
 function create_row_text(str)
 {
     let editor_content_list = document.getElementById("editor-content-list")
@@ -268,6 +293,9 @@ function create_row_text(str)
     element_a.textContent = str
     element_a.onclick = label_edit
     element_li.appendChild(element_a)
+
+    let element_br = document.createElement("br")
+    element_li.appendChild(element_br)
 }
 
 //ラベルの合成

@@ -53,6 +53,27 @@ function get_data(block_no)
     return data_array[i]
 }
 
+function save_data()
+{
+    let i
+    for(i = 0; i < data_array.length; i++)
+    {
+        if(select_block_no == data_array[i][0])
+        {
+            break
+        }
+    }
+    if(i == data_array.length)
+    {
+        console.log("dont select error!")
+        return
+    }
+
+    let data = export_data()
+    data.unshift(...data_array[i].slice(0, 3))
+    data_array[i] = data
+}
+
 function reset_tree()
 {
     let tree = document.getElementById("tree").children[0]
@@ -134,6 +155,7 @@ function make_tree()
         
         // treeタイトルを押すと右のエディタに内容を表示する
         element_a.onclick = function(event){
+            save_data()
             let own = event.target.parentElement
             const block_no = Number(own.children[2].textContent)
             select_block_no = block_no
@@ -185,8 +207,10 @@ function name_search()
             
             // treeタイトルを押すと右のエディタに内容を表示する
             element_a.onclick = function(event){
+                save_data()
                 let own = event.target.parentElement
                 const block_no = Number(own.children[2].textContent)
+                select_block_no = block_no
                 const data = get_data(block_no)
                 read_data(data)
             }
@@ -251,8 +275,10 @@ function tag_search()
             
             // treeタイトルを押すと右のエディタに内容を表示する
             element_a.onclick = function(event){
+                save_data()
                 let own = event.target.parentElement
                 const block_no = Number(own.children[2].textContent)
+                select_block_no = block_no
                 const data = get_data(block_no)
                 read_data(data)
             }
