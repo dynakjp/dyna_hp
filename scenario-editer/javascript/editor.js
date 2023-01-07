@@ -256,6 +256,28 @@ function read_data(data)
     }
 }
 
+function export_data()
+{
+    let data = []
+    data.push(document.getElementById("input_block_title").value)
+    data.push(tag_list)
+
+    if(input_keybord != undefined)
+    {
+        input_keybord.blur()
+    }
+    contents = document.getElementById("editor-content-list").children
+    for(let i = 0; i < contents.length; i++)
+    {
+        let row = contents[i]
+        if(row.children[0].tagName == "A")
+        {
+            data.push("<text>" + row.children[0].textContent)
+        }
+    }
+    return data
+}
+
 function create_row_text(str)
 {
     let editor_content_list = document.getElementById("editor-content-list")
