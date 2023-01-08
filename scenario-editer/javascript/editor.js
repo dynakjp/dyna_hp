@@ -4,9 +4,9 @@ let input_keybord
 let composition
 
 // ブロックタイトルの入力がされた
-document.getElementById("input_block_title").onchange = function()
+document.getElementById("input-block-title").onchange = function()
 {
-    let element = document.getElementById("input_block_title");
+    let element = document.getElementById("input-block-title");
     console.log(element.value);
     save_data()
 }
@@ -14,16 +14,16 @@ document.getElementById("input_block_title").onchange = function()
 // タグの追加ボタン
 document.getElementById("button-add-tag").onclick = function()
 {
-    let element = document.getElementById("input_add_tag");
+    let element = document.getElementById("input-add-tag");
     tag_list.push(element.value);
     element.value = ""
     tag_list_update();
 }
 
 // タグの削除ボタン
-document.getElementById("button-select-tag").onclick = function()
+document.getElementById("button-delete-tag").onclick = function()
 {
-    let element = document.getElementById("select_tag_list");
+    let element = document.getElementById("select-tag-list");
     tag_list.splice(element.value, 1);
     tag_list_update();
 }
@@ -31,7 +31,7 @@ document.getElementById("button-select-tag").onclick = function()
 // タグリストの更新
 function tag_list_update()
 {
-    let select = document.getElementById("select_tag_list");
+    let select = document.getElementById("select-tag-list");
     while(select.childElementCount != 0)
     {
         select.removeChild(select.firstChild)
@@ -208,10 +208,10 @@ function li_click()
 
 function reset_editor()
 {
-    let input_block_title = document.getElementById("input_block_title");
+    let input_block_title = document.getElementById("input-block-title");
     input_block_title.value = ""
 
-    let select_tag_list = document.getElementById("select_tag_list")
+    let select_tag_list = document.getElementById("select-tag-list")
     while(select_tag_list.childElementCount != 0)
     {
         select_tag_list.removeChild(select_tag_list.firstChild)
@@ -242,7 +242,7 @@ function editer_content_start()
 function read_data(data)
 {
     reset_editor()
-    let title = document.getElementById("input_block_title")
+    let title = document.getElementById("input-block-title")
     title.value = data[3]
     
     tag_list = data[4]
@@ -262,7 +262,7 @@ function read_data(data)
 function export_data()
 {
     let data = []
-    data.push(document.getElementById("input_block_title").value)
+    data.push(document.getElementById("input-block-title").value)
     data.push(tag_list)
 
     if(input_keybord != undefined)

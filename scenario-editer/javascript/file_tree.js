@@ -170,10 +170,10 @@ function make_tree()
     }
 }
 
-document.getElementById("search-name-input").onchange = name_search
+document.getElementById("input-search-name").onchange = name_search
 function name_search()
 {
-    const search_name = document.getElementById("search-name-input").value
+    const search_name = document.getElementById("input-search-name").value
     let tree = document.getElementById("tree").children[0]
     reset_tree()
     if(search_name == "")
@@ -238,10 +238,10 @@ function name_search()
     
 }
 
-document.getElementById("search-tag-input").onchange = tag_search
+document.getElementById("input-search-tag").onchange = tag_search
 function tag_search()
 {
-    const search_tag = document.getElementById("search-tag-input").value
+    const search_tag = document.getElementById("input-search-tag").value
     let tree = document.getElementById("tree").children[0]
     reset_tree()
     if(search_tag == "")
@@ -349,7 +349,7 @@ function array_to_string(array, separator)
     return string
 }
 
-document.getElementById("button-file-save").onclick = save_file
+document.getElementById("button-save-file").onclick = save_file
 async function save_file()
 {
     
@@ -376,7 +376,7 @@ async function save_file()
     await console.log("saved")
 }
 
-document.getElementById("button-file-open").onclick = open_file
+document.getElementById("button-open-file").onclick = open_file
 function open_file()
 {
     const showOpenFileDialog = () => {
