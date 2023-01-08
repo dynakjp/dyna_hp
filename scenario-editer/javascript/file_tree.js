@@ -160,7 +160,7 @@ function make_tree()
             const block_no = Number(own.children[2].textContent)
             select_block_no = block_no
             const data = get_data(block_no)
-            read_data(data)
+            import_data(data)
         }
 
         element_li.appendChild(icon)
@@ -212,7 +212,7 @@ function search_name()
                 const block_no = Number(own.children[2].textContent)
                 select_block_no = block_no
                 const data = get_data(block_no)
-                read_data(data)
+                import_data(data)
             }
 
             if(data[1] != 0)
@@ -280,7 +280,7 @@ function search_tag()
                 const block_no = Number(own.children[2].textContent)
                 select_block_no = block_no
                 const data = get_data(block_no)
-                read_data(data)
+                import_data(data)
             }
 
             if(data[1] != 0)

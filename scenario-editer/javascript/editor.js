@@ -224,7 +224,7 @@ function reset_editor()
     }
 }
 
-function read_data(data)
+function import_data(data)
 {
     reset_editor()
     let title = document.getElementById("input-block-title")
