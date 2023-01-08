@@ -170,8 +170,8 @@ function make_tree()
     }
 }
 
-document.getElementById("input-search-name").onchange = name_search
-function name_search()
+document.getElementById("input-search-name").onchange = search_name
+function search_name()
 {
     const search_name = document.getElementById("input-search-name").value
     let tree = document.getElementById("tree").children[0]
@@ -238,8 +238,8 @@ function name_search()
     
 }
 
-document.getElementById("input-search-tag").onchange = tag_search
-function tag_search()
+document.getElementById("input-search-tag").onchange = search_tag
+function search_tag()
 {
     const search_tag = document.getElementById("input-search-tag").value
     let tree = document.getElementById("tree").children[0]
