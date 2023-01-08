@@ -224,21 +224,6 @@ function reset_editor()
     }
 }
 
-// コンテンツの初期作成　テスト用
-function editer_content_start()
-{
-    editor_content_list = document.getElementById("editor-content-list")
-    element_li = document.createElement("li")
-    element_li.onclick = click_row_text
-    element_li.classList.add("editor-row")
-    editor_content_list.appendChild(element_li)
-
-    element_a = document.createElement("a")
-    element_a.textContent = "test abcdefghi"
-    element_a.onclick = edit_text
-    element_li.appendChild(element_a)
-}
-
 function read_data(data)
 {
     reset_editor()
@@ -675,6 +660,3 @@ $(document).keydown(function(event){
         }
     }
 });
-
-// テスト用自動で1行作る
-editer_content_start()
