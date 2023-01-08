@@ -17,7 +17,7 @@ document.getElementById("button-add-tag").onclick = function()
     let element = document.getElementById("input-add-tag");
     tag_list.push(element.value);
     element.value = ""
-    tag_list_update();
+    update_tag_list();
 }
 
 // タグの削除ボタン
@@ -25,11 +25,11 @@ document.getElementById("button-delete-tag").onclick = function()
 {
     let element = document.getElementById("select-tag-list");
     tag_list.splice(element.value, 1);
-    tag_list_update();
+    update_tag_list();
 }
 
 // タグリストの更新
-function tag_list_update()
+function update_tag_list()
 {
     let select = document.getElementById("select-tag-list");
     while(select.childElementCount != 0)
@@ -246,7 +246,7 @@ function read_data(data)
     title.value = data[3]
     
     tag_list = data[4]
-    tag_list_update()
+    update_tag_list()
 
     let i = 5
     while(i < data.length)
