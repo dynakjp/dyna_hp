@@ -47,7 +47,7 @@ function tag_list_update()
 }
 
 // ラベルクリック時の処理
-function label_edit()
+function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
@@ -68,7 +68,7 @@ function label_edit()
             {
                 // ラベルがないなら作成する
                 let element = document.createElement("a")
-                element.onclick = label_edit
+                element.onclick = edit_text
                 event.target.before(element)
             }
 
@@ -123,7 +123,7 @@ function label_edit()
     // カーソルが外れた時　ラベルの合成とinputの削除
     input_keybord.onblur = function()
     {
-        label_synthesis(input_keybord.parentElement)
+        text_synthesis(input_keybord.parentElement)
         input_keybord.parentElement.removeChild(input_keybord);
         // 入力していないことを記録
         input_keybord = undefined
@@ -137,7 +137,7 @@ function label_edit()
     // 後方ラベルを作成し選択部分以降を表示
     let text_after = document.createElement("a")
     text_after.textContent = str.slice(points[1], str.length)
-    text_after.onclick = label_edit
+    text_after.onclick = edit_text
     input_keybord.after(text_after) 
     // input内に選択した文字を入れ、フォーカスとinput内全選択
     input_keybord.value = str.slice(...points);
@@ -174,7 +174,7 @@ function label_edit()
 }
 
 // 行のラベルのない部分をクリックした時
-function li_click()
+function click_row_text()
 {
     // その行の一番最後のラベルの一番後ろにカーソルを合わせる
     let parent = event.target
@@ -229,13 +229,13 @@ function editer_content_start()
 {
     editor_content_list = document.getElementById("editor-content-list")
     element_li = document.createElement("li")
-    element_li.onclick = li_click
+    element_li.onclick = click_row_text
     element_li.classList.add("editor-row")
     editor_content_list.appendChild(element_li)
 
     element_a = document.createElement("a")
     element_a.textContent = "test abcdefghi"
-    element_a.onclick = label_edit
+    element_a.onclick = edit_text
     element_li.appendChild(element_a)
 }
 
@@ -285,13 +285,13 @@ function create_row_text(str)
 {
     let editor_content_list = document.getElementById("editor-content-list")
     let element_li = document.createElement("li")
-    element_li.onclick = li_click
+    element_li.onclick = click_row_text
     element_li.classList.add("editor-row")
     editor_content_list.appendChild(element_li)
 
     let element_a = document.createElement("a")
     element_a.textContent = str
-    element_a.onclick = label_edit
+    element_a.onclick = edit_text
     element_li.appendChild(element_a)
 
     let element_br = document.createElement("br")
@@ -299,7 +299,7 @@ function create_row_text(str)
 }
 
 //ラベルの合成
-function label_synthesis(element_li)
+function text_synthesis(element_li)
 {
     // 行のコンテンツを1つずつ見て以下の処理
     // <a> 内容をまとめながら削除
@@ -325,7 +325,7 @@ function label_synthesis(element_li)
     // まとめた文字列をラベルにして行の最初に配置
     let element_a = document.createElement("a")
     element_a.textContent = str
-    element_a.onclick = label_edit
+    element_a.onclick = edit_text
     element_li.prepend(element_a)
     // 行の最後に改行を追加
     let element_br = document.createElement("br")
@@ -365,7 +365,7 @@ $(document).keydown(function(event){
                     //前の行に現在の行のラベルを追加し、現在の行を消す
                     before_li.appendChild(input_keybord.nextElementSibling);
                     input_keybord.parentElement.parentElement.removeChild(input_keybord.parentElement)
-                    label_synthesis(before_li)
+                    text_synthesis(before_li)
                     //新しい行で入力状態にする
                     element_a = before_li.children[0]
                     select = new Range();
@@ -437,7 +437,7 @@ $(document).keydown(function(event){
                     // ラベルの要素を合成
                     let element_li = input_keybord.parentElement
                     input_keybord.blur()
-                    label_synthesis(element_li)
+                    text_synthesis(element_li)
                     //新しい行で入力状態にする
                     let element_a = element_li.children[0]
                     let select = new Range();
@@ -484,13 +484,13 @@ $(document).keydown(function(event){
                 // 新しい行を作成
                 let str = input_keybord.nextElementSibling.textContent
                 let element_li = document.createElement("li")
-                element_li.onclick = li_click
+                element_li.onclick = click_row_text
                 element_li.classList.add("editor-row")
                 input_keybord.parentElement.after(element_li)
                 // 後ろの要素を次の行に引き継ぐ
                 let element_a = document.createElement("a")
                 element_a.textContent = str
-                element_a.onclick = label_edit
+                element_a.onclick = edit_text
                 element_li.appendChild(element_a)
                 // 元の行の要らばい部分を削除
                 input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
@@ -510,12 +510,12 @@ $(document).keydown(function(event){
                 // 後ろに要素がない場合
                 // 新しい行を作る
                 let element_li = document.createElement("li")
-                element_li.onclick = li_click
+                element_li.onclick = click_row_text
                 element_li.classList.add("editor-row")
                 input_keybord.parentElement.after(element_li)
                 
                 let element_a = document.createElement("a")
-                element_a.onclick = label_edit
+                element_a.onclick = edit_text
                 element_li.appendChild(element_a)
 
                 input_keybord.blur()
