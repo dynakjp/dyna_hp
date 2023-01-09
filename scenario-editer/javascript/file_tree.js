@@ -87,7 +87,6 @@ function make_tree()
 {
     //ツリーを取得　リセット
     let tree = document.getElementById("tree").children[0]
-    console.log(data_array)
     reset_tree()
     for(let i = 0; i < data_array.length; i++)
     {
@@ -160,7 +159,7 @@ function make_tree()
             const block_no = Number(own.children[2].textContent)
             select_block_no = block_no
             const data = get_data(block_no)
-            read_data(data)
+            import_data(data)
         }
 
         element_li.appendChild(icon)
@@ -170,10 +169,10 @@ function make_tree()
     }
 }
 
-document.getElementById("search-name-input").onchange = name_search
-function name_search()
+document.getElementById("input-search-name").onchange = search_name
+function search_name()
 {
-    const search_name = document.getElementById("search-name-input").value
+    const search_name = document.getElementById("input-search-name").value
     let tree = document.getElementById("tree").children[0]
     reset_tree()
     if(search_name == "")
@@ -212,7 +211,7 @@ function name_search()
                 const block_no = Number(own.children[2].textContent)
                 select_block_no = block_no
                 const data = get_data(block_no)
-                read_data(data)
+                import_data(data)
             }
 
             if(data[1] != 0)
@@ -238,10 +237,10 @@ function name_search()
     
 }
 
-document.getElementById("search-tag-input").onchange = tag_search
-function tag_search()
+document.getElementById("input-search-tag").onchange = search_tag
+function search_tag()
 {
-    const search_tag = document.getElementById("search-tag-input").value
+    const search_tag = document.getElementById("input-search-tag").value
     let tree = document.getElementById("tree").children[0]
     reset_tree()
     if(search_tag == "")
@@ -280,7 +279,7 @@ function tag_search()
                 const block_no = Number(own.children[2].textContent)
                 select_block_no = block_no
                 const data = get_data(block_no)
-                read_data(data)
+                import_data(data)
             }
 
             if(data[1] != 0)
@@ -327,10 +326,6 @@ function make_text()
     data.push(document.getElementById("new-block-input").value)
     data.push([])
     data.push("<text> ")
-    console.log(data)
-    console.log(max_block_no)
-    console.log(select_block_index)
-    console.log(target_index)
     data_array.splice(target_index, 0, data)
     make_tree()
 }
@@ -349,7 +344,7 @@ function array_to_string(array, separator)
     return string
 }
 
-document.getElementById("button-file-save").onclick = save_file
+document.getElementById("button-save-file").onclick = save_file
 async function save_file()
 {
     
@@ -376,7 +371,7 @@ async function save_file()
     await console.log("saved")
 }
 
-document.getElementById("button-file-open").onclick = open_file
+document.getElementById("button-open-file").onclick = open_file
 function open_file()
 {
     const showOpenFileDialog = () => {
