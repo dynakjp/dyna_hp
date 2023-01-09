@@ -87,7 +87,6 @@ function make_tree()
 {
     //ツリーを取得　リセット
     let tree = document.getElementById("tree").children[0]
-    console.log(data_array)
     reset_tree()
     for(let i = 0; i < data_array.length; i++)
     {
@@ -327,10 +326,6 @@ function make_text()
     data.push(document.getElementById("new-block-input").value)
     data.push([])
     data.push("<text> ")
-    console.log(data)
-    console.log(max_block_no)
-    console.log(select_block_index)
-    console.log(target_index)
     data_array.splice(target_index, 0, data)
     make_tree()
 }
