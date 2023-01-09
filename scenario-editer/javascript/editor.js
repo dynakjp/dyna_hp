@@ -123,7 +123,7 @@ function edit_text()
     // カーソルが外れた時　ラベルの合成とinputの削除
     input_keybord.onblur = function()
     {
-        text_synthesis(input_keybord.parentElement)
+        synthesis_text(input_keybord.parentElement)
         input_keybord.parentElement.removeChild(input_keybord);
         // 入力していないことを記録
         input_keybord = undefined
@@ -238,7 +238,7 @@ function import_data(data)
     {
         if(data[i].indexOf("<text") == 0)
         {
-            create_row_text(data[i].slice(6, data[i].length))
+            make_row_text(data[i].slice(6, data[i].length))
         }
         i++;
     }
@@ -266,7 +266,7 @@ function export_data()
     return data
 }
 
-function create_row_text(str)
+function make_row_text(str)
 {
     let editor_content_list = document.getElementById("editor-content-list")
     let element_li = document.createElement("li")
@@ -284,7 +284,7 @@ function create_row_text(str)
 }
 
 //ラベルの合成
-function text_synthesis(element_li)
+function synthesis_text(element_li)
 {
     // 行のコンテンツを1つずつ見て以下の処理
     // <a> 内容をまとめながら削除
@@ -350,7 +350,7 @@ $(document).keydown(function(event){
                     //前の行に現在の行のラベルを追加し、現在の行を消す
                     before_li.appendChild(input_keybord.nextElementSibling);
                     input_keybord.parentElement.parentElement.removeChild(input_keybord.parentElement)
-                    text_synthesis(before_li)
+                    synthesis_text(before_li)
                     //新しい行で入力状態にする
                     element_a = before_li.children[0]
                     select = new Range();
@@ -422,7 +422,7 @@ $(document).keydown(function(event){
                     // ラベルの要素を合成
                     let element_li = input_keybord.parentElement
                     input_keybord.blur()
-                    text_synthesis(element_li)
+                    synthesis_text(element_li)
                     //新しい行で入力状態にする
                     let element_a = element_li.children[0]
                     let select = new Range();
