@@ -283,7 +283,7 @@ function move_tree(element)
             }
         }
         let origin = get_data_index(Number(event.dataTransfer.getData('text')))
-        if(index >= origin)
+        if(index > origin)
         {
             index --
         }
