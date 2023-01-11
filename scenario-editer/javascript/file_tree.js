@@ -246,11 +246,16 @@ function move_tree(element)
 
     element.ondrop = function (event) {
         event.preventDefault();
+        this.style.border = "";
 		let rect = this.getBoundingClientRect();
         let li = event.target
         while(li.tagName != "LI")
         {
             li = li.parentElement
+        }
+        if(li.children[2].textContent == event.dataTransfer.getData('text'))
+        {
+            return
         }
         let index = get_data_index(Number(li.children[2].textContent))
         let hierarchy = get_hierarchy(li.children[0])
@@ -294,9 +299,6 @@ function move_tree(element)
         data_array.splice(index, 0, ...move_data)
         optimize_data_hierarchy()
         make_tree()
-        this.style.border = "";
-        this.style.borderTop = '';
-        this.style.borderBottom = '';
     };
 }
 
