@@ -292,11 +292,29 @@ function move_tree(element)
         const move_data = data_array.slice(origin, origin + length)
         data_array.splice(origin, length)
         data_array.splice(index, 0, ...move_data)
+        optimize_data_hierarchy()
         make_tree()
         this.style.border = "";
         this.style.borderTop = '';
         this.style.borderBottom = '';
     };
+}
+
+function optimize_data_hierarchy()
+{
+    let last = -1
+    for(let i = 0; i < data_array.length; i++)
+    {
+        if(data_array[i][1] - last > 1)
+        {
+            const difference = data_array[i][1] - last - 1
+            for(let l = i; l < data_array.length && data_array[l][1] - last > 1; l++)
+            {
+                data_array[l][1] -= difference
+            }
+        }
+        last = data_array[i][1]
+    }
 }
 
 document.getElementById("search-name-input").onchange = name_search
