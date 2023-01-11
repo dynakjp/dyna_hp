@@ -315,14 +315,27 @@ function synthesis_text(element_li)
     // 行のコンテンツを1つずつ見て以下の処理
     // <a> 内容をまとめながら削除
     // <br> 削除
-    i = 0
-    str = ""
+    let i = 0
+    let str = ""
+    let last = -1
     while(i < element_li.childElementCount)
     {
         if(element_li.children[i].tagName == "A")
         {
-            str += element_li.children[i].textContent
-            element_li.removeChild(element_li.children[i])
+            console.log(last, i)
+            if(element_li.children[i].textContent == "")
+            {
+                element_li.removeChild(element_li.children[i])
+            }
+            else if(last != -1 && element_li.children[last].style.fontSize == element_li.children[i].style.fontSize && element_li.children[last].style.fontWeight == element_li.children[i].style.fontWeight && element_li.children[last].style.color == element_li.children[i].style.color)
+            {
+                element_li.children[last].textContent += element_li.children[i].textContent
+                element_li.removeChild(element_li.children[i])
+            }
+            else
+            {
+                last = i ++
+            }
         }
         else if(element_li.children[i].tagName == "BR")
         {
