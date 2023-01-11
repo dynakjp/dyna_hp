@@ -53,6 +53,23 @@ function get_data(block_no)
     return data_array[i]
 }
 
+function get_data_index(block_no)
+{
+    let i
+    for(i = 0; i < data_array.length; i++)
+    {
+        if(block_no == data_array[i][0])
+        {
+            break
+        }
+    }
+    if(i == data_array.length)
+    {
+        return undefined
+    }
+    return i
+}
+
 function save_data()
 {
     let i
@@ -162,10 +179,146 @@ function make_tree()
             import_data(data)
         }
 
+        element_li.draggable = "true"
+        move_tree(element_li)
+
         element_li.appendChild(icon)
         element_li.appendChild(element_a)
         element_li.appendChild(block_no)
         tree.appendChild(element_li)
+    }
+}
+
+function move_tree(element)
+{
+    element.style.boxSizing = "border-box"
+
+    element.ondragstart = function (event) {
+        console.log("tree drag start")
+        event.dataTransfer.setData('text/plain', event.target.children[2].textContent);
+    };
+    
+    element.ondragover = function (event) {
+        event.preventDefault();
+		let rect = this.getBoundingClientRect();
+        let li = event.target
+        while(li.tagName != "LI")
+        {
+            li = li.parentElement
+        }
+        let ul = document.getElementById("tree").children[0]
+        for(let i = 0; i < ul.childElementCount; i++)
+        {
+            ul.children[i].style.border = '';
+        }
+        let index = 0
+        if ((event.clientY - rect.top) < (this.clientHeight / 3)) 
+        {
+            this.style.borderTop = '2px solid blue';
+        } 
+        else if ((event.clientY - rect.top) < (this.clientHeight * 2 / 3)) 
+        {
+            this.style.border = '2px solid blue';
+        } 
+        else 
+        {
+            let li = event.target
+            while(li.tagName != "LI")
+            {
+                li = li.parentElement
+            }
+            index = 0
+            while(index < ul.childElementCount - 1 && li != ul.children[index])
+            {
+                index ++
+            }
+            while(index < ul.childElementCount - 1 && get_hierarchy(li.children[0]) < get_hierarchy(ul.children[index + 1].children[0]))
+            {
+                index ++
+            }
+            ul.children[index].style.borderBottom = '2px solid blue';
+        }
+    };
+
+    element.ondragleave = function (event) {
+        let ul = document.getElementById("tree").children[0]
+        for(let i = 0; i < ul.childElementCount; i++)
+        {
+            ul.children[i].style.border = '';
+        }
+    };
+
+    element.ondrop = function (event) {
+        event.preventDefault();
+		let rect = this.getBoundingClientRect();
+        let li = event.target
+        while(li.tagName != "LI")
+        {
+            li = li.parentElement
+        }
+        if(li.children[2].textContent == event.dataTransfer.getData('text'))
+        {
+            return
+        }
+        let index = get_data_index(Number(li.children[2].textContent))
+        let hierarchy = get_hierarchy(li.children[0])
+        if ((event.clientY - rect.top) < (this.clientHeight / 3)) 
+        {
+            // 同じ階層で1つ前
+        } 
+        else if ((event.clientY - rect.top) < (this.clientHeight * 2 / 3)) 
+        {
+            // 新規作成の処理同様 一つ下の階層の最後尾
+            index ++
+            while(index < data_array.length && get_hierarchy(li.children[0]) < data_array[index][1])
+            {
+                index ++
+            }
+            hierarchy ++
+        } 
+        else 
+        {
+            // 同じ階層で子要素を飛ばした1つ後ろ
+            index ++
+            while(index < data_array.length && get_hierarchy(li.children[0]) < data_array[index][1])
+            {
+                index ++
+            }
+        }
+        let origin = get_data_index(Number(event.dataTransfer.getData('text')))
+        if(index > origin)
+        {
+            index --
+        }
+        let length = 1
+        while(data_array.length > origin + length && data_array[origin][1] < data_array[origin + length][1])
+        {
+            data_array[origin + length][1] = data_array[origin + length][1] - data_array[origin][1] + hierarchy
+            length ++
+        }
+        data_array[origin][1] = hierarchy
+        const move_data = data_array.slice(origin, origin + length)
+        data_array.splice(origin, length)
+        data_array.splice(index, 0, ...move_data)
+        optimize_data_hierarchy()
+        make_tree()
+    };
+}
+
+function optimize_data_hierarchy()
+{
+    let last = -1
+    for(let i = 0; i < data_array.length; i++)
+    {
+        if(data_array[i][1] - last > 1)
+        {
+            const difference = data_array[i][1] - last - 1
+            for(let l = i; l < data_array.length && data_array[l][1] - last > 1; l++)
+            {
+                data_array[l][1] -= difference
+            }
+        }
+        last = data_array[i][1]
     }
 }
 
