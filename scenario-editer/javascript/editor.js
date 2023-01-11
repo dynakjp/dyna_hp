@@ -46,6 +46,13 @@ function update_tag_list()
     save_data()
 }
 
+function copy_text_style(one, two)
+{
+    one.style.fontSize = two.style.fontSize
+    one.style.fontWeight = two.style.fontWeight
+    one.style.color = two.style.color
+}
+
 // ラベルクリック時の処理
 function edit_text()
 {
@@ -137,6 +144,7 @@ function edit_text()
     // 後方ラベルを作成し選択部分以降を表示
     let text_after = document.createElement("a")
     text_after.textContent = str.slice(points[1], str.length)
+    copy_text_style(text_after, event.target)
     text_after.onclick = edit_text
     input_keybord.after(text_after) 
     // input内に選択した文字を入れ、フォーカスとinput内全選択
@@ -236,9 +244,16 @@ function import_data(data)
     let i = 5
     while(i < data.length)
     {
-        if(data[i].indexOf("<text") == 0)
+        if(data[i][0] != "<")
         {
-            make_row_text(data[i].slice(6, data[i].length))
+            i++
+            continue
+        }
+        const status = data[i].slice(1, data[i].indexOf(">")).split(",")
+        const content = data[i].slice(data[i].indexOf(">"))
+        if(status[0] == "text")
+        {
+            make_row_text(content, status.slice(1))
         }
         i++;
     }
@@ -266,7 +281,7 @@ function export_data()
     return data
 }
 
-function make_row_text(str)
+function make_row_text(str, styles)
 {
     let editor_content_list = document.getElementById("editor-content-list")
     let element_li = document.createElement("li")
@@ -277,6 +292,17 @@ function make_row_text(str)
     let element_a = document.createElement("a")
     element_a.textContent = str
     element_a.onclick = edit_text
+    for(const style of styles)
+    {
+        if(style.indexOf("size=") == 0)
+        {
+            element_a.style.fontSize = style.slice(style.indexOf("=") + 1)
+        }
+        else if(style == "bold")
+        {
+            element_a.style.fontWeight = "bold"
+        }
+    }
     element_li.appendChild(element_a)
 
     let element_br = document.createElement("br")
