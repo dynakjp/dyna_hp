@@ -191,6 +191,8 @@ function make_tree()
 
 function move_tree(element)
 {
+    element.style.boxSizing = "border-box"
+
     element.ondragstart = function (event) {
         console.log("tree drag start")
         event.dataTransfer.setData('text/plain', event.target.children[2].textContent);
@@ -205,11 +207,11 @@ function move_tree(element)
             li = li.parentElement
         }
         let ul = document.getElementById("tree").children[0]
-        let index = 0
         for(let i = 0; i < ul.childElementCount; i++)
         {
             ul.children[i].style.border = '';
         }
+        let index = 0
         if ((event.clientY - rect.top) < (this.clientHeight / 3)) 
         {
             this.style.borderTop = '2px solid blue';
@@ -239,14 +241,15 @@ function move_tree(element)
     };
 
     element.ondragleave = function (event) {
-        this.style.border = "";
-        this.style.borderTop = '';
-        this.style.borderBottom = '';
+        let ul = document.getElementById("tree").children[0]
+        for(let i = 0; i < ul.childElementCount; i++)
+        {
+            ul.children[i].style.border = '';
+        }
     };
 
     element.ondrop = function (event) {
         event.preventDefault();
-        this.style.border = "";
 		let rect = this.getBoundingClientRect();
         let li = event.target
         while(li.tagName != "LI")
