@@ -250,7 +250,7 @@ function import_data(data)
             continue
         }
         const status = data[i].slice(1, data[i].indexOf(">")).split(",")
-        const content = data[i].slice(data[i].indexOf(">"))
+        const content = data[i].slice(data[i].indexOf(">") + 1)
         if(status[0] == "text")
         {
             make_row_text(content, status.slice(1))
