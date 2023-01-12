@@ -2,7 +2,6 @@ let tag_list = []
 let selected
 let input_keybord
 let composition
-let block_type
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -237,7 +236,6 @@ function import_data(data)
 {
     reset_editor()
     let title = document.getElementById("input-block-title")
-    block_type = data[2]
     title.value = data[3]
     
     tag_list = data[4]
