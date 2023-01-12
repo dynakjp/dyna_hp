@@ -2,6 +2,7 @@ let tag_list = []
 let selected
 let input_keybord
 let composition
+let block_type
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -236,6 +237,7 @@ function import_data(data)
 {
     reset_editor()
     let title = document.getElementById("input-block-title")
+    block_type = data[2]
     title.value = data[3]
     
     tag_list = data[4]
@@ -275,7 +277,15 @@ function export_data()
         let row = contents[i]
         if(row.children[0].tagName == "A")
         {
-            data.push("<text>" + row.children[0].textContent)
+            let head = "<text"
+            head += ",size="
+            head += row.children[0].style.fontSize
+            if(row.children[0].style.fontWeight == "bold")
+            {
+                head += ",bold"
+            }
+            head += ">"
+            data.push(head + row.children[0].textContent)
         }
     }
     return data
