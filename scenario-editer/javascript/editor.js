@@ -46,6 +46,15 @@ function update_tag_list()
     save_data()
 }
 
+document.getElementById("input-font-size").onchange = function()
+{
+    console.log(document.getElementById("input-font-size").value + "px")
+    if(input_keybord != undefined)
+    {
+        input_keybord.style.fontSize = document.getElementById("input-font-size").value + "px"
+    }
+}
+
 function copy_text_style(one, two)
 {
     one.style.fontSize = two.style.fontSize
