@@ -46,6 +46,22 @@ function update_tag_list()
     save_data()
 }
 
+document.getElementById("input-font-size").onchange = function()
+{
+    console.log(document.getElementById("input-font-size").value + "px")
+    if(input_keybord != undefined)
+    {
+        input_keybord.style.fontSize = document.getElementById("input-font-size").value + "px"
+    }
+}
+
+function copy_text_style(one, two)
+{
+    one.style.fontSize = two.style.fontSize
+    one.style.fontWeight = two.style.fontWeight
+    one.style.color = two.style.color
+}
+
 // ラベルクリック時の処理
 function edit_text()
 {
@@ -57,6 +73,7 @@ function edit_text()
     input_keybord.type = "text"
     input_keybord.classList.add("editor-input")
     event.target.after(input_keybord)
+    copy_text_style(input_keybord, event.target)
 
     // 文字が変わった時
     input_keybord.oninput = function(event)
@@ -86,6 +103,7 @@ function edit_text()
             span.style.position = 'absolute';
             span.style.top = '-1000px';
             span.style.left = '-1000px';
+            copy_text_style(span ,event.target)
 
             span.style.whiteSpace = 'nowrap';
             span.innerHTML = event.target.value;
@@ -137,6 +155,7 @@ function edit_text()
     // 後方ラベルを作成し選択部分以降を表示
     let text_after = document.createElement("a")
     text_after.textContent = str.slice(points[1], str.length)
+    copy_text_style(text_after, event.target)
     text_after.onclick = edit_text
     input_keybord.after(text_after) 
     // input内に選択した文字を入れ、フォーカスとinput内全選択
@@ -236,9 +255,16 @@ function import_data(data)
     let i = 5
     while(i < data.length)
     {
-        if(data[i].indexOf("<text") == 0)
+        if(data[i][0] != "<")
         {
-            make_row_text(data[i].slice(6, data[i].length))
+            i++
+            continue
+        }
+        const status = data[i].slice(1, data[i].indexOf(">")).split(",")
+        const content = data[i].slice(data[i].indexOf(">") + 1)
+        if(status[0] == "text")
+        {
+            make_row_text(content, status.slice(1))
         }
         i++;
     }
@@ -257,16 +283,31 @@ function export_data()
     contents = document.getElementById("editor-content-list").children
     for(let i = 0; i < contents.length; i++)
     {
+        synthesis_text(contents[i])
         let row = contents[i]
-        if(row.children[0].tagName == "A")
+        for(element of row.children)
         {
-            data.push("<text>" + row.children[0].textContent)
+            if(element.tagName == "A")
+            {
+                let head = "<text"
+                if(element.style.fontSize != "")
+                {
+                    head += ",size="
+                    head += element.style.fontSize
+                }
+                if(element.style.fontWeight == "bold")
+                {
+                    head += ",bold"
+                }
+                head += ">"
+                data.push(head + element.textContent)
+            }
         }
     }
     return data
 }
 
-function make_row_text(str)
+function make_row_text(str, styles)
 {
     let editor_content_list = document.getElementById("editor-content-list")
     let element_li = document.createElement("li")
@@ -277,6 +318,17 @@ function make_row_text(str)
     let element_a = document.createElement("a")
     element_a.textContent = str
     element_a.onclick = edit_text
+    for(const style of styles)
+    {
+        if(style.indexOf("size=") == 0)
+        {
+            element_a.style.fontSize = style.slice(style.indexOf("=") + 1)
+        }
+        else if(style == "bold")
+        {
+            element_a.style.fontWeight = "bold"
+        }
+    }
     element_li.appendChild(element_a)
 
     let element_br = document.createElement("br")
@@ -289,14 +341,42 @@ function synthesis_text(element_li)
     // 行のコンテンツを1つずつ見て以下の処理
     // <a> 内容をまとめながら削除
     // <br> 削除
-    i = 0
-    str = ""
+    let i = 0
+    let str = ""
+    let last = -1
     while(i < element_li.childElementCount)
     {
         if(element_li.children[i].tagName == "A")
         {
-            str += element_li.children[i].textContent
-            element_li.removeChild(element_li.children[i])
+            if(element_li.children[i].textContent == "")
+            {
+                let count_a = 0
+                for(const element of element_li.children)
+                {
+                    if(element.tagName == "A")
+                    {
+                        count_a += 1
+                    }
+                }
+                console.log(count_a)
+                if(1 < count_a)
+                {
+                    element_li.removeChild(element_li.children[i])
+                }
+                else
+                {
+                    i ++
+                }
+            }
+            else if(last != -1 && element_li.children[last].style.fontSize == element_li.children[i].style.fontSize && element_li.children[last].style.fontWeight == element_li.children[i].style.fontWeight && element_li.children[last].style.color == element_li.children[i].style.color)
+            {
+                element_li.children[last].textContent += element_li.children[i].textContent
+                element_li.removeChild(element_li.children[i])
+            }
+            else
+            {
+                last = i ++
+            }
         }
         else if(element_li.children[i].tagName == "BR")
         {
@@ -307,11 +387,6 @@ function synthesis_text(element_li)
             i++
         }
     }
-    // まとめた文字列をラベルにして行の最初に配置
-    let element_a = document.createElement("a")
-    element_a.textContent = str
-    element_a.onclick = edit_text
-    element_li.prepend(element_a)
     // 行の最後に改行を追加
     let element_br = document.createElement("br")
     element_li.appendChild(element_br)
@@ -476,6 +551,7 @@ $(document).keydown(function(event){
                 let element_a = document.createElement("a")
                 element_a.textContent = str
                 element_a.onclick = edit_text
+                copy_text_style(element_a, input_keybord)
                 element_li.appendChild(element_a)
                 // 元の行の要らばい部分を削除
                 input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
@@ -501,6 +577,7 @@ $(document).keydown(function(event){
                 
                 let element_a = document.createElement("a")
                 element_a.onclick = edit_text
+                copy_text_style(element_a, input_keybord)
                 element_li.appendChild(element_a)
 
                 input_keybord.blur()
