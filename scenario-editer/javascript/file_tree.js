@@ -500,7 +500,7 @@ function array_to_string(array, separator)
 document.getElementById("button-save-file").onclick = save_file
 async function save_file()
 {
-    
+    save_data()
     const opts = {
         suggestedName: 'example',
         types: [{
