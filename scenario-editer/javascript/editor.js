@@ -337,7 +337,6 @@ function synthesis_text(element_li)
     {
         if(element_li.children[i].tagName == "A")
         {
-            console.log(last, i)
             if(element_li.children[i].textContent == "")
             {
                 element_li.removeChild(element_li.children[i])
@@ -361,11 +360,6 @@ function synthesis_text(element_li)
             i++
         }
     }
-    // まとめた文字列をラベルにして行の最初に配置
-    let element_a = document.createElement("a")
-    element_a.textContent = str
-    element_a.onclick = edit_text
-    element_li.prepend(element_a)
     // 行の最後に改行を追加
     let element_br = document.createElement("br")
     element_li.appendChild(element_br)
