@@ -272,18 +272,25 @@ function export_data()
     contents = document.getElementById("editor-content-list").children
     for(let i = 0; i < contents.length; i++)
     {
+        synthesis_text(contents[i])
         let row = contents[i]
-        if(row.children[0].tagName == "A")
+        for(element of row.children)
         {
-            let head = "<text"
-            head += ",size="
-            head += row.children[0].style.fontSize
-            if(row.children[0].style.fontWeight == "bold")
+            if(element.tagName == "A")
             {
-                head += ",bold"
+                let head = "<text"
+                if(element.style.fontSize != "")
+                {
+                    head += ",size="
+                    head += element.style.fontSize
+                }
+                if(element.style.fontWeight == "bold")
+                {
+                    head += ",bold"
+                }
+                head += ">"
+                data.push(head + element.textContent)
             }
-            head += ">"
-            data.push(head + row.children[0].textContent)
         }
     }
     return data
