@@ -62,6 +62,29 @@ function copy_text_style(one, two)
     one.style.color = two.style.color
 }
 
+function text_size(element, select)
+{
+    // spanを生成し配置することで文字の横幅を得る
+    let span = document.createElement('span');
+
+    // 画面外に折り返しなしで配置
+    span.style.position = 'absolute';
+    span.style.top = '-1000px';
+    span.style.left = '-1000px';
+    copy_text_style(span ,element)
+
+    span.style.maxWidth = element.getBoundingClientRect().width;
+    span.innerHTML = element.textContent.slice(0, select);
+    document.body.appendChild(span);
+
+    // 終わったら削除
+    const width = span.clientWidth
+    const height = span.clientHeight
+    span.parentElement.removeChild(span);
+    console.log(width, height)
+    return [width, height]
+}
+
 // ラベルクリック時の処理
 function edit_text()
 {
