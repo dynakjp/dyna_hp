@@ -64,6 +64,7 @@ function edit_text()
     input_keybord.type = "text"
     input_keybord.classList.add("editor-input")
     event.target.after(input_keybord)
+    copy_text_style(input_keybord, event.target)
 
     // 文字が変わった時
     input_keybord.oninput = function(event)
@@ -93,6 +94,7 @@ function edit_text()
             span.style.position = 'absolute';
             span.style.top = '-1000px';
             span.style.left = '-1000px';
+            copy_text_style(span ,event.target)
 
             span.style.whiteSpace = 'nowrap';
             span.innerHTML = event.target.value;
