@@ -341,7 +341,23 @@ function synthesis_text(element_li)
         {
             if(element_li.children[i].textContent == "")
             {
-                element_li.removeChild(element_li.children[i])
+                let count_a = 0
+                for(const element of element_li.children)
+                {
+                    if(element.tagName == "A")
+                    {
+                        count_a += 1
+                    }
+                }
+                console.log(count_a)
+                if(1 < count_a)
+                {
+                    element_li.removeChild(element_li.children[i])
+                }
+                else
+                {
+                    i ++
+                }
             }
             else if(last != -1 && element_li.children[last].style.fontSize == element_li.children[i].style.fontSize && element_li.children[last].style.fontWeight == element_li.children[i].style.fontWeight && element_li.children[last].style.color == element_li.children[i].style.color)
             {
@@ -526,6 +542,7 @@ $(document).keydown(function(event){
                 let element_a = document.createElement("a")
                 element_a.textContent = str
                 element_a.onclick = edit_text
+                copy_text_style(element_a, input_keybord)
                 element_li.appendChild(element_a)
                 // 元の行の要らばい部分を削除
                 input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
@@ -551,6 +568,7 @@ $(document).keydown(function(event){
                 
                 let element_a = document.createElement("a")
                 element_a.onclick = edit_text
+                copy_text_style(element_a, input_keybord)
                 element_li.appendChild(element_a)
 
                 input_keybord.blur()
