@@ -2,6 +2,7 @@ let tag_list = []
 let selected
 let input_keybord
 let composition
+let cursor
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -85,11 +86,46 @@ function text_size(element, select)
     return [width, height]
 }
 
+function make_text_cursor(select)
+{
+    const element_place = select.focusNode.parentElement.getBoundingClientRect()
+    const select_place = text_size(select.focusNode.parentElement,select.focusOffset)
+    const x = element_place.left + select_place[0]
+    const y = element_place.top + select_place[1] * 0.125
+    
+    remove_text_cursor()
+
+    cursor = document.createElement("canvas")
+    cursor.width = 1
+    cursor.height = select_place[1] * 0.75
+
+    cursor.style.position = 'absolute';
+    cursor.style.left = x + "px";
+    cursor.style.top = y + "px";
+
+    let fill = cursor.getContext('2d')
+    fill.fillRect(0,0,1,select_place[1] * 0.75)
+
+    document.body.appendChild(cursor);
+    console.log(element_place)
+    console.log(x)
+    console.log(element_place.top)
+}
+
+function remove_text_cursor()
+{
+    if(cursor != undefined)
+    {
+        cursor.parentElement.removeChild(cursor)
+    }
+}
+
 // ラベルクリック時の処理
 function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
+    make_text_cursor(selected);
     
     // キーボード入力部の作成
     input_keybord = document.createElement("input")
