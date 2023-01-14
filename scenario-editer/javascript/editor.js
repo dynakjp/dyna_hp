@@ -125,34 +125,106 @@ function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
-    make_text_cursor(selected);
     
-    // キーボード入力部の作成
-    input_keybord = document.createElement("input")
-    input_keybord.type = "text"
-    input_keybord.classList.add("editor-input")
-    event.target.after(input_keybord)
-    copy_text_style(input_keybord, event.target)
+    if(selected.anchorOffset == selected.focusOffset)
+    {        
+        // キーボード入力部の作成
+        input_keybord = document.createElement("input")
+        input_keybord.type = "text"
+        input_keybord.classList.add("editor-input")
+        event.target.after(input_keybord)
+        copy_text_style(input_keybord, event.target)
 
-    // 文字が変わった時
-    input_keybord.oninput = function(event)
-    {
-        if(!composition)
+        // 文字が変わった時
+        input_keybord.oninput = function(event)
         {
-            // 変換前でないなら前のラベルに文字追加
+            if(!composition)
+            {
+                // 変換前でないなら前のラベルに文字追加
+                if(event.target.previousElementSibling == null)
+                {
+                    // ラベルがないなら作成する
+                    let element = document.createElement("a")
+                    element.onclick = edit_text
+                    event.target.before(element)
+                }
+
+                event.target.previousElementSibling.textContent +=  event.target.value
+                event.target.value = ""
+                event.target.style.width = "5px"
+            }
+            else
+            {
+                // 変換前ならinputの長さを調節
+                // spanを生成し配置することで文字の横幅を得る
+                let span = document.createElement('span');
+
+                // 画面外に折り返しなしで配置
+                span.style.position = 'absolute';
+                span.style.top = '-1000px';
+                span.style.left = '-1000px';
+                copy_text_style(span ,event.target)
+
+                span.style.whiteSpace = 'nowrap';
+                span.innerHTML = event.target.value;
+                document.body.appendChild(span);
+
+                // 横幅を取得
+                width = span.clientWidth;
+                event.target.style.width = (width + 4) + "px";
+
+                // 終わったら削除
+                span.parentElement.removeChild(span);
+            }
+        }
+
+        // 変換前であることを記録
+        input_keybord.addEventListener('compositionstart', function(){
+            composition = true
+        });
+        // 変換完了時　記録とラベルに反映
+        input_keybord.addEventListener('compositionend', function(event){
+            composition = false
+            
+            //反映しラベルに追加
             if(event.target.previousElementSibling == null)
             {
-                // ラベルがないなら作成する
                 let element = document.createElement("a")
-                element.onclick = edit_text
                 event.target.before(element)
             }
 
             event.target.previousElementSibling.textContent +=  event.target.value
             event.target.value = ""
             event.target.style.width = "5px"
+        });
+
+        // カーソルが外れた時　ラベルの合成とinputの削除
+        input_keybord.onblur = function()
+        {
+            synthesis_text(input_keybord.parentElement)
+            input_keybord.parentElement.removeChild(input_keybord);
+            // 入力していないことを記録
+            input_keybord = undefined
+            save_data()
         }
-        else
+
+        // 前方ラベルの文字を選択部分より前のみに
+        let str = selected.focusNode.textContent
+        let points = [Math.min(selected.focusOffset, selected.anchorOffset), Math.max(selected.focusOffset, selected.anchorOffset)]
+        event.target.textContent = str.slice(0, points[0])
+        // 後方ラベルを作成し選択部分以降を表示
+        let text_after = document.createElement("a")
+        text_after.textContent = str.slice(points[1], str.length)
+        copy_text_style(text_after, event.target)
+        text_after.onclick = edit_text
+        input_keybord.after(text_after) 
+        // input内に選択した文字を入れ、フォーカスとinput内全選択
+        input_keybord.value = str.slice(...points);
+        input_keybord.focus();
+        input_keybord.setSelectionRange(0, input_keybord.value.length);
+        
+        //初期のinputの長さを調整
+        if(input_keybord.value.length != 0)
         {
             // 変換前ならinputの長さを調節
             // spanを生成し配置することで文字の横幅を得る
@@ -162,92 +234,26 @@ function edit_text()
             span.style.position = 'absolute';
             span.style.top = '-1000px';
             span.style.left = '-1000px';
-            copy_text_style(span ,event.target)
 
             span.style.whiteSpace = 'nowrap';
-            span.innerHTML = event.target.value;
+            span.innerHTML = input_keybord.value;
             document.body.appendChild(span);
 
             // 横幅を取得
             width = span.clientWidth;
-            event.target.style.width = (width + 4) + "px";
+            input_keybord.style.width = (width + 4) + "px";
 
             // 終わったら削除
             span.parentElement.removeChild(span);
         }
-    }
-
-    // 変換前であることを記録
-    input_keybord.addEventListener('compositionstart', function(){
-        composition = true
-    });
-    // 変換完了時　記録とラベルに反映
-    input_keybord.addEventListener('compositionend', function(event){
-        composition = false
-        
-        //反映しラベルに追加
-        if(event.target.previousElementSibling == null)
+        else
         {
-            let element = document.createElement("a")
-            event.target.before(element)
+            input_keybord.style.width = "5px";
         }
-
-        event.target.previousElementSibling.textContent +=  event.target.value
-        event.target.value = ""
-        event.target.style.width = "5px"
-    });
-
-    // カーソルが外れた時　ラベルの合成とinputの削除
-    input_keybord.onblur = function()
-    {
-        synthesis_text(input_keybord.parentElement)
-        input_keybord.parentElement.removeChild(input_keybord);
-        // 入力していないことを記録
-        input_keybord = undefined
-        save_data()
-    }
-
-    // 前方ラベルの文字を選択部分より前のみに
-    let str = selected.focusNode.textContent
-    let points = [Math.min(selected.focusOffset, selected.anchorOffset), Math.max(selected.focusOffset, selected.anchorOffset)]
-    event.target.textContent = str.slice(0, points[0])
-    // 後方ラベルを作成し選択部分以降を表示
-    let text_after = document.createElement("a")
-    text_after.textContent = str.slice(points[1], str.length)
-    copy_text_style(text_after, event.target)
-    text_after.onclick = edit_text
-    input_keybord.after(text_after) 
-    // input内に選択した文字を入れ、フォーカスとinput内全選択
-    input_keybord.value = str.slice(...points);
-    input_keybord.focus();
-    input_keybord.setSelectionRange(0, input_keybord.value.length);
-    
-    //初期のinputの長さを調整
-    if(input_keybord.value.length != 0)
-    {
-        // 変換前ならinputの長さを調節
-        // spanを生成し配置することで文字の横幅を得る
-        let span = document.createElement('span');
-
-        // 画面外に折り返しなしで配置
-        span.style.position = 'absolute';
-        span.style.top = '-1000px';
-        span.style.left = '-1000px';
-
-        span.style.whiteSpace = 'nowrap';
-        span.innerHTML = input_keybord.value;
-        document.body.appendChild(span);
-
-        // 横幅を取得
-        width = span.clientWidth;
-        input_keybord.style.width = (width + 4) + "px";
-
-        // 終わったら削除
-        span.parentElement.removeChild(span);
     }
     else
     {
-        input_keybord.style.width = "5px";
+        console.log(selected)
     }
 }
 
