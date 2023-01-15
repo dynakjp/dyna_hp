@@ -512,7 +512,8 @@ function delete_select_text(select)
         element = element.parentElement.previousElementSibling
         synthesis_text(element)
         element.removeChild(element.children[element.childElementCount - 1])
-        element.click()
+        cursor_element = element.children[element.childElementCount - 1]
+        cursor_offset = element.children[element.childElementCount - 1].textContent.length
 
         element = element.nextElementSibling
         for(let ele of element.children)
@@ -520,6 +521,15 @@ function delete_select_text(select)
             element.previousElementSibling.appendChild(ele)
         }
         element.parentElement.removeChild(element)
+
+        synthesis_text(cursor_element.parentElement)
+        let select = new Range();
+        select.setStart(cursor_element.firstChild, cursor_offset)
+        select.setEnd(cursor_element.firstChild, cursor_offset)
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(select);
+
+        cursor_element.click();
     }
 }
 
@@ -683,8 +693,10 @@ $(document).keydown(function(event){
         {
             // 改行(Enter)
             // 変換中でない　＋　入力中
+            console.log("enter")
             if(input_keybord.nextElementSibling != null)
             {
+                console.log("here")
                 // 後ろに要素がある
                 // 新しい行を作成
                 let str = input_keybord.nextElementSibling.textContent
@@ -693,23 +705,28 @@ $(document).keydown(function(event){
                 element_li.classList.add("editor-row")
                 input_keybord.parentElement.after(element_li)
                 // 後ろの要素を次の行に引き継ぐ
-                let element_a = document.createElement("a")
-                element_a.textContent = str
-                element_a.onclick = edit_text
-                copy_text_style(element_a, input_keybord)
-                element_li.appendChild(element_a)
-                // 元の行の要らばい部分を削除
-                input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
+                let element = input_keybord.nextElementSibling
+                let elements = []
+                while(element != undefined)
+                {
+                    element_li.appendChild(element)
+                    element = element.nextElementSibling
+                }
+                for(const ele of elements)
+                {
+                    element_li.appendChild(ele)
+                    // ele.parentElement.removeChild(ele)
+                }
                 input_keybord.blur()
 
                 // 新しい行で入力状態にする
                 let select = new Range();
-                select.setStart(element_a, 0)
-                select.setEnd(element_a, 0)
+                select.setStart(element_li.children[0], 0)
+                select.setEnd(element_li.children[0], 0)
                 document.getSelection().removeAllRanges();
                 document.getSelection().addRange(select);
 
-                element_a.click();
+                element_li.children[0].click();
             }
             else
             {
