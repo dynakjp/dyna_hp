@@ -460,8 +460,8 @@ function synthesis_text(element_li)
 function delete_select_text(select)
 {
     const range = select.getRangeAt(0)
-    console.log(range.startContainer)
-    console.log(range.endContainer)
+    // console.log(range.startContainer)
+    // console.log(range.endContainer)
     
     if(range.startContainer.parentElement == range.endContainer.parentElement && range.startContainer.tagName != "LI")
     {
@@ -471,8 +471,8 @@ function delete_select_text(select)
     else
     {
         let element = range.startContainer.parentElement
-        console.log(element)
-        console.log(range.startContainer.tagName)
+        // console.log(element)
+        // console.log(range.startContainer.tagName)
         if(element.tagName == "A")
         {
             element.textContent = element.textContent.slice(0, range.startOffset)
