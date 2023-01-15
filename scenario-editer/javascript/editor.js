@@ -371,7 +371,6 @@ function export_data()
     {
         synthesis_text(contents[i])
         let row = contents[i]
-        console.log(row)
         for(element of row.children)
         {
             if(element.tagName == "A")
