@@ -321,7 +321,6 @@ function import_data(data)
     let element_li = document.createElement("li")
     element_li.onclick = click_row_text
     element_li.classList.add("editor-row")
-    editor_content_list.appendChild(element_li)
 
     let i = 5
     while(i < data.length)
@@ -341,12 +340,19 @@ function import_data(data)
         {
             const element_br = document.createElement("br")
             element_li.appendChild(element_br)
+            editor_content_list.appendChild(element_li)
             element_li = document.createElement("li")
             element_li.onclick = click_row_text
             element_li.classList.add("editor-row")
-            editor_content_list.appendChild(element_li)
         }
         i++;
+    }
+
+    if(element_li.childElementCount > 0)
+    {
+        const element_br = document.createElement("br")
+        element_li.appendChild(element_br)
+        editor_content_list.appendChild(element_li)
     }
 }
 
@@ -365,6 +371,7 @@ function export_data()
     {
         synthesis_text(contents[i])
         let row = contents[i]
+        console.log(row)
         for(element of row.children)
         {
             if(element.tagName == "A")
