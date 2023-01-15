@@ -573,37 +573,42 @@ $(document).keydown(function(event){
                 if(input_keybord.parentElement.previousElementSibling != null)
                 {
                     //　前方にラベルがなく　前の行があるなら前の行と合成する
-                    before_li = input_keybord.parentElement.previousElementSibling
+                    let before_li = input_keybord.parentElement.previousElementSibling
                     //　前の行の<br>を削除する
                     before_li.removeChild(before_li.children[before_li.childElementCount - 1])
-                    //　現在の行の文字数を数えておく
-                    index = input_keybord.nextElementSibling.textContent.length
-                    // 空のラベルは削除
-                    if(input_keybord.previousElementSibling != null)
+                    //　クリック時のためのデータ収集
+                    let cursor_element = before_li.children[before_li.childElementCount - 1]
+                    let cursor_offset = before_li.children[before_li.childElementCount - 1].textContent.length
+                    // ラベルを一度統合
+                    input_keybord.blur()
+                    //前の行に現在の行のラベルを追加する
+                    let element = before_li.nextElementSibling.children[0]
+                    while(element != undefined)
                     {
-                        input_keybord.parentElement.removeChild(input_keybord.previousElementSibling)
+                        before_li.appendChild(element)
+                        element = element.nextElementSibling
                     }
-                    //前の行に現在の行のラベルを追加し、現在の行を消す
-                    before_li.appendChild(input_keybord.nextElementSibling);
-                    input_keybord.parentElement.parentElement.removeChild(input_keybord.parentElement)
                     synthesis_text(before_li)
+                    before_li.parentElement.removeChild(before_li.nextElementSibling)
                     //新しい行で入力状態にする
                     element_a = before_li.children[0]
                     select = new Range();
-                    if(element_a.firstChild != null)
+                    if(cursor_element != undefined && cursor_element.textContent != "")
                     {
-                        select.setStart(element_a.firstChild, element_a.textContent.length - index)
-                        select.setEnd(element_a.firstChild, element_a.textContent.length - index)
+                        select.setStart(cursor_element.firstChild, cursor_offset)
+                        select.setEnd(cursor_element.firstChild, cursor_offset)
+                        document.getSelection().removeAllRanges();
+                        document.getSelection().addRange(select);
+                        cursor_element.click();
                     }
                     else
                     {
-                        select.setStart(element_a, 0)
-                        select.setEnd(element_a, 0)
+                        select.setStart(before_li.children[0], 0)
+                        select.setEnd(before_li.children[0], 0)
+                        document.getSelection().removeAllRanges();
+                        document.getSelection().addRange(select);
+                        before_li.children[0].click();
                     }
-
-                    document.getSelection().removeAllRanges();
-                    document.getSelection().addRange(select);
-                    element_a.click();
                 }
             }
             else
@@ -631,48 +636,40 @@ $(document).keydown(function(event){
                 {
                     // 後ろにラベルがない、または空のラベルの場合　改行を削除する
                     // 後ろの行の取得、現在の行の<br>の削除、カーソルの位置を記憶、空のラベルは削除
-                    let after_li = input_keybord.parentElement.nextElementSibling
-                    input_keybord.parentElement.removeChild(input_keybord.parentElement.children[input_keybord.parentElement.childElementCount - 1])
-                    let index = input_keybord.previousElementSibling.textContent.length
-                    if(input_keybord.nextElementSibling != null)
-                    {
-                        input_keybord.parentElement.removeChild(input_keybord.nextElementSibling)
-                    }
-                    // 後ろの行の要素を現在の行に移していく
-                    let i = 0
-                    while(after_li.childElementCount > i)
-                    {
-                        if(after_li.children[i].tagName == "input")
-                        {
-                            i++
-                        }
-                        else
-                        {
-                            input_keybord.parentElement.appendChild(after_li.children[i]);
-                        }
-                    }
-                    after_li.parentElement.removeChild(after_li)
-                    // ラベルの要素を合成
-                    let element_li = input_keybord.parentElement
+                    let before_li = input_keybord.parentElement
                     input_keybord.blur()
-                    synthesis_text(element_li)
-                    //新しい行で入力状態にする
-                    let element_a = element_li.children[0]
-                    let select = new Range();
-                    if(element_a.firstChild != null)
+                    before_li.removeChild(before_li.children[before_li.childElementCount - 1])
+                    //　クリック時のためのデータ収集
+                    let cursor_element = before_li.children[before_li.childElementCount - 1]
+                    let cursor_offset = before_li.children[before_li.childElementCount - 1].textContent.length
+                    //前の行に現在の行のラベルを追加する
+                    let element = before_li.nextElementSibling.children[0]
+                    while(element != undefined)
                     {
-                        select.setStart(element_a.firstChild, index)
-                        select.setEnd(element_a.firstChild, index)
+                        before_li.appendChild(element)
+                        element = element.nextElementSibling
+                    }
+                    synthesis_text(before_li)
+                    before_li.parentElement.removeChild(before_li.nextElementSibling)
+                    //新しい行で入力状態にする
+                    element_a = before_li.children[0]
+                    select = new Range();
+                    if(cursor_element != undefined && cursor_element.textContent != "")
+                    {
+                        select.setStart(cursor_element.firstChild, cursor_offset)
+                        select.setEnd(cursor_element.firstChild, cursor_offset)
+                        document.getSelection().removeAllRanges();
+                        document.getSelection().addRange(select);
+                        cursor_element.click();
                     }
                     else
                     {
-                        select.setStart(element_a, 0)
-                        select.setEnd(element_a, 0)
+                        select.setStart(before_li.children[0], 0)
+                        select.setEnd(before_li.children[0], 0)
+                        document.getSelection().removeAllRanges();
+                        document.getSelection().addRange(select);
+                        before_li.children[0].click();
                     }
-
-                    document.getSelection().removeAllRanges();
-                    document.getSelection().addRange(select);
-                    element_a.click();
                 }
             }
             else
@@ -693,10 +690,8 @@ $(document).keydown(function(event){
         {
             // 改行(Enter)
             // 変換中でない　＋　入力中
-            console.log("enter")
             if(input_keybord.nextElementSibling != null)
             {
-                console.log("here")
                 // 後ろに要素がある
                 // 新しい行を作成
                 let str = input_keybord.nextElementSibling.textContent
@@ -706,16 +701,10 @@ $(document).keydown(function(event){
                 input_keybord.parentElement.after(element_li)
                 // 後ろの要素を次の行に引き継ぐ
                 let element = input_keybord.nextElementSibling
-                let elements = []
                 while(element != undefined)
                 {
                     element_li.appendChild(element)
                     element = element.nextElementSibling
-                }
-                for(const ele of elements)
-                {
-                    element_li.appendChild(ele)
-                    // ele.parentElement.removeChild(ele)
                 }
                 input_keybord.blur()
 
