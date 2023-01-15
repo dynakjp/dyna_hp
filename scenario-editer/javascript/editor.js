@@ -417,34 +417,6 @@ function make_label(str, styles)
     return element_a
 }
 
-function make_row_text(str, styles)
-{
-    let editor_content_list = document.getElementById("editor-content-list")
-    let element_li = document.createElement("li")
-    element_li.onclick = click_row_text
-    element_li.classList.add("editor-row")
-    editor_content_list.appendChild(element_li)
-
-    let element_a = document.createElement("a")
-    element_a.textContent = str
-    element_a.onclick = edit_text
-    for(const style of styles)
-    {
-        if(style.indexOf("size=") == 0)
-        {
-            element_a.style.fontSize = style.slice(style.indexOf("=") + 1)
-        }
-        else if(style == "bold")
-        {
-            element_a.style.fontWeight = "bold"
-        }
-    }
-    element_li.appendChild(element_a)
-
-    let element_br = document.createElement("br")
-    element_li.appendChild(element_br)
-}
-
 //ラベルの合成
 function synthesis_text(element_li)
 {
