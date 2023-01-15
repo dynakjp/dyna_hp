@@ -1,6 +1,6 @@
 let tag_list = []
 let selected
-let input_keybord
+let input_keybord = undefined
 let composition
 let cursor
 
@@ -457,6 +457,72 @@ function synthesis_text(element_li)
     element_li.appendChild(element_br)
 }
 
+function delete_select_text(select)
+{
+    const range = select.getRangeAt(0)
+    console.log(range.startContainer)
+    console.log(range.endContainer)
+    
+    if(range.startContainer.parentElement == range.endContainer.parentElement && range.startContainer.tagName != "LI")
+    {
+        let element_a = range.startContainer.parentElement
+        element_a.textContent = element_a.textContent.slice(0, range.startOffset) + element_a.textContent.slice(range.endOffset)
+    }
+    else
+    {
+        let element = range.startContainer.parentElement
+        console.log(element)
+        console.log(range.startContainer.tagName)
+        if(element.tagName == "A")
+        {
+            element.textContent = element.textContent.slice(0, range.startOffset)
+            element = element.nextElementSibling
+        }
+        else if(range.startContainer.tagName == "LI")
+        {
+            element = range.startContainer.children[range.startContainer.childElementCount - 1]
+        }
+
+        while(element.tagName != "BR")
+        {
+            element = element.nextElementSibling
+            element.parentElement.removeChild(element.previousElementSibling)
+        }
+
+        element = element.parentElement.nextElementSibling
+        let end = range.endContainer.parentElement
+        if(range.endContainer.tagName == "LI")
+        {
+            end = range.endContainer.children[0]
+        }
+        while(element != end.parentElement)
+        {
+            element = element.nextElementSibling
+            element.parentElement.removeChild(element.previousElementSibling)
+        }
+
+        element = element.children[0]
+        while(element != end)
+        {
+            element = element.nextElementSibling
+            element.parentElement.removeChild(element.previousElementSibling)
+        }
+        element.textContent = element.textContent.slice(range.endOffset)
+        
+        element = element.parentElement.previousElementSibling
+        synthesis_text(element)
+        element.removeChild(element.children[element.childElementCount - 1])
+        element.click()
+
+        element = element.nextElementSibling
+        for(let ele of element.children)
+        {
+            element.previousElementSibling.appendChild(ele)
+        }
+        element.parentElement.removeChild(element)
+    }
+}
+
 $(document).keydown(function(event){
     // クリックされたキーのコード
     var keyCode = event.keyCode;
@@ -465,12 +531,32 @@ $(document).keydown(function(event){
     // Altキーがクリックされたか (true or false)
     var altClick = event.altKey;
     
+    selected = window.getSelection();
+    
     // キーを制御する
-    if(keyCode == 8)
+    if(input_keybord == undefined && selected.isCollapsed == false)
     {
-        // 削除（back sapace）
-        if(input_keybord != undefined && input_keybord.value == "")
+        if(!ctrlClick && !altClick)
         {
+            if(48 <= keyCode && keyCode <= 90)
+            {
+                delete_select_text(selected)
+            }
+            else if(keyCode == 8 || keyCode == 46)
+            {
+                delete_select_text(selected)
+            }
+            else if(keyCode == 32)
+            {
+                delete_select_text(selected)
+            }
+        }
+    }
+    else if(input_keybord != undefined && !composition)
+    {
+        if(keyCode == 8)
+        {
+            // 削除（back sapace）
             // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
             {
@@ -525,12 +611,9 @@ $(document).keydown(function(event){
                 }
             }
         }
-    }
-    else if(keyCode == 46)
-    {
-        // 削除(Delete)
-        if(input_keybord != undefined && input_keybord.value == "")
+        else if(keyCode == 46)
         {
+            // 削除(Delete)
             // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.nextElementSibling == null || input_keybord.nextElementSibling.textContent == "")
             {
@@ -596,12 +679,9 @@ $(document).keydown(function(event){
                 }
             }
         }
-    }
-    else if(keyCode == 13)
-    {
-        // 改行(Enter)
-        if(!composition && input_keybord != undefined)
+        else if(keyCode == 13)
         {
+            // 改行(Enter)
             // 変換中でない　＋　入力中
             if(input_keybord.nextElementSibling != null)
             {
@@ -657,13 +737,9 @@ $(document).keydown(function(event){
                 element_a.click();
             }
         }
-    }
-    else if(keyCode == 37)
-    {
-        // ←（左キー）
-        if(input_keybord != undefined && input_keybord.value == "")
+        else if(keyCode == 37)
         {
-            // 入力中でかつ、inputに文字が入っていない時
+            // ←（左キー）// 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
             {
                 if(input_keybord.parentElement.previousElementSibling != null)
@@ -690,12 +766,9 @@ $(document).keydown(function(event){
                 destination.children[0].click()
             }
         }
-    }
-    else if(keyCode == 39)
-    {
-        // →（右キー）
-        if(input_keybord != undefined && input_keybord.value == "")
+        else if(keyCode == 39)
         {
+            // →（右キー）
             // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.nextElementSibling == null || input_keybord.nextElementSibling.textContent == "")
             {
@@ -736,12 +809,9 @@ $(document).keydown(function(event){
                 destination.children[0].click()
             }
         }
-    }
-    else if(keyCode == 38)
-    {
-        // ↑（上キー）
-        if(input_keybord != undefined && input_keybord.value == "")
+        else if(keyCode == 38)
         {
+            // ↑（上キー）
             // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.parentElement.previousElementSibling != null)
             {
@@ -768,12 +838,9 @@ $(document).keydown(function(event){
                 destination.children[0].click()
             }
         }
-    }
-    else if(keyCode == 40)
-    {
-        // ↓（下キー）
-        if(input_keybord != undefined && input_keybord.value == "")
+        else if(keyCode == 40)
         {
+            // ↓（下キー）
             // 入力中でかつ、inputに文字が入っていない時
             if(input_keybord.parentElement.nextElementSibling != null)
             {
