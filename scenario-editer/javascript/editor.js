@@ -317,6 +317,12 @@ function import_data(data)
     tag_list = data[4]
     update_tag_list()
 
+    let editor_content_list = document.getElementById("editor-content-list")
+    let element_li = document.createElement("li")
+    element_li.onclick = click_row_text
+    element_li.classList.add("editor-row")
+    editor_content_list.appendChild(element_li)
+
     let i = 5
     while(i < data.length)
     {
@@ -329,7 +335,16 @@ function import_data(data)
         const content = data[i].slice(data[i].indexOf(">") + 1)
         if(status[0] == "text")
         {
-            make_row_text(content, status.slice(1))
+            element_li.appendChild(make_label(content, status.slice(1)))
+        }
+        else if(status[0] == "break")
+        {
+            const element_br = document.createElement("br")
+            element_li.appendChild(element_br)
+            element_li = document.createElement("li")
+            element_li.onclick = click_row_text
+            element_li.classList.add("editor-row")
+            editor_content_list.appendChild(element_li)
         }
         i++;
     }
@@ -374,6 +389,25 @@ function export_data()
         }
     }
     return data
+}
+
+function make_label(str, styles)
+{
+    let element_a = document.createElement("a")
+    element_a.textContent = str
+    element_a.onclick = edit_text
+    for(const style of styles)
+    {
+        if(style.indexOf("size=") == 0)
+        {
+            element_a.style.fontSize = style.slice(style.indexOf("=") + 1)
+        }
+        else if(style == "bold")
+        {
+            element_a.style.fontWeight = "bold"
+        }
+    }
+    return element_a
 }
 
 function make_row_text(str, styles)
