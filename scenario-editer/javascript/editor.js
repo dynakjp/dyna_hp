@@ -367,6 +367,10 @@ function export_data()
                 head += ">"
                 data.push(head + element.textContent)
             }
+            else if(element.tagName == "BR")
+            {
+                data.push("<break>")
+            }
         }
     }
     return data
