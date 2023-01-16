@@ -821,12 +821,14 @@ $(document).keydown(function(event){
                 let destination = input_keybord.previousElementSibling
                 if(input_keybord.nextElementSibling.textContent == "")
                 {
+                    // 同行で別ラベル
                     destination = input_keybord.nextElementSibling.nextElementSibling
                     index = 1
                     input_keybord.blur()
                 }
                 else if(destination.textContent == "")
                 {
+                    // 行の最初
                     index = 1
                     destination = destination.parentElement
                     input_keybord.blur()
@@ -834,12 +836,13 @@ $(document).keydown(function(event){
                 }
                 else
                 {
+                    // その他
                     index = destination.textContent.length + 1
                     input_keybord.blur()
                 }
 
                 
-
+                // カーソルを移動する
                 let select = new Range();
                 select.setStart(destination.firstChild, index)
                 select.setEnd(destination.firstChild, index)
