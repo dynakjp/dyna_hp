@@ -764,7 +764,7 @@ $(document).keydown(function(event){
         else if(keyCode == 37)
         {
             // ←（左キー）// 入力中でかつ、inputに文字が入っていない時
-            if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
+            if(input_keybord.previousElementSibling == input_keybord.parentElement.children[0] && input_keybord.previousElementSibling.textContent == "")
             {
                 if(input_keybord.parentElement.previousElementSibling != null)
                 {
@@ -778,16 +778,20 @@ $(document).keydown(function(event){
             {
                 // 前に1つ進む
                 // 移動先の確認
-                let index = input_keybord.previousElementSibling.textContent.length - 1
-                let destination = input_keybord.parentElement
+                let destination = input_keybord.previousElementSibling
+                if(destination.textContent == "")
+                {
+                    destination = destination.previousElementSibling
+                }
+                let index = destination.textContent.length - 1
                 input_keybord.blur()
                 // 移動
                 let select = new Range();
-                select.setStart(destination.children[0].firstChild, index)
-                select.setEnd(destination.children[0].firstChild, index)
+                select.setStart(destination.firstChild, index)
+                select.setEnd(destination.firstChild, index)
                 document.getSelection().removeAllRanges();
                 document.getSelection().addRange(select);
-                destination.children[0].click()
+                destination.click()
             }
         }
         else if(keyCode == 39)
