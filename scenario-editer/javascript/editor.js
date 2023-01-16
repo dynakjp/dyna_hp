@@ -925,26 +925,60 @@ $(document).keydown(function(event){
             if(input_keybord.parentElement.nextElementSibling != null)
             {
                 // 下に行があるなら移動
-                // 移動先の設定と元の行の整理
+                // 移動先の設定
                 let destination = input_keybord.parentElement.nextElementSibling
-                let index = input_keybord.previousElementSibling.textContent.length
+                // 元の位置のｘ軸を調べる
+                let width = 0
+                let element = input_keybord.previousElementSibling
+                while(element != null)
+                {
+                    if(element.tagName == "A")
+                    {
+                        width += text_size(element)[0]
+                    }
+                    element = element.previousElementSibling
+                }
                 input_keybord.blur()
                 // 移動
-                let select = new Range();
-                if(destination.children[0].firstChild == null)
+                let wid = 0
+                let i = 0
+                element = destination.children[0]
+                while(element != null)
                 {
-                    select.setStart(destination.children[0], 0)
-                    select.setEnd(destination.children[0], 0)
+                    // 同じ高さのエレメントを探す
+                    if(element.tagName == "A")
+                    {
+                        if(width <= wid + text_size(element)[0])
+                        {
+                            //エレメント内の何文字目かを考える
+                            i = 0
+                            while(width > wid + text_size(element, i)[0])
+                            {
+                                i ++
+                            }
+                            break
+                        }
+                        else
+                        {
+                            wid += text_size(element)[0]
+                        }
+                    }
+                    element = element.nextElementSibling
+                }
+                if(element == null)
+                {
+                    // 行の長さが満たないので末尾
+                    destination.click()
                 }
                 else
                 {
-                    // 出来る限り元と同じX軸(文字数)を残す
-                    select.setStart(destination.children[0].firstChild, Math.min(index, destination.children[0].firstChild.length))
-                    select.setEnd(destination.children[0].firstChild,  Math.min(index, destination.children[0].firstChild.length))
+                    let select = new Range();
+                    select.setStart(element.firstChild, i)
+                    select.setEnd(element.firstChild, i)
+                    document.getSelection().removeAllRanges();
+                    document.getSelection().addRange(select);
+                    element.click()
                 }
-                document.getSelection().removeAllRanges();
-                document.getSelection().addRange(select);
-                destination.children[0].click()
             }
         }
     }
