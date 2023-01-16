@@ -798,7 +798,7 @@ $(document).keydown(function(event){
         {
             // →（右キー）
             // 入力中でかつ、inputに文字が入っていない時
-            if(input_keybord.nextElementSibling == null || input_keybord.nextElementSibling.textContent == "")
+            if(input_keybord.nextElementSibling == input_keybord.parentElement.children[input_keybord.parentElement.childElementCount - 2] && input_keybord.nextElementSibling.textContent == "")
             {
                 // 後ろに移動先の要素がない場合
                 if(input_keybord.parentElement.nextElementSibling != null)
@@ -816,25 +816,36 @@ $(document).keydown(function(event){
             }
             else
             {
-                // 後ろに要素があるなら1つ後ろに移動
+                // 後ろに要素があるなら1つ後ろに移動]
                 let index = 0
-                if(input_keybord.previousElementSibling == null)
+                let destination = input_keybord.previousElementSibling
+                if(input_keybord.nextElementSibling.textContent == "")
+                {
+                    destination = input_keybord.nextElementSibling.nextElementSibling
+                    index = 1
+                    input_keybord.blur()
+                }
+                else if(destination.textContent == "")
                 {
                     index = 1
+                    destination = destination.parentElement
+                    input_keybord.blur()
+                    destination = destination.children[0]
                 }
                 else
                 {
-                    index = input_keybord.previousElementSibling.textContent.length + 1
+                    index = destination.textContent.length + 1
+                    input_keybord.blur()
                 }
-                let destination = input_keybord.parentElement
-                input_keybord.blur()
+
+                
 
                 let select = new Range();
-                select.setStart(destination.children[0].firstChild, index)
-                select.setEnd(destination.children[0].firstChild, index)
+                select.setStart(destination.firstChild, index)
+                select.setEnd(destination.firstChild, index)
                 document.getSelection().removeAllRanges();
                 document.getSelection().addRange(select);
-                destination.children[0].click()
+                destination.click()
             }
         }
         else if(keyCode == 38)
