@@ -74,6 +74,10 @@ function text_size(element, select)
     span.style.left = '-1000px';
     copy_text_style(span ,element)
 
+    if(select == -1 || select == undefined)
+    {
+        select = element.textContent.length
+    }
     span.style.maxWidth = element.getBoundingClientRect().width;
     span.innerHTML = element.textContent.slice(0, select);
     document.body.appendChild(span);
@@ -82,7 +86,7 @@ function text_size(element, select)
     const width = span.clientWidth
     const height = span.clientHeight
     span.parentElement.removeChild(span);
-    console.log(width, height)
+    // console.log(width, height)
     return [width, height]
 }
 
@@ -764,7 +768,7 @@ $(document).keydown(function(event){
         else if(keyCode == 37)
         {
             // ←（左キー）// 入力中でかつ、inputに文字が入っていない時
-            if(input_keybord.previousElementSibling == null || input_keybord.previousElementSibling.textContent == "")
+            if(input_keybord.previousElementSibling == input_keybord.parentElement.children[0] && input_keybord.previousElementSibling.textContent == "")
             {
                 if(input_keybord.parentElement.previousElementSibling != null)
                 {
@@ -778,23 +782,27 @@ $(document).keydown(function(event){
             {
                 // 前に1つ進む
                 // 移動先の確認
-                let index = input_keybord.previousElementSibling.textContent.length - 1
-                let destination = input_keybord.parentElement
+                let destination = input_keybord.previousElementSibling
+                if(destination.textContent == "")
+                {
+                    destination = destination.previousElementSibling
+                }
+                let index = destination.textContent.length - 1
                 input_keybord.blur()
                 // 移動
                 let select = new Range();
-                select.setStart(destination.children[0].firstChild, index)
-                select.setEnd(destination.children[0].firstChild, index)
+                select.setStart(destination.firstChild, index)
+                select.setEnd(destination.firstChild, index)
                 document.getSelection().removeAllRanges();
                 document.getSelection().addRange(select);
-                destination.children[0].click()
+                destination.click()
             }
         }
         else if(keyCode == 39)
         {
             // →（右キー）
             // 入力中でかつ、inputに文字が入っていない時
-            if(input_keybord.nextElementSibling == null || input_keybord.nextElementSibling.textContent == "")
+            if(input_keybord.nextElementSibling == input_keybord.parentElement.children[input_keybord.parentElement.childElementCount - 2] && input_keybord.nextElementSibling.textContent == "")
             {
                 // 後ろに移動先の要素がない場合
                 if(input_keybord.parentElement.nextElementSibling != null)
@@ -814,23 +822,37 @@ $(document).keydown(function(event){
             {
                 // 後ろに要素があるなら1つ後ろに移動
                 let index = 0
-                if(input_keybord.previousElementSibling == null)
+                let destination = input_keybord.previousElementSibling
+                if(input_keybord.nextElementSibling.textContent == "")
                 {
+                    // 同行で別ラベル
+                    destination = input_keybord.nextElementSibling.nextElementSibling
                     index = 1
+                    input_keybord.blur()
+                }
+                else if(destination.textContent == "")
+                {
+                    // 行の最初
+                    index = 1
+                    destination = destination.parentElement
+                    input_keybord.blur()
+                    destination = destination.children[0]
                 }
                 else
                 {
-                    index = input_keybord.previousElementSibling.textContent.length + 1
+                    // その他
+                    index = destination.textContent.length + 1
+                    input_keybord.blur()
                 }
-                let destination = input_keybord.parentElement
-                input_keybord.blur()
 
+                
+                // カーソルを移動する
                 let select = new Range();
-                select.setStart(destination.children[0].firstChild, index)
-                select.setEnd(destination.children[0].firstChild, index)
+                select.setStart(destination.firstChild, index)
+                select.setEnd(destination.firstChild, index)
                 document.getSelection().removeAllRanges();
                 document.getSelection().addRange(select);
-                destination.children[0].click()
+                destination.click()
             }
         }
         else if(keyCode == 38)
@@ -840,26 +862,60 @@ $(document).keydown(function(event){
             if(input_keybord.parentElement.previousElementSibling != null)
             {
                 // 上に要素があるならば上に移動
-                // 移動先の設定と元の行の整理
+                // 移動先の設定
                 let destination = input_keybord.parentElement.previousElementSibling
-                let index = input_keybord.previousElementSibling.textContent.length
+                // 元の位置のｘ軸を調べる
+                let width = 0
+                let element = input_keybord.previousElementSibling
+                while(element != null)
+                {
+                    if(element.tagName == "A")
+                    {
+                        width += text_size(element)[0]
+                    }
+                    element = element.previousElementSibling
+                }
                 input_keybord.blur()
                 // 移動
-                let select = new Range();
-                if(destination.children[0].firstChild == null)
+                let wid = 0
+                let i = 0
+                element = destination.children[0]
+                while(element != null)
                 {
-                    select.setStart(destination.children[0], 0)
-                    select.setEnd(destination.children[0], 0)
+                    // 同じ高さのエレメントを探す
+                    if(element.tagName == "A")
+                    {
+                        if(width <= wid + text_size(element)[0])
+                        {
+                            //エレメント内の何文字目かを考える
+                            i = 0
+                            while(width > wid + text_size(element, i)[0])
+                            {
+                                i ++
+                            }
+                            break
+                        }
+                        else
+                        {
+                            wid += text_size(element)[0]
+                        }
+                    }
+                    element = element.nextElementSibling
+                }
+                if(element == null)
+                {
+                    // 行の長さが満たないので末尾
+                    destination.click()
                 }
                 else
                 {
-                    // 出来る限り元と同じX軸(文字数)を残す
-                    select.setStart(destination.children[0].firstChild, Math.min(index, destination.children[0].firstChild.length))
-                    select.setEnd(destination.children[0].firstChild,  Math.min(index, destination.children[0].firstChild.length))
+                    let select = new Range();
+                    select.setStart(element.firstChild, i)
+                    select.setEnd(element.firstChild, i)
+                    document.getSelection().removeAllRanges();
+                    document.getSelection().addRange(select);
+                    element.click()
                 }
-                document.getSelection().removeAllRanges();
-                document.getSelection().addRange(select);
-                destination.children[0].click()
             }
         }
         else if(keyCode == 40)
@@ -869,26 +925,60 @@ $(document).keydown(function(event){
             if(input_keybord.parentElement.nextElementSibling != null)
             {
                 // 下に行があるなら移動
-                // 移動先の設定と元の行の整理
+                // 移動先の設定
                 let destination = input_keybord.parentElement.nextElementSibling
-                let index = input_keybord.previousElementSibling.textContent.length
+                // 元の位置のｘ軸を調べる
+                let width = 0
+                let element = input_keybord.previousElementSibling
+                while(element != null)
+                {
+                    if(element.tagName == "A")
+                    {
+                        width += text_size(element)[0]
+                    }
+                    element = element.previousElementSibling
+                }
                 input_keybord.blur()
                 // 移動
-                let select = new Range();
-                if(destination.children[0].firstChild == null)
+                let wid = 0
+                let i = 0
+                element = destination.children[0]
+                while(element != null)
                 {
-                    select.setStart(destination.children[0], 0)
-                    select.setEnd(destination.children[0], 0)
+                    // 同じ高さのエレメントを探す
+                    if(element.tagName == "A")
+                    {
+                        if(width <= wid + text_size(element)[0])
+                        {
+                            //エレメント内の何文字目かを考える
+                            i = 0
+                            while(width > wid + text_size(element, i)[0])
+                            {
+                                i ++
+                            }
+                            break
+                        }
+                        else
+                        {
+                            wid += text_size(element)[0]
+                        }
+                    }
+                    element = element.nextElementSibling
+                }
+                if(element == null)
+                {
+                    // 行の長さが満たないので末尾
+                    destination.click()
                 }
                 else
                 {
-                    // 出来る限り元と同じX軸(文字数)を残す
-                    select.setStart(destination.children[0].firstChild, Math.min(index, destination.children[0].firstChild.length))
-                    select.setEnd(destination.children[0].firstChild,  Math.min(index, destination.children[0].firstChild.length))
+                    let select = new Range();
+                    select.setStart(element.firstChild, i)
+                    select.setEnd(element.firstChild, i)
+                    document.getSelection().removeAllRanges();
+                    document.getSelection().addRange(select);
+                    element.click()
                 }
-                document.getSelection().removeAllRanges();
-                document.getSelection().addRange(select);
-                destination.children[0].click()
             }
         }
     }
