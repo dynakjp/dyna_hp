@@ -258,6 +258,11 @@ function move_tree(element)
         }
         if(li.children[2].textContent == event.dataTransfer.getData('text'))
         {
+            let ul = document.getElementById("tree").children[0]
+            for(let i = 0; i < ul.childElementCount; i++)
+            {
+                ul.children[i].style.border = '';
+            }
             return
         }
         let index = get_data_index(Number(li.children[2].textContent))
