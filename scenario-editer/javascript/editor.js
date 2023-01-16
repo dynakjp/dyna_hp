@@ -725,8 +725,9 @@ $(document).keydown(function(event){
                 let element = input_keybord.nextElementSibling
                 while(element != undefined)
                 {
-                    element_li.appendChild(element)
+                    const target = element
                     element = element.nextElementSibling
+                    element_li.appendChild(target)
                 }
                 input_keybord.blur()
 
