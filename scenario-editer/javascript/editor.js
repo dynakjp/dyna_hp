@@ -3,6 +3,7 @@ let selected
 let input_keybord = undefined
 let composition
 let cursor
+let select_editor = {}
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -47,12 +48,23 @@ function update_tag_list()
     save_data()
 }
 
+// editor-content内を選択した場合に変数を更新
+document.onselectionchange = () => 
+{
+    let select = window.getSelection()
+    if(document.getElementById("editor-content").contains(select.anchorNode) && document.getElementById("editor-content").contains(select.focusNode))
+    {    
+        $.extend(select_editor, window.getSelection())
+    }
+}
+
 document.getElementById("input-font-size").onchange = function()
 {
+    const log = selected
     console.log(document.getElementById("input-font-size").value + "px")
-    if(input_keybord != undefined)
+    if(select_editor.isCollapsed && select_editor != {})
     {
-        input_keybord.style.fontSize = document.getElementById("input-font-size").value + "px"
+        console.log("input")
     }
 }
 
