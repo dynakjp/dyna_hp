@@ -864,7 +864,6 @@ $(document).keydown(function(event){
                 // 上に要素があるならば上に移動
                 // 移動先の設定
                 let destination = input_keybord.parentElement.previousElementSibling
-                let index = input_keybord.previousElementSibling.textContent.length
                 // 元の位置のｘ軸を調べる
                 let width = 0
                 let element = input_keybord.previousElementSibling
@@ -883,10 +882,12 @@ $(document).keydown(function(event){
                 element = destination.children[0]
                 while(element != null)
                 {
+                    // 同じ高さのエレメントを探す
                     if(element.tagName == "A")
                     {
                         if(width <= wid + text_size(element)[0])
                         {
+                            //エレメント内の何文字目かを考える
                             i = 0
                             while(width > wid + text_size(element, i)[0])
                             {
@@ -915,7 +916,6 @@ $(document).keydown(function(event){
                     document.getSelection().addRange(select);
                     element.click()
                 }
-                
             }
         }
         else if(keyCode == 40)
