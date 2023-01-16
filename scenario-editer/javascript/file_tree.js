@@ -10,6 +10,7 @@ function import_file()
     document.getElementById("file-title").textContent = file_status[0]
     max_block_no = Number(file_status[1])
     let i = 1
+    data_array = []
     while(i < file_array.length)
     {
         let data = []
