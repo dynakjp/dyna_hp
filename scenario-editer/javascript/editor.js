@@ -125,9 +125,6 @@ function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
-    console.log("click")
-    const t = [event.target ,selected.focusNode, selected.focusOffset, selected.anchorNode, selected.anchorOffset]
-    console.log(t)
     if(selected.anchorOffset == selected.focusOffset)
     {        
         // キーボード入力部の作成
