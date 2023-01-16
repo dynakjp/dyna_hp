@@ -125,7 +125,6 @@ function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
-    
     if(selected.anchorOffset == selected.focusOffset)
     {        
         // キーボード入力部の作成
@@ -209,17 +208,20 @@ function edit_text()
         }
 
         // 前方ラベルの文字を選択部分より前のみに
-        let str = selected.focusNode.textContent
-        let points = [Math.min(selected.focusOffset, selected.anchorOffset), Math.max(selected.focusOffset, selected.anchorOffset)]
-        event.target.textContent = str.slice(0, points[0])
+        let str = event.target.textContent
+        let point = selected.focusOffset
+        if(event.target != selected.focusNode.parentElement)
+        {
+            point = 0
+        }
+        event.target.textContent = str.slice(0, point)
         // 後方ラベルを作成し選択部分以降を表示
         let text_after = document.createElement("a")
-        text_after.textContent = str.slice(points[1], str.length)
+        text_after.textContent = str.slice(point, str.length)
         copy_text_style(text_after, event.target)
         text_after.onclick = edit_text
         input_keybord.after(text_after) 
         // input内に選択した文字を入れ、フォーカスとinput内全選択
-        input_keybord.value = str.slice(...points);
         input_keybord.focus();
         input_keybord.setSelectionRange(0, input_keybord.value.length);
         
