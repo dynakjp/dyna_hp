@@ -324,6 +324,7 @@ function reset_editor()
     {
         editor_content_list.removeChild(editor_content_list.firstChild)
     }
+    select_editor = {}
 }
 
 function import_data(data)
