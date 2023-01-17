@@ -85,8 +85,6 @@ document.getElementById("button-font-bold").onclick = function()
         select.setEnd(select_element.firstChild, select_element.firstChild.length)
         document.getSelection().removeAllRanges();
         document.getSelection().addRange(select);
-        // console.log(text.slice(selected.anchorOffset, selected.focusOffset))
-        // console.log(test.slice(selected.focusOffset))
     }
 }
 
