@@ -63,7 +63,11 @@ document.onselectionchange = () =>
 
 document.getElementById("button-font-bold").onclick = function()
 {
-    if (selected.anchorNode == selected.focusNode && document.getElementById("editor-content").contains(selected.anchorNode) && selected.anchorNode.parentElement.tagName == "A")
+    if(selected.isCollapsed)
+    {
+        console.log("no select")
+    }
+    else if(selected.anchorNode == selected.focusNode && document.getElementById("editor-content").contains(selected.anchorNode) && selected.anchorNode.parentElement.tagName == "A")
     {
         const text = selected.anchorNode.parentElement.textContent
         let before_element = make_label(text.slice(0, selected.anchorOffset))
