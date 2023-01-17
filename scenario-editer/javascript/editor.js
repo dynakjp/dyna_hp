@@ -3,7 +3,7 @@ let selected
 let input_keybord = undefined
 let composition
 let cursor
-let select_editor = {}
+let select_text = {}
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -53,18 +53,23 @@ document.onselectionchange = () =>
 {
     let select = window.getSelection()
     if(document.getElementById("editor-content").contains(select.anchorNode) && document.getElementById("editor-content").contains(select.focusNode))
-    {    
-        $.extend(select_editor, window.getSelection())
+    {
+        if(select.anchorNode.parentElement.tagName == "A" && select.focusNode.parentElement.tagName == "A")
+        {
+            $.extend(select_text, window.getSelection())
+        }
     }
 }
 
-document.getElementById("input-font-size").onchange = function()
+document.getElementById("button-font-bold").onclick = function()
 {
-    const log = selected
-    console.log(document.getElementById("input-font-size").value + "px")
-    if(select_editor.isCollapsed && select_editor != {})
+    if (selected.anchorNode == selected.focusNode && document.getElementById("editor-content").contains(selected.anchorNode) && selected.anchorNode.parentElement.tagName == "A")
     {
-        console.log("input")
+        const text = selected.anchorNode.parentElement.textContent
+        console.log(make_label(text.slice(0, selected.anchorOffset)))
+        
+        // console.log(text.slice(selected.anchorOffset, selected.focusOffset))
+        // console.log(test.slice(selected.focusOffset))
     }
 }
 
@@ -324,7 +329,7 @@ function reset_editor()
     {
         editor_content_list.removeChild(editor_content_list.firstChild)
     }
-    select_editor = {}
+    select_text = {}
 }
 
 function import_data(data)
