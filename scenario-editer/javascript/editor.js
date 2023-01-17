@@ -426,15 +426,18 @@ function make_label(str, styles)
     let element_a = document.createElement("a")
     element_a.textContent = str
     element_a.onclick = edit_text
-    for(const style of styles)
+    if(styles != undefined)
     {
-        if(style.indexOf("size=") == 0)
+        for(const style of styles)
         {
-            element_a.style.fontSize = style.slice(style.indexOf("=") + 1)
-        }
-        else if(style == "bold")
-        {
-            element_a.style.fontWeight = "bold"
+            if(style.indexOf("size=") == 0)
+            {
+                element_a.style.fontSize = style.slice(style.indexOf("=") + 1)
+            }
+            else if(style == "bold")
+            {
+                element_a.style.fontWeight = "bold"
+            }
         }
     }
     return element_a
