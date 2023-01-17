@@ -1,5 +1,5 @@
 let tag_list = []
-let selected
+let selected = window.getSelection()
 let input_keybord = undefined
 let composition
 let cursor
@@ -87,6 +87,80 @@ document.getElementById("button-font-bold").onclick = function()
         let select = new Range()
         select.setStart(select_element.firstChild, 0)
         select.setEnd(select_element.firstChild, select_element.firstChild.length)
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(select);
+    }
+    else if(document.getElementById("editor-content").contains(selected.anchorNode) && document.getElementById("editor-content").contains(selected.focusNode))
+    {
+        const range = selected.getRangeAt(0)
+        let select = new Range()
+        
+        let element = range.startContainer.parentElement
+        if(element.tagName == "A")
+        {
+            const text = element.textContent.slice(range.startOffset)
+            element.textContent = element.textContent.slice(0, range.startOffset)
+
+            let select_element = make_label(text)
+            copy_text_style(select_element, element)
+            select_element.style.fontWeight = "bold"
+            element.after(select_element)
+
+            select.setStart(select_element.firstChild, 0)
+            element = select_element.nextElementSibling
+        }
+        else if(range.startContainer.tagName == "LI")
+        {
+            element = range.startContainer.children[range.startContainer.childElementCount - 1]
+        }
+
+        while(element.tagName != "BR")
+        {
+            if(element.tagName == "A")
+            {
+                element.style.fontWeight = "bold"
+            }
+            element = element.nextElementSibling
+        }
+
+        element = element.parentElement.nextElementSibling
+        let end = range.endContainer.parentElement
+        if(range.endContainer.tagName == "LI")
+        {
+            end = range.endContainer.children[0]
+        }
+        while(element != end.parentElement)
+        {
+            for(let ele of element.children)
+            {
+                if(ele.tagName == "A")
+                {
+                    ele.style.fontWeight = "bold"
+                }
+            }
+            element = element.nextElementSibling
+        }
+
+        element = element.children[0]
+        while(element != end)
+        {
+            if(element.tagName == "A")
+            {
+                element.style.fontWeight = "bold"
+            }
+            element = element.nextElementSibling
+        }
+        if(element.tagName == "A")
+        {
+            const text = element.textContent.slice(0, range.endOffset)
+            element.textContent = element.textContent.slice(range.endOffset)
+
+            let select_element = make_label(text)
+            copy_text_style(select_element, element)
+            select_element.style.fontWeight = "bold"
+            element.before(select_element)
+            select.setEnd(select_element.firstChild, select_element.firstChild.length)
+        }
         document.getSelection().removeAllRanges();
         document.getSelection().addRange(select);
     }
