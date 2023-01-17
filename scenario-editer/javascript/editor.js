@@ -66,8 +66,25 @@ document.getElementById("button-font-bold").onclick = function()
     if (selected.anchorNode == selected.focusNode && document.getElementById("editor-content").contains(selected.anchorNode) && selected.anchorNode.parentElement.tagName == "A")
     {
         const text = selected.anchorNode.parentElement.textContent
-        console.log(make_label(text.slice(0, selected.anchorOffset)))
+        let before_element = make_label(text.slice(0, selected.anchorOffset))
+        copy_text_style(before_element, selected.anchorNode.parentElement)
+        selected.anchorNode.parentElement.before(before_element)
+
+        let select_element = make_label(text.slice(selected.anchorOffset, selected.focusOffset))
+        copy_text_style(select_element, selected.anchorNode.parentElement)
+        select_element.style.fontWeight = "bold"
+        selected.anchorNode.parentElement.before(select_element)
         
+        let after_element = make_label(text.slice(selected.focusOffset))
+        copy_text_style(after_element, selected.anchorNode.parentElement)
+        selected.anchorNode.parentElement.before(after_element)
+        
+        selected.anchorNode.parentElement.parentElement.removeChild(selected.anchorNode.parentElement)
+        let select = new Range()
+        select.setStart(select_element.firstChild, 0)
+        select.setEnd(select_element.firstChild, select_element.firstChild.length)
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(select);
         // console.log(text.slice(selected.anchorOffset, selected.focusOffset))
         // console.log(test.slice(selected.focusOffset))
     }
