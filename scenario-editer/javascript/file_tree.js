@@ -562,4 +562,24 @@ function open_file()
     })();
 }
 
+document.getElementById("button-new-file").onclick = new_file
+function new_file()
+{
+    const file_name = window.prompt("プロジェクト名を入力してください\n※　保存名とは別です　※", "");
+    if(file_name == null || file_name == "")
+    {
+        window.alert('キャンセルしました')
+    }
+    else if(file_name.indexOf(",") != -1)
+    {
+        window.alert('ファイル名に,は使えません')
+    }
+    else
+    {
+        file = file_name + ",0\n0,0,text,初期作成\n\n<text>\n<break>"
+        console.log(file)
+        import_file()
+        make_tree()
+    }
+}
 reset_tree()
