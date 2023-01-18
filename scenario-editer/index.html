@@ -55,11 +55,14 @@
                                     <input type="text" class="form-control" placeholder="タイトル" id="input-block-title">
                                 </div>
                             </div>
-                            <div id="editor-button">
-                                <div  class="input-group">
-                                    <input id="input-font-size" type="number" min="1" max="100" value="12">
+                            <div id="editor-button" style="display:flex;">
+                                <div  class="input-group" style="width:auto;">
+                                    <button id="button-font-small" class="btn btn-outline-success" type="button"><i class="fas fa-search"></i> 小</button>
+                                    <button id="button-font-big" class="btn btn-outline-success" type="button"><i class="fas fa-search"></i> 大</button>
+                                </div>
+                                <div  class="input-group" style="width:auto;">
+                                    <button id="button-font-nomal" class="btn btn-outline-success" type="button"><i class="fas fa-search"></i> N</button>
                                     <button id="button-font-bold" class="btn btn-outline-success" type="button"><i class="fas fa-search"></i> B</button>
-                                    <button class="btn btn-outline-success" type="button" id="button-add-link"><i class="fas fa-search"></i> link</button>
                                 </div>
                             </div>
                         </div>
