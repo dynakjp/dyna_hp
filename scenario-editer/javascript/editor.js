@@ -61,6 +61,11 @@ document.onselectionchange = () =>
     }
 }
 
+document.getElementById("button-font-normal").onclick = function()
+{
+    edit_select_text(function(element){element.style.fontWeight = "normal";});
+}
+
 document.getElementById("button-font-bold").onclick = function()
 {
     edit_select_text(function(element){element.style.fontWeight = "bold";});
