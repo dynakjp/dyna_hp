@@ -63,6 +63,11 @@ document.onselectionchange = () =>
 
 document.getElementById("button-font-bold").onclick = function()
 {
+    edit_select_text(function(element){element.style.fontWeight = "bold";});
+} 
+
+function edit_select_text(func)
+{
     if(document.getElementById("editor-content").contains(selected.anchorNode) && document.getElementById("editor-content").contains(selected.focusNode))
     {
         if(selected.isCollapsed)
@@ -78,7 +83,7 @@ document.getElementById("button-font-bold").onclick = function()
 
             let select_element = make_label(text.slice(selected.anchorOffset, selected.focusOffset))
             copy_text_style(select_element, selected.anchorNode.parentElement)
-            select_element.style.fontWeight = "bold"
+            func(select_element)
             selected.anchorNode.parentElement.before(select_element)
             
             let after_element = make_label(text.slice(selected.focusOffset))
@@ -105,7 +110,7 @@ document.getElementById("button-font-bold").onclick = function()
 
                 let select_element = make_label(text)
                 copy_text_style(select_element, element)
-                select_element.style.fontWeight = "bold"
+                func(select_element)
                 element.after(select_element)
 
                 select.setStart(select_element.firstChild, 0)
@@ -116,7 +121,7 @@ document.getElementById("button-font-bold").onclick = function()
             {
                 if(element.tagName == "A")
                 {
-                    element.style.fontWeight = "bold"
+                    func(element)
                 }
                 element = element.nextElementSibling
             }
@@ -127,7 +132,7 @@ document.getElementById("button-font-bold").onclick = function()
 
                 let select_element = make_label(text)
                 copy_text_style(select_element, element)
-                select_element.style.fontWeight = "bold"
+                func(select_element)
                 element.before(select_element)
                 select.setEnd(select_element.firstChild, select_element.firstChild.length)
             }
@@ -147,7 +152,7 @@ document.getElementById("button-font-bold").onclick = function()
 
                 let select_element = make_label(text)
                 copy_text_style(select_element, element)
-                select_element.style.fontWeight = "bold"
+                func(select_element)
                 element.after(select_element)
 
                 select.setStart(select_element.firstChild, 0)
@@ -162,7 +167,7 @@ document.getElementById("button-font-bold").onclick = function()
             {
                 if(element.tagName == "A")
                 {
-                    element.style.fontWeight = "bold"
+                    func(element)
                 }
                 element = element.nextElementSibling
             }
@@ -179,7 +184,7 @@ document.getElementById("button-font-bold").onclick = function()
                 {
                     if(ele.tagName == "A")
                     {
-                        ele.style.fontWeight = "bold"
+                        func(ele)
                     }
                 }
                 element = element.nextElementSibling
@@ -190,7 +195,7 @@ document.getElementById("button-font-bold").onclick = function()
             {
                 if(element.tagName == "A")
                 {
-                    element.style.fontWeight = "bold"
+                    func(element)
                 }
                 element = element.nextElementSibling
             }
@@ -201,7 +206,7 @@ document.getElementById("button-font-bold").onclick = function()
 
                 let select_element = make_label(text)
                 copy_text_style(select_element, element)
-                select_element.style.fontWeight = "bold"
+                func(select_element)
                 element.before(select_element)
                 select.setEnd(select_element.firstChild, select_element.firstChild.length)
             }
