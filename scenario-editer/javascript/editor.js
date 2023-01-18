@@ -239,8 +239,8 @@ function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
-    if(selected.anchorOffset == selected.focusOffset)
-    {        
+    if(selected.isCollapsed)
+    {
         // キーボード入力部の作成
         input_keybord = document.createElement("input")
         input_keybord.type = "text"
@@ -376,34 +376,36 @@ function edit_text()
 // 行のラベルのない部分をクリックした時
 function click_row_text()
 {
-    // その行の一番最後のラベルの一番後ろにカーソルを合わせる
-    let parent = event.target
-    let i = parent.childElementCount - 1
-    select = new Range();
-    // 後ろから前に生きつつ<a>を探す
-    while(0 <= i)
+    if(selected.isCollapsed)
     {
-        if(parent.children[i].tagName == "A")
+        // その行の一番最後のラベルの一番後ろにカーソルを合わせる
+        let parent = event.target
+        let i = parent.childElementCount - 1
+        select = new Range();
+        // 後ろから前に生きつつ<a>を探す
+        while(0 <= i)
         {
-            // <a>の最後尾にカーソルを合わせクリックする
-            if(parent.children[i].firstChild == null)
+            if(parent.children[i].tagName == "A")
             {
-                select.setStart(parent.children[i], 0)
-                select.setEnd(parent.children[i], 0)
+                // <a>の最後尾にカーソルを合わせクリックする
+                if(parent.children[i].firstChild == null)
+                {
+                    select.setStart(parent.children[i], 0)
+                    select.setEnd(parent.children[i], 0)
+                }
+                else
+                {
+                    select.setStart(parent.children[i].firstChild, parent.children[i].firstChild.length)
+                    select.setEnd(parent.children[i].firstChild, parent.children[i].firstChild.length)
+                }
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+                parent.children[i].click();
+                break
             }
-            else
-            {
-                select.setStart(parent.children[i].firstChild, parent.children[i].firstChild.length)
-                select.setEnd(parent.children[i].firstChild, parent.children[i].firstChild.length)
-            }
-            document.getSelection().removeAllRanges();
-            document.getSelection().addRange(select);
-            parent.children[i].click();
-            break
+            i--
         }
-        i--
     }
-
 }
 
 function reset_editor()
