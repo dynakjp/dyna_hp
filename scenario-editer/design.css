@@ -11,6 +11,16 @@ ul
     cursor: default;
 }
 
+.editor-button
+{
+    width: 50px;
+}
+
+.editor-buttons
+{
+    margin-right: 10px;
+}
+
 .editor-input
 {
     /* 枠を常に表示しない */

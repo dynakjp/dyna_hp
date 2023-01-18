@@ -1,8 +1,9 @@
 let tag_list = []
-let selected
+let selected = window.getSelection()
 let input_keybord = undefined
 let composition
 let cursor
+let select_text = {}
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -47,12 +48,212 @@ function update_tag_list()
     save_data()
 }
 
-document.getElementById("input-font-size").onchange = function()
+// editor-content内を選択した場合に変数を更新
+document.onselectionchange = () => 
 {
-    console.log(document.getElementById("input-font-size").value + "px")
-    if(input_keybord != undefined)
+    let select = window.getSelection()
+    if(document.getElementById("editor-content").contains(select.anchorNode) && document.getElementById("editor-content").contains(select.focusNode))
     {
-        input_keybord.style.fontSize = document.getElementById("input-font-size").value + "px"
+        if(select.anchorNode.parentElement.tagName == "A" && select.focusNode.parentElement.tagName == "A")
+        {
+            $.extend(select_text, window.getSelection())
+        }
+    }
+}
+
+document.getElementById("button-font-small").onclick = function()
+{
+    edit_select_text(function(element)
+    {
+        const plus = -2
+        let font_size = element.style.fontSize
+        if(font_size == "")
+        {
+            font_size = window.getComputedStyle(document.documentElement).getPropertyValue('font-size')
+        }
+        font_size = parseFloat(font_size)
+        if(font_size + plus > 0)
+        {
+            element.style.fontSize = String(font_size + plus) + "px"
+        }
+    });
+}
+
+document.getElementById("button-font-big").onclick = function()
+{
+    edit_select_text(function(element)
+    {
+        const plus = 2
+        let font_size = element.style.fontSize
+        if(font_size == "")
+        {
+            font_size = window.getComputedStyle(document.documentElement).getPropertyValue('font-size')
+        }
+        font_size = parseFloat(font_size)
+        if(font_size + plus > 0)
+        {
+            element.style.fontSize = String(font_size + plus) + "px"
+        }
+    });
+}
+
+document.getElementById("button-font-normal").onclick = function()
+{
+    edit_select_text(function(element){element.style.fontWeight = "normal";});
+}
+
+document.getElementById("button-font-bold").onclick = function()
+{
+    edit_select_text(function(element){element.style.fontWeight = "bold";});
+} 
+
+function edit_select_text(func)
+{
+    const range = selected.getRangeAt(0)
+    if(document.getElementById("editor-content").contains(range.startContainer) && document.getElementById("editor-content").contains(selected.focusNode))
+    {
+        if(selected.isCollapsed)
+        {
+            console.log("no select")
+        }
+        else if(range.startContainer == range.endContainer && range.startContainer.parentElement.tagName == "A")
+        {
+            const text = range.startContainer.parentElement.textContent
+            console.log(range.startOffset, range.endOffset)
+            let before_element = make_label(text.slice(0, range.startOffset))
+            copy_text_style(before_element, range.startContainer.parentElement)
+            range.startContainer.parentElement.before(before_element)
+
+            let select_element = make_label(text.slice(range.startOffset, range.endOffset))
+            copy_text_style(select_element, range.startContainer.parentElement)
+            func(select_element)
+            range.startContainer.parentElement.before(select_element)
+            
+            let after_element = make_label(text.slice(range.endOffset))
+            copy_text_style(after_element, range.startContainer.parentElement)
+            range.startContainer.parentElement.before(after_element)
+            
+            range.startContainer.parentElement.parentElement.removeChild(range.startContainer.parentElement)
+            let select = new Range()
+            select.setStart(select_element.firstChild, 0)
+            select.setEnd(select_element.firstChild, select_element.firstChild.length)
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+        }
+        else if(range.startContainer.parentElement.parentElement == selected.focusNode.parentElement.parentElement)
+        {
+            let select = new Range()
+            
+            let element = range.startContainer.parentElement
+            if(element.tagName == "A")
+            {
+                const text = element.textContent.slice(range.startOffset)
+                element.textContent = element.textContent.slice(0, range.startOffset)
+
+                let select_element = make_label(text)
+                copy_text_style(select_element, element)
+                func(select_element)
+                element.after(select_element)
+
+                select.setStart(select_element.firstChild, 0)
+                element = select_element.nextElementSibling
+            }
+
+            while(element != range.endContainer.parentElement)
+            {
+                if(element.tagName == "A")
+                {
+                    func(element)
+                }
+                element = element.nextElementSibling
+            }
+            if(element.tagName == "A")
+            {
+                const text = element.textContent.slice(0, range.endOffset)
+                element.textContent = element.textContent.slice(range.endOffset)
+
+                let select_element = make_label(text)
+                copy_text_style(select_element, element)
+                func(select_element)
+                element.before(select_element)
+                select.setEnd(select_element.firstChild, select_element.firstChild.length)
+            }
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+        }
+        else
+        {
+            let select = new Range()
+            
+            let element = range.startContainer.parentElement
+            if(element.tagName == "A")
+            {
+                const text = element.textContent.slice(range.startOffset)
+                element.textContent = element.textContent.slice(0, range.startOffset)
+
+                let select_element = make_label(text)
+                copy_text_style(select_element, element)
+                func(select_element)
+                element.after(select_element)
+
+                select.setStart(select_element.firstChild, 0)
+                element = select_element.nextElementSibling
+            }
+            else if(range.startContainer.tagName == "LI")
+            {
+                element = range.startContainer.children[range.startContainer.childElementCount - 1]
+            }
+
+            while(element.tagName != "BR")
+            {
+                if(element.tagName == "A")
+                {
+                    func(element)
+                }
+                element = element.nextElementSibling
+            }
+
+            element = element.parentElement.nextElementSibling
+            let end = range.endContainer.parentElement
+            if(range.endContainer.tagName == "LI")
+            {
+                end = range.endContainer.children[0]
+            }
+            while(element != end.parentElement)
+            {
+                for(let ele of element.children)
+                {
+                    if(ele.tagName == "A")
+                    {
+                        func(ele)
+                    }
+                }
+                element = element.nextElementSibling
+            }
+
+            element = element.children[0]
+            while(element != end)
+            {
+                if(element.tagName == "A")
+                {
+                    func(element)
+                }
+                element = element.nextElementSibling
+            }
+            if(element.tagName == "A")
+            {
+                const text = element.textContent.slice(0, range.endOffset)
+                element.textContent = element.textContent.slice(range.endOffset)
+
+                let select_element = make_label(text)
+                copy_text_style(select_element, element)
+                func(select_element)
+                element.before(select_element)
+                select.setEnd(select_element.firstChild, select_element.firstChild.length)
+            }
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+        }
     }
 }
 
@@ -129,8 +330,8 @@ function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
-    if(selected.anchorOffset == selected.focusOffset)
-    {        
+    if(selected.isCollapsed)
+    {
         // キーボード入力部の作成
         input_keybord = document.createElement("input")
         input_keybord.type = "text"
@@ -266,34 +467,36 @@ function edit_text()
 // 行のラベルのない部分をクリックした時
 function click_row_text()
 {
-    // その行の一番最後のラベルの一番後ろにカーソルを合わせる
-    let parent = event.target
-    let i = parent.childElementCount - 1
-    select = new Range();
-    // 後ろから前に生きつつ<a>を探す
-    while(0 <= i)
+    if(selected.isCollapsed)
     {
-        if(parent.children[i].tagName == "A")
+        // その行の一番最後のラベルの一番後ろにカーソルを合わせる
+        let parent = event.target
+        let i = parent.childElementCount - 1
+        select = new Range();
+        // 後ろから前に生きつつ<a>を探す
+        while(0 <= i)
         {
-            // <a>の最後尾にカーソルを合わせクリックする
-            if(parent.children[i].firstChild == null)
+            if(parent.children[i].tagName == "A")
             {
-                select.setStart(parent.children[i], 0)
-                select.setEnd(parent.children[i], 0)
+                // <a>の最後尾にカーソルを合わせクリックする
+                if(parent.children[i].firstChild == null)
+                {
+                    select.setStart(parent.children[i], 0)
+                    select.setEnd(parent.children[i], 0)
+                }
+                else
+                {
+                    select.setStart(parent.children[i].firstChild, parent.children[i].firstChild.length)
+                    select.setEnd(parent.children[i].firstChild, parent.children[i].firstChild.length)
+                }
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+                parent.children[i].click();
+                break
             }
-            else
-            {
-                select.setStart(parent.children[i].firstChild, parent.children[i].firstChild.length)
-                select.setEnd(parent.children[i].firstChild, parent.children[i].firstChild.length)
-            }
-            document.getSelection().removeAllRanges();
-            document.getSelection().addRange(select);
-            parent.children[i].click();
-            break
+            i--
         }
-        i--
     }
-
 }
 
 function reset_editor()
@@ -312,6 +515,7 @@ function reset_editor()
     {
         editor_content_list.removeChild(editor_content_list.firstChild)
     }
+    select_text = {}
 }
 
 function import_data(data)
@@ -408,15 +612,18 @@ function make_label(str, styles)
     let element_a = document.createElement("a")
     element_a.textContent = str
     element_a.onclick = edit_text
-    for(const style of styles)
+    if(styles != undefined)
     {
-        if(style.indexOf("size=") == 0)
+        for(const style of styles)
         {
-            element_a.style.fontSize = style.slice(style.indexOf("=") + 1)
-        }
-        else if(style == "bold")
-        {
-            element_a.style.fontWeight = "bold"
+            if(style.indexOf("size=") == 0)
+            {
+                element_a.style.fontSize = style.slice(style.indexOf("=") + 1)
+            }
+            else if(style == "bold")
+            {
+                element_a.style.fontWeight = "bold"
+            }
         }
     }
     return element_a
