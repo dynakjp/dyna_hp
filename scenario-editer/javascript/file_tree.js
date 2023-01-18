@@ -534,52 +534,67 @@ async function save_file()
 document.getElementById("button-open-file").onclick = open_file
 function open_file()
 {
-    const showOpenFileDialog = () => {
-        return new Promise(resolve => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.txt, text/plain';
-            input.onchange = event => { resolve(event.target.files[0]); };
-            input.click();
-        });
-    };
-    
-    const readAsText = file => {
-        return new Promise(resolve => {
-            const reader = new FileReader();
-            reader.readAsText(file);
-            reader.onload = () => { resolve(reader.result); };
-        });
-    };
-    
-    (async () => {
-        const file_data = await showOpenFileDialog();
-        file = await readAsText(file_data);
-        // 内容表示
-        // console.log(file);
-        import_file()
-        make_tree()
-    })();
+    if(confirm("保存していないデータは消去されます。\n問題がある場合はキャンセルし保存してください"))
+    {
+        const showOpenFileDialog = () => {
+            return new Promise(resolve => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.txt, text/plain';
+                input.onchange = event => { resolve(event.target.files[0]); };
+                input.click();
+            });
+        };
+        
+        const readAsText = file => {
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.readAsText(file);
+                reader.onload = () => { resolve(reader.result); };
+            });
+        };
+        
+        (async () => {
+            const file_data = await showOpenFileDialog();
+            file = await readAsText(file_data);
+            // 内容表示
+            // console.log(file);
+            import_file()
+            make_tree()
+        })();
+    }
 }
 
 document.getElementById("button-new-file").onclick = new_file
 function new_file()
 {
-    const file_name = window.prompt("プロジェクト名を入力してください\n※　保存名とは別です　※", "");
-    if(file_name == null || file_name == "")
+    if(confirm("保存していないデータは消去されます。\n問題がある場合はキャンセルし保存してください"))
     {
-        window.alert('キャンセルしました')
-    }
-    else if(file_name.indexOf(",") != -1)
-    {
-        window.alert('ファイル名に,は使えません')
-    }
-    else
-    {
-        file = file_name + ",0\n0,0,text,初期作成\n\n<text>\n<break>"
-        console.log(file)
-        import_file()
-        make_tree()
+        const file_name = window.prompt("プロジェクト名を入力してください\n※　保存名とは別です　※", "");
+        if(file_name == null || file_name == "")
+        {
+            window.alert('キャンセルしました')
+        }
+        else if(file_name.indexOf(",") != -1)
+        {
+            window.alert('ファイル名に,は使えません')
+        }
+        else
+        {
+            file = file_name + ",0\n0,0,text,初期作成\n\n<text>\n<break>"
+            console.log(file)
+            import_file()
+            make_tree()
+        }
     }
 }
+
+window.addEventListener('beforeunload', function (e) 
+{
+    // イベントをキャンセルする
+    e.preventDefault();
+    // Chrome では returnValue を設定する必要がある
+    e.returnValue = '';
+});
+
 reset_tree()
