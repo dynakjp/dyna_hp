@@ -109,38 +109,39 @@ document.getElementById("button-font-bold").onclick = function()
 
 function edit_select_text(func)
 {
-    if(document.getElementById("editor-content").contains(selected.anchorNode) && document.getElementById("editor-content").contains(selected.focusNode))
+    const range = selected.getRangeAt(0)
+    if(document.getElementById("editor-content").contains(range.startContainer) && document.getElementById("editor-content").contains(selected.focusNode))
     {
         if(selected.isCollapsed)
         {
             console.log("no select")
         }
-        else if(selected.anchorNode == selected.focusNode && selected.anchorNode.parentElement.tagName == "A")
+        else if(range.startContainer == range.endContainer && range.startContainer.parentElement.tagName == "A")
         {
-            const text = selected.anchorNode.parentElement.textContent
-            let before_element = make_label(text.slice(0, selected.anchorOffset))
-            copy_text_style(before_element, selected.anchorNode.parentElement)
-            selected.anchorNode.parentElement.before(before_element)
+            const text = range.startContainer.parentElement.textContent
+            console.log(range.startOffset, range.endOffset)
+            let before_element = make_label(text.slice(0, range.startOffset))
+            copy_text_style(before_element, range.startContainer.parentElement)
+            range.startContainer.parentElement.before(before_element)
 
-            let select_element = make_label(text.slice(selected.anchorOffset, selected.focusOffset))
-            copy_text_style(select_element, selected.anchorNode.parentElement)
+            let select_element = make_label(text.slice(range.startOffset, range.endOffset))
+            copy_text_style(select_element, range.startContainer.parentElement)
             func(select_element)
-            selected.anchorNode.parentElement.before(select_element)
+            range.startContainer.parentElement.before(select_element)
             
-            let after_element = make_label(text.slice(selected.focusOffset))
-            copy_text_style(after_element, selected.anchorNode.parentElement)
-            selected.anchorNode.parentElement.before(after_element)
+            let after_element = make_label(text.slice(range.endOffset))
+            copy_text_style(after_element, range.startContainer.parentElement)
+            range.startContainer.parentElement.before(after_element)
             
-            selected.anchorNode.parentElement.parentElement.removeChild(selected.anchorNode.parentElement)
+            range.startContainer.parentElement.parentElement.removeChild(range.startContainer.parentElement)
             let select = new Range()
             select.setStart(select_element.firstChild, 0)
             select.setEnd(select_element.firstChild, select_element.firstChild.length)
             document.getSelection().removeAllRanges();
             document.getSelection().addRange(select);
         }
-        else if(selected.anchorNode.parentElement.parentElement == selected.focusNode.parentElement.parentElement)
+        else if(range.startContainer.parentElement.parentElement == selected.focusNode.parentElement.parentElement)
         {
-            const range = selected.getRangeAt(0)
             let select = new Range()
             
             let element = range.startContainer.parentElement
@@ -182,7 +183,6 @@ function edit_select_text(func)
         }
         else
         {
-            const range = selected.getRangeAt(0)
             let select = new Range()
             
             let element = range.startContainer.parentElement
