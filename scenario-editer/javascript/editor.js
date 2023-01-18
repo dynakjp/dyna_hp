@@ -63,106 +63,151 @@ document.onselectionchange = () =>
 
 document.getElementById("button-font-bold").onclick = function()
 {
-    if(selected.isCollapsed)
+    if(document.getElementById("editor-content").contains(selected.anchorNode) && document.getElementById("editor-content").contains(selected.focusNode))
     {
-        console.log("no select")
-    }
-    else if(selected.anchorNode == selected.focusNode && document.getElementById("editor-content").contains(selected.anchorNode) && selected.anchorNode.parentElement.tagName == "A")
-    {
-        const text = selected.anchorNode.parentElement.textContent
-        let before_element = make_label(text.slice(0, selected.anchorOffset))
-        copy_text_style(before_element, selected.anchorNode.parentElement)
-        selected.anchorNode.parentElement.before(before_element)
-
-        let select_element = make_label(text.slice(selected.anchorOffset, selected.focusOffset))
-        copy_text_style(select_element, selected.anchorNode.parentElement)
-        select_element.style.fontWeight = "bold"
-        selected.anchorNode.parentElement.before(select_element)
-        
-        let after_element = make_label(text.slice(selected.focusOffset))
-        copy_text_style(after_element, selected.anchorNode.parentElement)
-        selected.anchorNode.parentElement.before(after_element)
-        
-        selected.anchorNode.parentElement.parentElement.removeChild(selected.anchorNode.parentElement)
-        let select = new Range()
-        select.setStart(select_element.firstChild, 0)
-        select.setEnd(select_element.firstChild, select_element.firstChild.length)
-        document.getSelection().removeAllRanges();
-        document.getSelection().addRange(select);
-    }
-    else if(document.getElementById("editor-content").contains(selected.anchorNode) && document.getElementById("editor-content").contains(selected.focusNode))
-    {
-        const range = selected.getRangeAt(0)
-        let select = new Range()
-        
-        let element = range.startContainer.parentElement
-        if(element.tagName == "A")
+        if(selected.isCollapsed)
         {
-            const text = element.textContent.slice(range.startOffset)
-            element.textContent = element.textContent.slice(0, range.startOffset)
+            console.log("no select")
+        }
+        else if(selected.anchorNode == selected.focusNode && selected.anchorNode.parentElement.tagName == "A")
+        {
+            const text = selected.anchorNode.parentElement.textContent
+            let before_element = make_label(text.slice(0, selected.anchorOffset))
+            copy_text_style(before_element, selected.anchorNode.parentElement)
+            selected.anchorNode.parentElement.before(before_element)
 
-            let select_element = make_label(text)
-            copy_text_style(select_element, element)
+            let select_element = make_label(text.slice(selected.anchorOffset, selected.focusOffset))
+            copy_text_style(select_element, selected.anchorNode.parentElement)
             select_element.style.fontWeight = "bold"
-            element.after(select_element)
-
+            selected.anchorNode.parentElement.before(select_element)
+            
+            let after_element = make_label(text.slice(selected.focusOffset))
+            copy_text_style(after_element, selected.anchorNode.parentElement)
+            selected.anchorNode.parentElement.before(after_element)
+            
+            selected.anchorNode.parentElement.parentElement.removeChild(selected.anchorNode.parentElement)
+            let select = new Range()
             select.setStart(select_element.firstChild, 0)
-            element = select_element.nextElementSibling
-        }
-        else if(range.startContainer.tagName == "LI")
-        {
-            element = range.startContainer.children[range.startContainer.childElementCount - 1]
-        }
-
-        while(element.tagName != "BR")
-        {
-            if(element.tagName == "A")
-            {
-                element.style.fontWeight = "bold"
-            }
-            element = element.nextElementSibling
-        }
-
-        element = element.parentElement.nextElementSibling
-        let end = range.endContainer.parentElement
-        if(range.endContainer.tagName == "LI")
-        {
-            end = range.endContainer.children[0]
-        }
-        while(element != end.parentElement)
-        {
-            for(let ele of element.children)
-            {
-                if(ele.tagName == "A")
-                {
-                    ele.style.fontWeight = "bold"
-                }
-            }
-            element = element.nextElementSibling
-        }
-
-        element = element.children[0]
-        while(element != end)
-        {
-            if(element.tagName == "A")
-            {
-                element.style.fontWeight = "bold"
-            }
-            element = element.nextElementSibling
-        }
-        if(element.tagName == "A")
-        {
-            const text = element.textContent.slice(0, range.endOffset)
-            element.textContent = element.textContent.slice(range.endOffset)
-
-            let select_element = make_label(text)
-            copy_text_style(select_element, element)
-            select_element.style.fontWeight = "bold"
-            element.before(select_element)
             select.setEnd(select_element.firstChild, select_element.firstChild.length)
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
         }
-        document.getSelection().removeAllRanges();
-        document.getSelection().addRange(select);
+        else if(selected.anchorNode.parentElement.parentElement == selected.focusNode.parentElement.parentElement)
+        {
+            const range = selected.getRangeAt(0)
+            let select = new Range()
+            
+            let element = range.startContainer.parentElement
+            if(element.tagName == "A")
+            {
+                const text = element.textContent.slice(range.startOffset)
+                element.textContent = element.textContent.slice(0, range.startOffset)
+
+                let select_element = make_label(text)
+                copy_text_style(select_element, element)
+                select_element.style.fontWeight = "bold"
+                element.after(select_element)
+
+                select.setStart(select_element.firstChild, 0)
+                element = select_element.nextElementSibling
+            }
+
+            while(element != range.endContainer.parentElement)
+            {
+                if(element.tagName == "A")
+                {
+                    element.style.fontWeight = "bold"
+                }
+                element = element.nextElementSibling
+            }
+            if(element.tagName == "A")
+            {
+                const text = element.textContent.slice(0, range.endOffset)
+                element.textContent = element.textContent.slice(range.endOffset)
+
+                let select_element = make_label(text)
+                copy_text_style(select_element, element)
+                select_element.style.fontWeight = "bold"
+                element.before(select_element)
+                select.setEnd(select_element.firstChild, select_element.firstChild.length)
+            }
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+        }
+        else
+        {
+            const range = selected.getRangeAt(0)
+            let select = new Range()
+            
+            let element = range.startContainer.parentElement
+            if(element.tagName == "A")
+            {
+                const text = element.textContent.slice(range.startOffset)
+                element.textContent = element.textContent.slice(0, range.startOffset)
+
+                let select_element = make_label(text)
+                copy_text_style(select_element, element)
+                select_element.style.fontWeight = "bold"
+                element.after(select_element)
+
+                select.setStart(select_element.firstChild, 0)
+                element = select_element.nextElementSibling
+            }
+            else if(range.startContainer.tagName == "LI")
+            {
+                element = range.startContainer.children[range.startContainer.childElementCount - 1]
+            }
+
+            while(element.tagName != "BR")
+            {
+                if(element.tagName == "A")
+                {
+                    element.style.fontWeight = "bold"
+                }
+                element = element.nextElementSibling
+            }
+
+            element = element.parentElement.nextElementSibling
+            let end = range.endContainer.parentElement
+            if(range.endContainer.tagName == "LI")
+            {
+                end = range.endContainer.children[0]
+            }
+            while(element != end.parentElement)
+            {
+                for(let ele of element.children)
+                {
+                    if(ele.tagName == "A")
+                    {
+                        ele.style.fontWeight = "bold"
+                    }
+                }
+                element = element.nextElementSibling
+            }
+
+            element = element.children[0]
+            while(element != end)
+            {
+                if(element.tagName == "A")
+                {
+                    element.style.fontWeight = "bold"
+                }
+                element = element.nextElementSibling
+            }
+            if(element.tagName == "A")
+            {
+                const text = element.textContent.slice(0, range.endOffset)
+                element.textContent = element.textContent.slice(range.endOffset)
+
+                let select_element = make_label(text)
+                copy_text_style(select_element, element)
+                select_element.style.fontWeight = "bold"
+                element.before(select_element)
+                select.setEnd(select_element.firstChild, select_element.firstChild.length)
+            }
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+        }
     }
 }
 
