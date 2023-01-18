@@ -61,6 +61,42 @@ document.onselectionchange = () =>
     }
 }
 
+document.getElementById("button-font-small").onclick = function()
+{
+    edit_select_text(function(element)
+    {
+        const plus = -2
+        let font_size = element.style.fontSize
+        if(font_size == "")
+        {
+            font_size = window.getComputedStyle(document.documentElement).getPropertyValue('font-size')
+        }
+        font_size = parseFloat(font_size)
+        if(font_size + plus > 0)
+        {
+            element.style.fontSize = String(font_size + plus) + "px"
+        }
+    });
+}
+
+document.getElementById("button-font-big").onclick = function()
+{
+    edit_select_text(function(element)
+    {
+        const plus = 2
+        let font_size = element.style.fontSize
+        if(font_size == "")
+        {
+            font_size = window.getComputedStyle(document.documentElement).getPropertyValue('font-size')
+        }
+        font_size = parseFloat(font_size)
+        if(font_size + plus > 0)
+        {
+            element.style.fontSize = String(font_size + plus) + "px"
+        }
+    });
+}
+
 document.getElementById("button-font-normal").onclick = function()
 {
     edit_select_text(function(element){element.style.fontWeight = "normal";});
