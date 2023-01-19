@@ -1140,7 +1140,6 @@ $(document).keydown(function(event){
                         if(width <= wid + text_size(element)[0])
                         {
                             //エレメント内の何文字目かを考える
-                            i = 0
                             while(width > wid + text_size(element, i)[0])
                             {
                                 i ++
@@ -1154,7 +1153,7 @@ $(document).keydown(function(event){
                     }
                     element = element.nextElementSibling
                 }
-                if(element == null)
+                if(element == null || element.firstChild == null)
                 {
                     // 行の長さが満たないので末尾
                     destination.click()
@@ -1203,7 +1202,6 @@ $(document).keydown(function(event){
                         if(width <= wid + text_size(element)[0])
                         {
                             //エレメント内の何文字目かを考える
-                            i = 0
                             while(width > wid + text_size(element, i)[0])
                             {
                                 i ++
@@ -1217,7 +1215,7 @@ $(document).keydown(function(event){
                     }
                     element = element.nextElementSibling
                 }
-                if(element == null)
+                if(element == null || element.firstChild == null)
                 {
                     // 行の長さが満たないので末尾
                     destination.click()
