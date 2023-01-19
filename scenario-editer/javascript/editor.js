@@ -344,6 +344,41 @@ function edit_text()
         {
             if(!composition)
             {
+                const datas = event.target.value.split(" ")
+                if(datas.length > 1)
+                {
+                    let element = make_label(datas[0])
+                    copy_text_style(element, input_keybord)
+                    event.target.before(element)
+                    element = event.target.nextElementSibling
+                    let element_li
+                    for(const data of datas.splice(1))
+                    {
+                        element_li = document.createElement("li")
+                        element_li.onclick = click_row_text
+                        element_li.classList.add("editor-row")
+                        element.parentElement.after(element_li)
+                        element = element.nextElementSibling
+                        while(element.tagName != "BR")
+                        {
+                            const target = element
+                            element = element.nextElementSibling
+                            console.log(target,element)
+                            element_li.appendChild(target)
+                        }
+                        element_li.appendChild(document.createElement("br"))
+                        synthesis_text(element_li.previousElementSibling)
+
+                        element = make_label(data)
+                        copy_text_style(element, input_keybord)
+                        element_li.children[0].before(element)
+                    }
+                    event.target.value = ""
+                    input_keybord.blur()
+                    element_li.click()
+                    return
+                }
+
                 // 変換前でないなら前のラベルに文字追加
                 if(event.target.previousElementSibling == null)
                 {
