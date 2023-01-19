@@ -1078,6 +1078,13 @@ $(document).keydown(function(event){
                     index = 1
                     input_keybord.blur()
                 }
+                else if(destination == null)
+                {
+                    //前にラベルがない
+                    index = 1
+                    destination = input_keybord.nextElementSibling
+                    input_keybord.blur()
+                }
                 else if(destination.textContent == "")
                 {
                     // 行の最初
