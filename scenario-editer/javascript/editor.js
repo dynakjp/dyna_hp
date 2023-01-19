@@ -344,6 +344,50 @@ function edit_text()
         {
             if(!composition)
             {
+                // コピペなどでスペースを含む文章を渡された場合
+                // inputは改行をスペースとして受け取るのでやや不本意だがスペースを改行として考えて変換する
+                const datas = event.target.value.split(" ")
+                if(datas.length > 1 && event.target.value != " ")
+                {
+                    // 1行目入力
+                    let element = make_label(datas[0])
+                    copy_text_style(element, input_keybord)
+                    event.target.before(element)
+                    element = event.target
+                    let element_li
+                    // 2行目以降は行作成　テキスト作成　改行作成
+                    for(const data of datas.splice(1))
+                    {
+                        element_li = document.createElement("li")
+                        element_li.onclick = click_row_text
+                        element_li.classList.add("editor-row")
+                        element.parentElement.after(element_li)
+                        element = element.nextElementSibling
+                        while(element.tagName != "BR")
+                        {
+                            const target = element
+                            element = element.nextElementSibling
+                            element_li.appendChild(target)
+                        }
+                        element_li.appendChild(document.createElement("br"))
+                        synthesis_text(element_li.previousElementSibling)
+
+                        element = make_label(data)
+                        copy_text_style(element, input_keybord)
+                        element_li.children[0].before(element)
+                    }
+                    // インプットの内容を消して、終了し、最後に作った要素にカーソルを持ってくる
+                    event.target.value = ""
+                    input_keybord.blur()
+
+                    select.setStart(element.firstChild, element.firstChild.length)
+                    select.setEnd(element.firstChild, element.firstChild.length)
+                    document.getSelection().removeAllRanges();
+                    document.getSelection().addRange(select);
+                    element.click()
+                    return
+                }
+
                 // 変換前でないなら前のラベルに文字追加
                 if(event.target.previousElementSibling == null)
                 {
