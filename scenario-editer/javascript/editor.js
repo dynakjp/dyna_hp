@@ -367,7 +367,6 @@ function edit_text()
                         {
                             const target = element
                             element = element.nextElementSibling
-                            console.log(target,element)
                             element_li.appendChild(target)
                         }
                         element_li.appendChild(document.createElement("br"))
