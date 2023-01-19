@@ -11,6 +11,7 @@ document.getElementById("input-block-title").onchange = function()
     let element = document.getElementById("input-block-title");
     console.log(element.value);
     save_data()
+    make_tree()
 }
 
 // タグの追加ボタン
