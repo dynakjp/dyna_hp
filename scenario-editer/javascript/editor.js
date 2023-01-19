@@ -347,7 +347,7 @@ function edit_text()
                 // コピペなどでスペースを含む文章を渡された場合
                 // inputは改行をスペースとして受け取るのでやや不本意だがスペースを改行として考えて変換する
                 const datas = event.target.value.split(" ")
-                if(datas.length > 1)
+                if(datas.length > 1 && event.target.value != " ")
                 {
                     // 1行目入力
                     let element = make_label(datas[0])
