@@ -353,7 +353,7 @@ function edit_text()
                     let element = make_label(datas[0])
                     copy_text_style(element, input_keybord)
                     event.target.before(element)
-                    element = event.target.nextElementSibling
+                    element = event.target
                     let element_li
                     // 2行目以降は行作成　テキスト作成　改行作成
                     for(const data of datas.splice(1))
@@ -380,7 +380,12 @@ function edit_text()
                     // インプットの内容を消して、終了し、最後に作った要素にカーソルを持ってくる
                     event.target.value = ""
                     input_keybord.blur()
-                    element_li.click()
+
+                    select.setStart(element.firstChild, element.firstChild.length)
+                    select.setEnd(element.firstChild, element.firstChild.length)
+                    document.getSelection().removeAllRanges();
+                    document.getSelection().addRange(select);
+                    element.click()
                     return
                 }
 
