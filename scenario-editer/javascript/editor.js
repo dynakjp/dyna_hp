@@ -341,20 +341,25 @@ function edit_text()
         copy_text_style(input_keybord, event.target)
 
         // 文字が変わった時
-        input_keybord.oninput = function(event)
+        input_keybord.oninput = load_input_keybord
+        function load_input_keybord()
         {
+            if(input_keybord.value == "")
+            {
+                return
+            }
             if(!composition)
             {
                 // コピペなどでスペースを含む文章を渡された場合
                 // inputは改行をスペースとして受け取るのでやや不本意だがスペースを改行として考えて変換する
-                const datas = event.target.value.split(" ")
-                if(datas.length > 1 && event.target.value != " ")
+                const datas = input_keybord.value.split(" ")
+                if(datas.length > 1 && input_keybord.value != " ")
                 {
                     // 1行目入力
                     let element = make_label(datas[0])
                     copy_text_style(element, input_keybord)
-                    event.target.before(element)
-                    element = event.target
+                    input_keybord.before(element)
+                    element = input_keybord
                     let element_li
                     // 2行目以降は行作成　テキスト作成　改行作成
                     for(const data of datas.splice(1))
@@ -378,7 +383,7 @@ function edit_text()
                         element_li.children[0].before(element)
                     }
                     // インプットの内容を消して、終了し、最後に作った要素にカーソルを持ってくる
-                    event.target.value = ""
+                    input_keybord.value = ""
                     input_keybord.blur()
 
                     select.setStart(element.firstChild, element.firstChild.length)
@@ -390,17 +395,17 @@ function edit_text()
                 }
 
                 // 変換前でないなら前のラベルに文字追加
-                if(event.target.previousElementSibling == null)
+                if(input_keybord.previousElementSibling == null)
                 {
                     // ラベルがないなら作成する
                     let element = document.createElement("a")
                     element.onclick = edit_text
-                    event.target.before(element)
+                    input_keybord.before(element)
                 }
 
-                event.target.previousElementSibling.textContent +=  event.target.value
-                event.target.value = ""
-                event.target.style.width = "5px"
+                input_keybord.previousElementSibling.textContent +=  input_keybord.value
+                input_keybord.value = ""
+                input_keybord.style.width = "5px"
             }
             else
             {
@@ -412,15 +417,15 @@ function edit_text()
                 span.style.position = 'absolute';
                 span.style.top = '-1000px';
                 span.style.left = '-1000px';
-                copy_text_style(span ,event.target)
+                copy_text_style(span ,input_keybord)
 
                 span.style.whiteSpace = 'nowrap';
-                span.innerHTML = event.target.value;
+                span.innerHTML = input_keybord.value;
                 document.body.appendChild(span);
 
                 // 横幅を取得
                 width = span.clientWidth;
-                event.target.style.width = (width + 4) + "px";
+                input_keybord.style.width = (width + 4) + "px";
 
                 // 終わったら削除
                 span.parentElement.removeChild(span);
@@ -434,17 +439,7 @@ function edit_text()
         // 変換完了時　記録とラベルに反映
         input_keybord.addEventListener('compositionend', function(event){
             composition = false
-            
-            //反映しラベルに追加
-            if(event.target.previousElementSibling == null)
-            {
-                let element = document.createElement("a")
-                event.target.before(element)
-            }
-
-            event.target.previousElementSibling.textContent +=  event.target.value
-            event.target.value = ""
-            event.target.style.width = "5px"
+            window.setTimeout(load_input_keybord,1)
         });
 
         // カーソルが外れた時　ラベルの合成とinputの削除
