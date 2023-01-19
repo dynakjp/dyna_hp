@@ -344,14 +344,18 @@ function edit_text()
         {
             if(!composition)
             {
+                // コピペなどでスペースを含む文章を渡された場合
+                // inputは改行をスペースとして受け取るのでやや不本意だがスペースを改行として考えて変換する
                 const datas = event.target.value.split(" ")
                 if(datas.length > 1)
                 {
+                    // 1行目入力
                     let element = make_label(datas[0])
                     copy_text_style(element, input_keybord)
                     event.target.before(element)
                     element = event.target.nextElementSibling
                     let element_li
+                    // 2行目以降は行作成　テキスト作成　改行作成
                     for(const data of datas.splice(1))
                     {
                         element_li = document.createElement("li")
@@ -373,6 +377,7 @@ function edit_text()
                         copy_text_style(element, input_keybord)
                         element_li.children[0].before(element)
                     }
+                    // インプットの内容を消して、終了し、最後に作った要素にカーソルを持ってくる
                     event.target.value = ""
                     input_keybord.blur()
                     element_li.click()
