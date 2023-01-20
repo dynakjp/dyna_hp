@@ -492,11 +492,17 @@ function search_tag()
 document.getElementById("button-delete-block").onclick = delete_block
 function delete_block()
 {
-    const delete_block_no = select_block_no
+    const block_no = select_block_no
     // 確認を入れる
-    if(confirm("現在開いている「" + get_data(delete_block_no)[3] +"」を削除します\n復元等は出来ません。よろしいですか。"))
+    if(confirm("現在開いている「" + get_data(block_no)[3] +"」を削除します\n復元等は出来ません。よろしいですか。\n(このブロックの中のブロックは削除されません)"))
     {
-        data_array.splice(get_data_index(delete_block_no),1)
+        const block_hierarchy = get_data(block_no)[1]
+        const block_index = get_data_index(block_no)
+        data_array.splice(block_index,1)
+        for(let i = block_index; i < data_array.length && block_hierarchy < data_array[i][1]; i++)
+        {
+            data_array[i][1]--
+        }
         make_tree()
         reset_editor()
     }
