@@ -780,6 +780,7 @@ function delete_select_text(select)
     }
 }
 
+
 $(document).keydown(function(event){
     // クリックされたキーのコード
     var keyCode = event.keyCode;
