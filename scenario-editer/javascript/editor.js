@@ -7,7 +7,6 @@ let composition
 document.getElementById("input-block-title").onchange = function()
 {
     let element = document.getElementById("input-block-title");
-    console.log(element.value);
     save_data()
     make_tree()
 }
@@ -646,7 +645,6 @@ function synthesis_text(element_li)
                         count_a += 1
                     }
                 }
-                console.log(count_a)
                 if(1 < count_a)
                 {
                     element_li.removeChild(element_li.children[i])
@@ -822,10 +820,8 @@ function delete_select_text(select)
 
         synthesis_text(cursor_element.parentElement)
         let select = new Range();
-        console.log(cursor_element,cursor_offset)
         if(cursor_parent.contains(cursor_element) == false && cursor_parent.firstChild.firstChild == null)
         {
-            console.log(cursor_parent, cursor_parent.onclick)
             document.getSelection().removeAllRanges();
             cursor_parent.click()
         }
