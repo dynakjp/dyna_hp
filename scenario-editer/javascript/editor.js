@@ -638,6 +638,7 @@ function synthesis_text(element_li)
         {
             if(element_li.children[i].textContent == "")
             {
+                // 空白のテキストは行がそれしかない場合以外は削除
                 let count_a = 0
                 for(const element of element_li.children)
                 {
@@ -658,6 +659,7 @@ function synthesis_text(element_li)
             }
             else if(last != -1 && element_li.children[last].style.fontSize == element_li.children[i].style.fontSize && element_li.children[last].style.fontWeight == element_li.children[i].style.fontWeight && element_li.children[last].style.color == element_li.children[i].style.color)
             {
+                // 最後のラベルとスタイルが同じなら合成する
                 element_li.children[last].textContent += element_li.children[i].textContent
                 element_li.removeChild(element_li.children[i])
             }
