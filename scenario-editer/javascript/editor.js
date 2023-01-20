@@ -488,23 +488,26 @@ function click_row_text()
     }
 }
 
+// エディターのリセット
 function reset_editor()
 {
+    // タイトルのリセット
     let input_block_title = document.getElementById("input-block-title");
     input_block_title.value = ""
 
+    // タグリストの更新
     let select_tag_list = document.getElementById("select-tag-list")
     while(select_tag_list.childElementCount != 0)
     {
         select_tag_list.removeChild(select_tag_list.firstChild)
     }
     
+    // コンテンツの削除
     let editor_content_list = document.getElementById("editor-content-list")
     while(editor_content_list.childElementCount != 0)
     {
         editor_content_list.removeChild(editor_content_list.firstChild)
     }
-    select_text = {}
 }
 
 function import_data(data)
