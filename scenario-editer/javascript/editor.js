@@ -694,12 +694,34 @@ function delete_select_text(select)
     {
         // 1つのテキスト内
         let element_a = range.startContainer.parentElement
+        cursor_offset = range.startOffset
         element_a.textContent = element_a.textContent.slice(0, range.startOffset) + element_a.textContent.slice(range.endOffset)
+        // 選択位置の修正
+        select = new Range()
+        cursor_element = element_a
+        if(cursor_element.textContent == "")
+        {
+            cursor_offset = 0
+        }
+        while(cursor_element != null && (cursor_element.tagName != "A" || cursor_element.textContent == ""))
+        {
+            cursor_element = cursor_element.nextElementSibling
+        }
+        if(cursor_element == null)
+        {
+            cursor_element = element_a.parentElement
+        }
+        select.setStart(cursor_element.firstChild, cursor_offset)
+        select.setEnd(cursor_element.firstChild, cursor_offset)
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(select);
+        cursor_element.click()
     }
     else if(range.startContainer.parentElement.parentElement == range.endContainer.parentElement.parentElement)
     {
         // 最初の要素の選択部分を削除
         let element = range.startContainer.parentElement
+        cursor_offset = range.startOffset
         if(element.tagName == "A")
         {
             element.textContent = element.textContent.slice(0, range.startOffset)
@@ -719,6 +741,26 @@ function delete_select_text(select)
         }
         // 最後の要素の選択部分を削除
         element.textContent = element.textContent.slice(range.endOffset)
+        // 選択位置の修正
+        select = new Range()
+        cursor_element = element
+        if(cursor_element.textContent == "")
+        {
+            cursor_offset = 0
+        }
+        while(cursor_element != null && (cursor_element.tagName != "A" || cursor_element.textContent == ""))
+        {
+            cursor_element = cursor_element.nextElementSibling
+        }
+        if(cursor_element == null)
+        {
+            cursor_element = element.parentElement
+        }
+        select.setStart(cursor_element.firstChild, cursor_offset)
+        select.setEnd(cursor_element.firstChild, cursor_offset)
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(select);
+        cursor_element.click()
     }
     else
     {
