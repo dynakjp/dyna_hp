@@ -488,9 +488,22 @@ function search_tag()
     
 }
 
-// ブロックの作成
-document.getElementById("button-make-text").onclick = make_brock_text
-function make_brock_text()
+// ブロック
+document.getElementById("button-delete-block").onclick = delete_block
+function delete_block()
+{
+    const delete_block_no = select_block_no
+    // 確認を入れる
+    if(confirm("現在開いている「" + get_data(delete_block_no)[3] +"」を削除します\n復元等は出来ません。よろしいですか。"))
+    {
+        data_array.splice(get_data_index(delete_block_no),1)
+        make_tree()
+        reset_editor()
+    }
+}
+
+document.getElementById("button-make-text").onclick = make_block_text
+function make_block_text()
 {
     let select_block_index = 0
     while(data_array[select_block_index][0] != select_block_no)
