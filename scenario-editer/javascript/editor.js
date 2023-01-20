@@ -794,8 +794,10 @@ $(document).keydown(function(event){
     // キーを制御する
     if(input_keybord == undefined && selected.isCollapsed == false)
     {
+        // 範囲選択されていてinput中でない
         if(!ctrlClick && !altClick)
         {
+            // 通常文字入力、削除、スペースは範囲削除
             if(48 <= keyCode && keyCode <= 90)
             {
                 delete_select_text(selected)
