@@ -696,6 +696,30 @@ function delete_select_text(select)
         let element_a = range.startContainer.parentElement
         element_a.textContent = element_a.textContent.slice(0, range.startOffset) + element_a.textContent.slice(range.endOffset)
     }
+    else if(range.startContainer.parentElement.parentElement == range.endContainer.parentElement.parentElement)
+    {
+        // 最初の要素の選択部分を削除
+        let element = range.startContainer.parentElement
+        if(element.tagName == "A")
+        {
+            element.textContent = element.textContent.slice(0, range.startOffset)
+            element = element.nextElementSibling
+        }
+        else if(range.startContainer.tagName == "LI")
+        {
+            element = range.startContainer.children[range.startContainer.childElementCount - 1]
+        }
+
+        // 最後の要素まで削除していく
+        let end = range.endContainer.parentElement
+        while(element != end)
+        {
+            element = element.nextElementSibling
+            element.parentElement.removeChild(element.previousElementSibling)
+        }
+        // 最後の要素の選択部分を削除
+        element.textContent = element.textContent.slice(range.endOffset)
+    }
     else
     {
         // 最初の要素の選択部分を削除
