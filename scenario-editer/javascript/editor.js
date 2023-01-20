@@ -1021,7 +1021,7 @@ $(document).keydown(function(event){
         else if(keyCode == 37)
         {
             // ←（左キー）// 入力中でかつ、inputに文字が入っていない時
-            if(input_keybord.previousElementSibling == input_keybord.parentElement.children[0] && input_keybord.previousElementSibling.textContent == "")
+            if((input_keybord.previousElementSibling == null && input_keybord == input_keybord.parentElement.children[0]) || (input_keybord.previousElementSibling == input_keybord.parentElement.children[0] && input_keybord.previousElementSibling.textContent == ""))
             {
                 if(input_keybord.parentElement.previousElementSibling != null)
                 {
@@ -1055,7 +1055,7 @@ $(document).keydown(function(event){
         {
             // →（右キー）
             // 入力中でかつ、inputに文字が入っていない時
-            if(input_keybord.nextElementSibling == input_keybord.parentElement.children[input_keybord.parentElement.childElementCount - 2] && input_keybord.nextElementSibling.textContent == "")
+            if(input_keybord.nextElementSibling.tagName == "BR" || (input_keybord.nextElementSibling == input_keybord.parentElement.children[input_keybord.parentElement.childElementCount - 2] && input_keybord.nextElementSibling.textContent == ""))
             {
                 // 後ろに移動先の要素がない場合
                 if(input_keybord.parentElement.nextElementSibling != null)
@@ -1094,9 +1094,8 @@ $(document).keydown(function(event){
                 {
                     // 行の最初
                     index = 1
-                    destination = destination.parentElement
+                    destination = input_keybord.nextElementSibling
                     input_keybord.blur()
-                    destination = destination.children[0]
                 }
                 else
                 {
