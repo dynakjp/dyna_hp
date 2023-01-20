@@ -48,6 +48,7 @@ function update_tag_list()
     save_data()
 }
 
+// 文字の装飾ボタン
 document.getElementById("button-font-small").onclick = function()
 {
     edit_select_text(function(element)
@@ -94,6 +95,7 @@ document.getElementById("button-font-bold").onclick = function()
     edit_select_text(function(element){element.style.fontWeight = "bold";});
 } 
 
+// 範囲選択された文字を編集する　(編集内容)
 function edit_select_text(func)
 {
     const range = selected.getRangeAt(0)
@@ -101,26 +103,32 @@ function edit_select_text(func)
     {
         if(selected.isCollapsed)
         {
-            console.log("no select")
+            // 文字が選択されていない
+            console.log("edit_select_text: no select")
         }
         else if(range.startContainer == range.endContainer && range.startContainer.parentElement.tagName == "A")
         {
+            // 1つの要素内を選択
+            // 選択外(前方)の作成
             const text = range.startContainer.parentElement.textContent
-            console.log(range.startOffset, range.endOffset)
             let before_element = make_label(text.slice(0, range.startOffset))
             copy_text_style(before_element, range.startContainer.parentElement)
             range.startContainer.parentElement.before(before_element)
 
+            // 選択された部分の作成
             let select_element = make_label(text.slice(range.startOffset, range.endOffset))
             copy_text_style(select_element, range.startContainer.parentElement)
             func(select_element)
             range.startContainer.parentElement.before(select_element)
             
+            // 選択外(後方)の作成
             let after_element = make_label(text.slice(range.endOffset))
             copy_text_style(after_element, range.startContainer.parentElement)
             range.startContainer.parentElement.before(after_element)
             
+            // 元の要素の削除
             range.startContainer.parentElement.parentElement.removeChild(range.startContainer.parentElement)
+            // 選択状態再決定
             let select = new Range()
             select.setStart(select_element.firstChild, 0)
             select.setEnd(select_element.firstChild, select_element.firstChild.length)
@@ -129,11 +137,14 @@ function edit_select_text(func)
         }
         else if(range.startContainer.parentElement.parentElement == selected.focusNode.parentElement.parentElement)
         {
+            // 1行の内で選択されている
             let select = new Range()
             
+            // 最初の要素の編集
             let element = range.startContainer.parentElement
             if(element.tagName == "A")
             {
+                // ラベルなら選択部分を分けて編集
                 const text = element.textContent.slice(range.startOffset)
                 element.textContent = element.textContent.slice(0, range.startOffset)
 
@@ -146,6 +157,7 @@ function edit_select_text(func)
                 element = select_element.nextElementSibling
             }
 
+            // 終わりの要素までたどっていって、テキストなら編集する
             while(element != range.endContainer.parentElement)
             {
                 if(element.tagName == "A")
@@ -154,8 +166,10 @@ function edit_select_text(func)
                 }
                 element = element.nextElementSibling
             }
+            // 終わりの要素を編集
             if(element.tagName == "A")
             {
+                // ラベルなら選択部分を分けて編集
                 const text = element.textContent.slice(0, range.endOffset)
                 element.textContent = element.textContent.slice(range.endOffset)
 
@@ -165,16 +179,20 @@ function edit_select_text(func)
                 element.before(select_element)
                 select.setEnd(select_element.firstChild, select_element.firstChild.length)
             }
+            // 選択状態の変更
             document.getSelection().removeAllRanges();
             document.getSelection().addRange(select);
         }
         else
         {
+            // 2以上の行を選択している
             let select = new Range()
             
+            // 最初の要素を編集
             let element = range.startContainer.parentElement
             if(element.tagName == "A")
             {
+                // 選択部分を分割し編集
                 const text = element.textContent.slice(range.startOffset)
                 element.textContent = element.textContent.slice(0, range.startOffset)
 
@@ -188,9 +206,11 @@ function edit_select_text(func)
             }
             else if(range.startContainer.tagName == "LI")
             {
+                // 要素が行なら選択位置を変更
                 element = range.startContainer.children[range.startContainer.childElementCount - 1]
             }
 
+            // 行の端まで文字をたどっていく
             while(element.tagName != "BR")
             {
                 if(element.tagName == "A")
@@ -200,6 +220,7 @@ function edit_select_text(func)
                 element = element.nextElementSibling
             }
 
+            // 最後の要素を取得しておき、そこまでの行を編集していく
             element = element.parentElement.nextElementSibling
             let end = range.endContainer.parentElement
             if(range.endContainer.tagName == "LI")
@@ -218,6 +239,7 @@ function edit_select_text(func)
                 element = element.nextElementSibling
             }
 
+            // 最後の行の最初から最後の要素まで編集をしていく
             element = element.children[0]
             while(element != end)
             {
@@ -229,6 +251,7 @@ function edit_select_text(func)
             }
             if(element.tagName == "A")
             {
+                // 最後の要素を選択部分を分割し編集する
                 const text = element.textContent.slice(0, range.endOffset)
                 element.textContent = element.textContent.slice(range.endOffset)
 
@@ -238,6 +261,7 @@ function edit_select_text(func)
                 element.before(select_element)
                 select.setEnd(select_element.firstChild, select_element.firstChild.length)
             }
+            // 選択部分を変更
             document.getSelection().removeAllRanges();
             document.getSelection().addRange(select);
         }
