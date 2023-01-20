@@ -100,7 +100,7 @@ function edit_select_text(func)
     const range = selected.getRangeAt(0)
     if(document.getElementById("editor-content").contains(range.startContainer) && document.getElementById("editor-content").contains(selected.focusNode))
     {
-        if(selected.isCollapsed)
+        if(range.collapsed)
         {
             // 文字が選択されていない
             console.log("edit_select_text: no select")
@@ -134,7 +134,7 @@ function edit_select_text(func)
             document.getSelection().removeAllRanges();
             document.getSelection().addRange(select);
         }
-        else if(range.startContainer.parentElement.parentElement == selected.focusNode.parentElement.parentElement)
+        else if(range.startContainer.parentElement.parentElement == range.endContainer.parentElement.parentElement)
         {
             // 1行の内で選択されている
             let select = new Range()
@@ -684,7 +684,7 @@ function synthesis_text(element_li)
 function delete_select_text(select)
 {
     const range = select.getRangeAt(0)
-    if(!(document.getElementById("editor-content").contains(range.startContainer) && document.getElementById("editor-content").contains(selected.focusNode)))
+    if(!(document.getElementById("editor-content").contains(range.startContainer) && document.getElementById("editor-content").contains(range.endContainer)))
     {
         // 削除範囲がコンテンツ外
         return
