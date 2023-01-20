@@ -492,6 +492,10 @@ function make_text()
 
 function array_to_string(array, separator)
 {
+    if(array.length == 0)
+    {
+        return ""
+    }
     let string = ""
     string += array[0]
     i = 1
