@@ -378,8 +378,7 @@ function edit_text()
                 if(input_keybord.previousElementSibling == null)
                 {
                     // ラベルがないなら作成する
-                    let element = document.createElement("a")
-                    element.onclick = edit_text
+                    let element = make_label("")
                     copy_text_style(element, input_keybord)
                     input_keybord.before(element)
                 }
@@ -442,42 +441,15 @@ function edit_text()
         }
         event.target.textContent = str.slice(0, point)
         // 後方ラベルを作成し選択部分以降を表示
-        let text_after = document.createElement("a")
-        text_after.textContent = str.slice(point, str.length)
+        let text_after = make_label(str.slice(point))
         copy_text_style(text_after, event.target)
-        text_after.onclick = edit_text
         input_keybord.after(text_after) 
         // input内に選択した文字を入れ、フォーカスとinput内全選択
         input_keybord.focus();
-        input_keybord.setSelectionRange(0, input_keybord.value.length);
+        input_keybord.setSelectionRange(0, 0);
         
         //初期のinputの長さを調整
-        if(input_keybord.value.length != 0)
-        {
-            // 変換前ならinputの長さを調節
-            // spanを生成し配置することで文字の横幅を得る
-            let span = document.createElement('span');
-
-            // 画面外に折り返しなしで配置
-            span.style.position = 'absolute';
-            span.style.top = '-1000px';
-            span.style.left = '-1000px';
-
-            span.style.whiteSpace = 'nowrap';
-            span.innerHTML = input_keybord.value;
-            document.body.appendChild(span);
-
-            // 横幅を取得
-            width = span.clientWidth;
-            input_keybord.style.width = (width + 4) + "px";
-
-            // 終わったら削除
-            span.parentElement.removeChild(span);
-        }
-        else
-        {
-            input_keybord.style.width = "5px";
-        }
+        input_keybord.style.width = "5px";
     }
 }
 
