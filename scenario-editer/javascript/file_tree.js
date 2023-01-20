@@ -34,10 +34,10 @@ function import_file()
     }
 }
 
-function get_hierarchy(icon)
+function get_hierarchy(element_li)
 {
-    // ツリーの左側からのマージンでヒエラルキーを推測し、返す
-    return Number(icon.style.marginLeft.slice(0, icon.style.marginLeft.length -2)) / 10
+    // ツリーの要素からデータを取得し、階層を返す
+    return get_data(Number(element_li.children[2].textContent))[1]
 }
 
 function get_data(block_no)
@@ -141,7 +141,7 @@ function make_tree()
             icon.textContent = "∨"
             icon.onclick = function(event){
                 let own = event.target.parentElement
-                const hierarchy = get_hierarchy(event.target)
+                const hierarchy = get_hierarchy(own)
                 let element_li = own.nextElementSibling
                 let display
                 // 閉じるか開けるかを特定
@@ -156,9 +156,9 @@ function make_tree()
                     own.children[0].textContent = "＞"
                 }
                 // 1つ下の階層の要素を表示する
-                while(element_li != null && get_hierarchy(element_li.children[0]) > hierarchy)
+                while(element_li != null && get_hierarchy(element_li) > hierarchy)
                 {
-                    if(get_hierarchy(element_li.children[0]) == hierarchy + 1)
+                    if(get_hierarchy(element_li) == hierarchy + 1)
                     {
                         element_li.style.display = display
                         if(element_li.children[0].textContent == "∨")
@@ -251,7 +251,7 @@ function move_tree(element)
             {
                 index ++
             }
-            while(index < ul.childElementCount - 1 && get_hierarchy(li.children[0]) < get_hierarchy(ul.children[index + 1].children[0]))
+            while(index < ul.childElementCount - 1 && get_hierarchy(li) < get_hierarchy(ul.children[index + 1]))
             {
                 index ++
             }
@@ -287,7 +287,7 @@ function move_tree(element)
             return
         }
         let index = get_data_index(Number(li.children[2].textContent))
-        let hierarchy = get_hierarchy(li.children[0])
+        let hierarchy = get_hierarchy(li)
         if ((event.clientY - rect.top) < (this.clientHeight / 3)) 
         {
             // 同じ階層で1つ前
@@ -296,7 +296,7 @@ function move_tree(element)
         {
             // 新規作成の処理同様 一つ下の階層の最後尾
             index ++
-            while(index < data_array.length && get_hierarchy(li.children[0]) < data_array[index][1])
+            while(index < data_array.length && get_hierarchy(li) < data_array[index][1])
             {
                 index ++
             }
@@ -306,7 +306,7 @@ function move_tree(element)
         {
             // 同じ階層で子要素を飛ばした1つ後ろ
             index ++
-            while(index < data_array.length && get_hierarchy(li.children[0]) < data_array[index][1])
+            while(index < data_array.length && get_hierarchy(li) < data_array[index][1])
             {
                 index ++
             }
