@@ -464,8 +464,8 @@ function search_tag()
     
 }
 
-document.getElementById("button-make-text").onclick = make_text
-function make_text()
+document.getElementById("button-make-text").onclick = make_brock_text
+function make_brock_text()
 {
     let select_block_index = 0
     while(data_array[select_block_index][0] != select_block_no)
