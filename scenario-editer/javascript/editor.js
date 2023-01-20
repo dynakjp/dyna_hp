@@ -268,11 +268,12 @@ function edit_select_text(func)
     }
 }
 
+// 第2引数の要素のスタイルを第1引数の要素のスタイルにコピーする
 function copy_text_style(one, two)
 {
+    // 現状扱うスタイル　(サイズ、太さ)
     one.style.fontSize = two.style.fontSize
     one.style.fontWeight = two.style.fontWeight
-    one.style.color = two.style.color
 }
 
 function text_size(element, select)
