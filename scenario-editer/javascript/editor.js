@@ -2,7 +2,6 @@ let tag_list = []
 let selected = window.getSelection()
 let input_keybord = undefined
 let composition
-let cursor
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
