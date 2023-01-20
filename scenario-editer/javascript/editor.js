@@ -95,7 +95,7 @@ document.getElementById("button-font-bold").onclick = function()
     edit_select_text(function(element){element.style.fontWeight = "bold";});
 } 
 
-// 範囲選択された文字を編集する　(編集内容)
+
 function edit_select_text(func)
 {
     const range = selected.getRangeAt(0)
@@ -268,7 +268,6 @@ function edit_select_text(func)
     }
 }
 
-// 第2引数の要素のスタイルを第1引数の要素のスタイルにコピーする
 function copy_text_style(one, two)
 {
     // 現状扱うスタイル　(サイズ、太さ)
@@ -276,7 +275,6 @@ function copy_text_style(one, two)
     one.style.fontWeight = two.style.fontWeight
 }
 
-// テキストの大きさを測る
 function text_size(element, select)
 {
     // spanを生成し配置することで文字の横幅を得る
@@ -304,7 +302,6 @@ function text_size(element, select)
     return [width, height]
 }
 
-// ラベルクリック時の処理
 function edit_text()
 {
     // 選択部分の更新
@@ -453,7 +450,6 @@ function edit_text()
     }
 }
 
-// 行のラベルのない部分をクリックした時
 function click_row_text()
 {
     if(selected.isCollapsed)
@@ -488,7 +484,6 @@ function click_row_text()
     }
 }
 
-// エディターのリセット
 function reset_editor()
 {
     // タイトルのリセット
