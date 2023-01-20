@@ -3,7 +3,6 @@ let selected = window.getSelection()
 let input_keybord = undefined
 let composition
 let cursor
-let select_text = {}
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -47,19 +46,6 @@ function update_tag_list()
         select.appendChild(element);
     }
     save_data()
-}
-
-// editor-content内を選択した場合に変数を更新
-document.onselectionchange = () => 
-{
-    let select = window.getSelection()
-    if(document.getElementById("editor-content").contains(select.anchorNode) && document.getElementById("editor-content").contains(select.focusNode))
-    {
-        if(select.anchorNode.parentElement.tagName == "A" && select.focusNode.parentElement.tagName == "A")
-        {
-            $.extend(select_text, window.getSelection())
-        }
-    }
 }
 
 document.getElementById("button-font-small").onclick = function()
