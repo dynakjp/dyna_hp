@@ -13,14 +13,17 @@ function import_file()
     data_array = []
     while(i < file_array.length)
     {
+        // ブロックの基本情報
         let data = []
         let data_status = file_array[i].split(",")
         data.push(Number(data_status[0]))
         data.push(Number(data_status[1]))
         data.push(data_status[2])
         data.push(data_status[3])
+        // タグリスト
         i++
         data.push(file_array[i].split(","))
+        // コンテンツ
         i++
         while( i < file_array.length && file_array[i][0] == "<")
         {
@@ -29,16 +32,17 @@ function import_file()
         }
         data_array.push(data)
     }
-    console.log("import")
 }
 
-function get_hierarchy(icon)
+function get_hierarchy(element_li)
 {
-    return Number(icon.style.marginLeft.slice(0, icon.style.marginLeft.length -2)) / 10
+    // ツリーの要素からデータを取得し、階層を返す
+    return get_data(Number(element_li.children[2].textContent))[1]
 }
 
 function get_data(block_no)
 {
+    // 1つ1つブロックナンバーと照会していく
     let i
     for(i = 0; i < data_array.length; i++)
     {
@@ -47,6 +51,7 @@ function get_data(block_no)
             break
         }
     }
+    // 見つからなかった場合
     if(i == data_array.length)
     {
         return undefined
@@ -56,6 +61,7 @@ function get_data(block_no)
 
 function get_data_index(block_no)
 {
+    // 1つ1つ照会する
     let i
     for(i = 0; i < data_array.length; i++)
     {
@@ -64,6 +70,7 @@ function get_data_index(block_no)
             break
         }
     }
+    // 見つからなかった場合
     if(i == data_array.length)
     {
         return undefined
@@ -73,6 +80,7 @@ function get_data_index(block_no)
 
 function save_data()
 {
+    // 選択されたブロックを探す
     let i
     for(i = 0; i < data_array.length; i++)
     {
@@ -87,6 +95,7 @@ function save_data()
         return
     }
 
+    // エディタからデータをもらって必要部分を書き換える
     let data = export_data()
     data.unshift(...data_array[i].slice(0, 3))
     data_array[i] = data
@@ -94,6 +103,7 @@ function save_data()
 
 function reset_tree()
 {
+    // ツリー内の要素をすべて削除
     let tree = document.getElementById("tree").children[0]
     while(tree.childElementCount > 0)
     {
@@ -131,7 +141,7 @@ function make_tree()
             icon.textContent = "∨"
             icon.onclick = function(event){
                 let own = event.target.parentElement
-                const hierarchy = get_hierarchy(event.target)
+                const hierarchy = get_hierarchy(own)
                 let element_li = own.nextElementSibling
                 let display
                 // 閉じるか開けるかを特定
@@ -146,9 +156,9 @@ function make_tree()
                     own.children[0].textContent = "＞"
                 }
                 // 1つ下の階層の要素を表示する
-                while(element_li != null && get_hierarchy(element_li.children[0]) > hierarchy)
+                while(element_li != null && get_hierarchy(element_li) > hierarchy)
                 {
-                    if(get_hierarchy(element_li.children[0]) == hierarchy + 1)
+                    if(get_hierarchy(element_li) == hierarchy + 1)
                     {
                         element_li.style.display = display
                         if(element_li.children[0].textContent == "∨")
@@ -192,13 +202,16 @@ function make_tree()
 
 function move_tree(element)
 {
+    // 動かせるようにしたい要素が渡される
+    // ボーダーを内側に表示されるように
     element.style.boxSizing = "border-box"
 
+    // ドラッグされたらブロックナンバーを控えておく
     element.ondragstart = function (event) {
-        console.log("tree drag start")
         event.dataTransfer.setData('text/plain', event.target.children[2].textContent);
     };
     
+    // 自分の上にドラッグが来た場合
     element.ondragover = function (event) {
         event.preventDefault();
 		let rect = this.getBoundingClientRect();
@@ -207,22 +220,27 @@ function move_tree(element)
         {
             li = li.parentElement
         }
+        // ボーダーリセット
         let ul = document.getElementById("tree").children[0]
         for(let i = 0; i < ul.childElementCount; i++)
         {
             ul.children[i].style.border = '';
         }
+        // 上、真ん中、下のどの部分にいるかでボーダーを表示する
         let index = 0
         if ((event.clientY - rect.top) < (this.clientHeight / 3)) 
         {
+            // 同階層前
             this.style.borderTop = '2px solid blue';
         } 
         else if ((event.clientY - rect.top) < (this.clientHeight * 2 / 3)) 
         {
+            // 子要素
             this.style.border = '2px solid blue';
         } 
         else 
         {
+            // 同階層後ろ
             let li = event.target
             while(li.tagName != "LI")
             {
@@ -233,7 +251,7 @@ function move_tree(element)
             {
                 index ++
             }
-            while(index < ul.childElementCount - 1 && get_hierarchy(li.children[0]) < get_hierarchy(ul.children[index + 1].children[0]))
+            while(index < ul.childElementCount - 1 && get_hierarchy(li) < get_hierarchy(ul.children[index + 1]))
             {
                 index ++
             }
@@ -241,6 +259,7 @@ function move_tree(element)
         }
     };
 
+    // ドラッグが離れた時ボーダーをリセット
     element.ondragleave = function (event) {
         let ul = document.getElementById("tree").children[0]
         for(let i = 0; i < ul.childElementCount; i++)
@@ -249,6 +268,7 @@ function move_tree(element)
         }
     };
 
+    //ドロップをしたとき
     element.ondrop = function (event) {
         event.preventDefault();
 		let rect = this.getBoundingClientRect();
@@ -267,7 +287,7 @@ function move_tree(element)
             return
         }
         let index = get_data_index(Number(li.children[2].textContent))
-        let hierarchy = get_hierarchy(li.children[0])
+        let hierarchy = get_hierarchy(li)
         if ((event.clientY - rect.top) < (this.clientHeight / 3)) 
         {
             // 同じ階層で1つ前
@@ -276,7 +296,7 @@ function move_tree(element)
         {
             // 新規作成の処理同様 一つ下の階層の最後尾
             index ++
-            while(index < data_array.length && get_hierarchy(li.children[0]) < data_array[index][1])
+            while(index < data_array.length && get_hierarchy(li) < data_array[index][1])
             {
                 index ++
             }
@@ -286,7 +306,7 @@ function move_tree(element)
         {
             // 同じ階層で子要素を飛ばした1つ後ろ
             index ++
-            while(index < data_array.length && get_hierarchy(li.children[0]) < data_array[index][1])
+            while(index < data_array.length && get_hierarchy(li) < data_array[index][1])
             {
                 index ++
             }
@@ -313,6 +333,7 @@ function move_tree(element)
 
 function optimize_data_hierarchy()
 {
+    // 階層の最適化を行う
     let last = -1
     for(let i = 0; i < data_array.length; i++)
     {
@@ -328,6 +349,7 @@ function optimize_data_hierarchy()
     }
 }
 
+// 検索系
 document.getElementById("input-search-name").onchange = search_name
 function search_name()
 {
@@ -339,6 +361,7 @@ function search_name()
         make_tree()
         return
     }
+    // 名前が部分一致するブロックを探して表示
     for(i = 0; i < data_array.length; i++)
     {
         let data = data_array[i]
@@ -407,6 +430,7 @@ function search_tag()
         make_tree()
         return
     }
+    // 完全一致するタグがあるブロックを調べ、表示
     for(i = 0; i < data_array.length; i++)
     {
         let data = data_array[i]
@@ -464,8 +488,9 @@ function search_tag()
     
 }
 
-document.getElementById("button-make-text").onclick = make_text
-function make_text()
+// ブロックの作成
+document.getElementById("button-make-text").onclick = make_brock_text
+function make_brock_text()
 {
     let select_block_index = 0
     while(data_array[select_block_index][0] != select_block_no)
@@ -508,9 +533,11 @@ function array_to_string(array, separator)
     return string
 }
 
+// ファイル操作
 document.getElementById("button-save-file").onclick = save_file
 async function save_file()
 {
+    // 現状を保存
     save_data()
     const opts = {
         suggestedName: 'example',
@@ -519,6 +546,7 @@ async function save_file()
         accept: {'text/plain': ['.txt']},
         }],
     };
+    // ファイル情報をまとめる
     let file = document.getElementById("file-title").textContent + "," + max_block_no
     for(const data of data_array)
     {
@@ -528,6 +556,7 @@ async function save_file()
         file += "\n"
         file += array_to_string(data.slice(5), "\n")
     }
+    // 保存先を選択
     const handle = await window.showSaveFilePicker(opts);
     const writable = await handle.createWritable()
     await writable.write(file)
@@ -538,8 +567,10 @@ async function save_file()
 document.getElementById("button-open-file").onclick = open_file
 function open_file()
 {
+    // 確認してOKなら
     if(confirm("保存していないデータは消去されます。\n問題がある場合はキャンセルし保存してください"))
     {
+        // ファイルを開くの設定
         const showOpenFileDialog = () => {
             return new Promise(resolve => {
                 const input = document.createElement('input');
@@ -559,10 +590,10 @@ function open_file()
         };
         
         (async () => {
+            // ファイルを開く
             const file_data = await showOpenFileDialog();
             file = await readAsText(file_data);
-            // 内容表示
-            // console.log(file);
+            // 内容表示しツリー表示
             import_file()
             make_tree()
         })();
@@ -572,8 +603,10 @@ function open_file()
 document.getElementById("button-new-file").onclick = new_file
 function new_file()
 {
+    // 確認
     if(confirm("保存していないデータは消去されます。\n問題がある場合はキャンセルし保存してください"))
     {
+        // プロジェクト名を受け取る
         const file_name = window.prompt("プロジェクト名を入力してください\n※　保存名とは別です　※", "");
         if(file_name == null || file_name == "")
         {
@@ -585,14 +618,15 @@ function new_file()
         }
         else
         {
+            // ファイルの新規作成
             file = file_name + ",0\n0,0,text,初期作成\n\n<text>\n<break>"
-            console.log(file)
             import_file()
             make_tree()
         }
     }
 }
 
+// タブを閉じる際
 window.addEventListener('beforeunload', function (e) 
 {
     // イベントをキャンセルする
