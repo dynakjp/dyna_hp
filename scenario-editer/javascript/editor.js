@@ -683,23 +683,22 @@ function synthesis_text(element_li)
 function delete_select_text(select)
 {
     const range = select.getRangeAt(0)
-    // console.log(range.startContainer)
-    // console.log(range.endContainer)
     if(!(document.getElementById("editor-content").contains(range.startContainer) && document.getElementById("editor-content").contains(selected.focusNode)))
     {
+        // 削除範囲がコンテンツ外
         return
     }
     
     if(range.startContainer.parentElement == range.endContainer.parentElement && range.startContainer.tagName != "LI")
     {
+        // 1つのテキスト内
         let element_a = range.startContainer.parentElement
         element_a.textContent = element_a.textContent.slice(0, range.startOffset) + element_a.textContent.slice(range.endOffset)
     }
     else
     {
+        // 最初の要素の選択部分を削除
         let element = range.startContainer.parentElement
-        // console.log(element)
-        // console.log(range.startContainer.tagName)
         if(element.tagName == "A")
         {
             element.textContent = element.textContent.slice(0, range.startOffset)
@@ -710,12 +709,14 @@ function delete_select_text(select)
             element = range.startContainer.children[range.startContainer.childElementCount - 1]
         }
 
+        // 行末まで削除していく
         while(element.tagName != "BR")
         {
             element = element.nextElementSibling
             element.parentElement.removeChild(element.previousElementSibling)
         }
 
+        // 最後の要素の行の前まで削除していく
         element = element.parentElement.nextElementSibling
         let end = range.endContainer.parentElement
         if(range.endContainer.tagName == "LI")
@@ -728,6 +729,7 @@ function delete_select_text(select)
             element.parentElement.removeChild(element.previousElementSibling)
         }
 
+        // 最後の要素まで削除していく
         element = element.children[0]
         while(element != end)
         {
@@ -736,6 +738,7 @@ function delete_select_text(select)
         }
         element.textContent = element.textContent.slice(range.endOffset)
         
+        // 選択位置の調整と整形
         element = element.parentElement.previousElementSibling
         synthesis_text(element)
         element.removeChild(element.children[element.childElementCount - 1])
