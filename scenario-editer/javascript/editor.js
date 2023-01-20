@@ -400,6 +400,7 @@ function edit_text()
                     // ラベルがないなら作成する
                     let element = document.createElement("a")
                     element.onclick = edit_text
+                    copy_text_style(element, input_keybord)
                     input_keybord.before(element)
                 }
 
