@@ -731,6 +731,10 @@ function delete_select_text(select)
     const range = select.getRangeAt(0)
     // console.log(range.startContainer)
     // console.log(range.endContainer)
+    if(!(document.getElementById("editor-content").contains(range.startContainer) && document.getElementById("editor-content").contains(selected.focusNode)))
+    {
+        return
+    }
     
     if(range.startContainer.parentElement == range.endContainer.parentElement && range.startContainer.tagName != "LI")
     {
