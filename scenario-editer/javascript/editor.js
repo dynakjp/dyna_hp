@@ -276,6 +276,7 @@ function copy_text_style(one, two)
     one.style.fontWeight = two.style.fontWeight
 }
 
+// テキストの大きさを測る
 function text_size(element, select)
 {
     // spanを生成し配置することで文字の横幅を得る
@@ -287,6 +288,7 @@ function text_size(element, select)
     span.style.left = '-1000px';
     copy_text_style(span ,element)
 
+    // 範囲選択をしていない場合
     if(select == -1 || select == undefined)
     {
         select = element.textContent.length
