@@ -311,6 +311,7 @@ function edit_text()
     selected = window.getSelection();
     if(selected.isCollapsed)
     {
+        // 範囲選択がされていない場合、入力状態へ
         // キーボード入力部の作成
         input_keybord = document.createElement("input")
         input_keybord.type = "text"
@@ -324,6 +325,7 @@ function edit_text()
         {
             if(input_keybord.value == "")
             {
+                // 文字が何も入っていないなら何もしない
                 return
             }
             if(!composition)
@@ -476,10 +478,6 @@ function edit_text()
         {
             input_keybord.style.width = "5px";
         }
-    }
-    else
-    {
-        console.log(selected)
     }
 }
 
