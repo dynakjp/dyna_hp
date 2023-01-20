@@ -786,6 +786,7 @@ function delete_select_text(select)
         synthesis_text(element)
         element.removeChild(element.children[element.childElementCount - 1])
         cursor_element = element.children[element.childElementCount - 1]
+        cursor_parent = cursor_element.parentElement
         cursor_offset = element.children[element.childElementCount - 1].textContent.length
 
         element = element.nextElementSibling
@@ -797,12 +798,27 @@ function delete_select_text(select)
 
         synthesis_text(cursor_element.parentElement)
         let select = new Range();
-        select.setStart(cursor_element.firstChild, cursor_offset)
-        select.setEnd(cursor_element.firstChild, cursor_offset)
-        document.getSelection().removeAllRanges();
-        document.getSelection().addRange(select);
-
-        cursor_element.click();
+        console.log(cursor_element,cursor_offset)
+        if(cursor_parent.contains(cursor_element) == false && cursor_parent.firstChild.firstChild == null)
+        {
+            console.log(cursor_parent, cursor_parent.onclick)
+            document.getSelection().removeAllRanges();
+            cursor_parent.click()
+        }
+        else
+        {
+            if(cursor_parent.contains(cursor_element) == false)
+            {
+                cursor_element = cursor_parent.firstChild
+                cursor_offset = 0
+            }
+            select.setStart(cursor_element.firstChild, cursor_offset)
+            select.setEnd(cursor_element.firstChild, cursor_offset)
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+    
+            cursor_element.click();
+        }
     }
 }
 
