@@ -508,6 +508,7 @@ function reset_editor()
 function import_data(data)
 {
     reset_editor()
+    // コンテンツ以外の読み込み
     let title = document.getElementById("input-block-title")
     title.value = data[3]
     
@@ -519,6 +520,7 @@ function import_data(data)
     element_li.onclick = click_row_text
     element_li.classList.add("editor-row")
 
+    // コンテンツの読み込み
     let i = 5
     while(i < data.length)
     {
@@ -545,6 +547,7 @@ function import_data(data)
         i++;
     }
 
+    // 最後に改行がなければ
     if(element_li.childElementCount > 0)
     {
         const element_br = document.createElement("br")
@@ -555,14 +558,17 @@ function import_data(data)
 
 function export_data()
 {
+    // コンテンツ以外を記録
     let data = []
     data.push(document.getElementById("input-block-title").value)
     data.push(tag_list)
 
+    // 入力中の終了
     if(input_keybord != undefined)
     {
         input_keybord.blur()
     }
+    // コンテンツを記録
     contents = document.getElementById("editor-content-list").children
     for(let i = 0; i < contents.length; i++)
     {
@@ -596,9 +602,11 @@ function export_data()
 
 function make_label(str, styles)
 {
+    // 文字とスタイルを入れるとテキストを作成する
     let element_a = document.createElement("a")
     element_a.textContent = str
     element_a.onclick = edit_text
+    // スタイルはある場合のみ処理(主にデータインポート時)
     if(styles != undefined)
     {
         for(const style of styles)
@@ -616,7 +624,6 @@ function make_label(str, styles)
     return element_a
 }
 
-//ラベルの合成
 function synthesis_text(element_li)
 {
     // 行のコンテンツを1つずつ見て以下の処理
