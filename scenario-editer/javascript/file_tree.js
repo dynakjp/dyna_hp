@@ -2,6 +2,7 @@ let file = ""
 let data_array = []
 let max_block_no = 0
 let select_block_no = -1
+let file_handle
 
 function import_file()
 {
@@ -578,6 +579,36 @@ async function save_as_file()
     const writable = await handle.createWritable()
     await writable.write(file)
     await writable.close()
+    await console.log("saved")
+}
+
+document.getElementById("button-save-file").onclick = save_file
+async function save_file()
+{
+    // 現状を保存
+    save_data()
+    // ファイル情報をまとめる
+    let file = document.getElementById("file-title").textContent + "," + max_block_no
+    for(const data of data_array)
+    {
+        file += "\n"
+        file += data[0] + "," + data[1] + "," + data[2] + "," + data[3] + "\n"
+        file += array_to_string(data[4], ",")
+        file += "\n"
+        file += array_to_string(data.slice(5), "\n")
+    }
+
+    // 既存の保存先の有無で挙動を変更
+    if(file_handle == null)
+    {
+        seve_as_file()
+    }
+    else
+    {
+        const writable = await file_handle.createWritable()
+        await writable.write(file)
+        await writable.close()
+    }
     await console.log("saved")
 }
 
