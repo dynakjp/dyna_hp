@@ -1,3 +1,8 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
 ul
 {
     /* 点を消す */
@@ -9,6 +14,12 @@ ul
 {
     /* カーソルを通常に固定 */
     cursor: default;
+}
+
+.parent-height{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .editor-button
