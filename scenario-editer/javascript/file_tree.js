@@ -373,7 +373,6 @@ function search_name()
             let block_no = document.createElement("a")
             let parent = document.createElement("a")
     
-            icon.style.marginLeft = 10 * data[1] + "px"
             element_a.textContent = data[3]
             element_li.classList.add("can-push")
             block_no.textContent = data[0]
@@ -442,7 +441,6 @@ function search_tag()
             let block_no = document.createElement("a")
             let parent = document.createElement("a")
     
-            icon.style.marginLeft = 10 * data[1] + "px"
             element_a.textContent = data[3]
             element_li.classList.add("can-push")
             block_no.textContent = data[0]
