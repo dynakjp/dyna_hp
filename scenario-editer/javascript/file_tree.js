@@ -641,7 +641,6 @@ function open_file()
         (async () => {
             // ファイルを開く
             const file_data = await showOpenFileDialog();
-            console.log(file_data)
             file = await readAsText(file_data);
             // 内容表示しツリー表示
             import_file()
