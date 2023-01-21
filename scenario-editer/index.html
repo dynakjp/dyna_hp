@@ -9,10 +9,10 @@
     <link href="design.css" rel="stylesheet">
 </head>
 <body> 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="border-right">
+    <div class="container-fluid parent-height">
+        <div class="row parent-height">
+            <div class="col-md-3 parent-height">
+                <div class="parent-height">
                     <div id="file-title" class="text-center" style="font-size: 28px;">Call me HERO</div>
                     <div id="control-file">
                         <div  class="input-group">
@@ -38,7 +38,7 @@
                             <button class="btn btn-outline-success" type="button" id="button-make-map"><i class="fas fa-search"></i> map</button>
                         </div>
                     </div>
-                    <div id="tree" class="overflow-auto">
+                    <div id="tree" class="overflow-scroll" style="flex-grow: 1; white-space: nowrap;">
                         <ul>
                             <li>Item #1</li>
                             <li>Item #2</li>
@@ -47,7 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 parent-height">
                 <div id="editor-heder">
                     <div class="row">
                         <div class="col-md-7">
@@ -85,7 +85,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="editor-content">
+                <div id="editor-content" class="overflow-auto" style="flex-grow: 1;">
                     <ul id="editor-content-list">
                     </ul>
                 </div>
