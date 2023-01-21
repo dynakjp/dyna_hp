@@ -579,6 +579,7 @@ async function save_as_file()
     const writable = await handle.createWritable()
     await writable.write(file)
     await writable.close()
+    file_handle = handle
     await console.log("saved")
 }
 
@@ -599,9 +600,9 @@ async function save_file()
     }
 
     // 既存の保存先の有無で挙動を変更
-    if(file_handle == null)
+    if(file_handle == undefined)
     {
-        seve_as_file()
+        save_as_file()
     }
     else
     {
@@ -640,6 +641,7 @@ function open_file()
         (async () => {
             // ファイルを開く
             const file_data = await showOpenFileDialog();
+            console.log(file_data)
             file = await readAsText(file_data);
             // 内容表示しツリー表示
             import_file()
