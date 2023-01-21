@@ -551,8 +551,8 @@ function array_to_string(array, separator)
 }
 
 // ファイル操作
-document.getElementById("button-save-file").onclick = save_file
-async function save_file()
+document.getElementById("button-save-as-file").onclick = save_as_file
+async function save_as_file()
 {
     // 現状を保存
     save_data()
