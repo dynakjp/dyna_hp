@@ -850,7 +850,9 @@ $(document).keydown(function(event){
     var ctrlClick = event.ctrlKey;
     // Altキーがクリックされたか (true or false)
     var altClick = event.altKey;
-    
+    // Shiftキーがクリックされたか
+    var shiftClick = event.shiftKey
+    console.log(keyCode,ctrlClick,shiftClick,altClick)
     selected = window.getSelection();
     
     // キーを制御する
@@ -871,6 +873,50 @@ $(document).keydown(function(event){
             else if(keyCode == 32)
             {
                 delete_select_text(selected)
+            }
+        }
+        else(ctrlClick && !altClick)
+        {
+            // ショートカットキー
+            if(shiftClick)
+            {
+                console.log("here",keyCode == 188)
+                if(keyCode == 188)
+                {
+                    // 文字サイズを小さく
+                    edit_select_text(function(element)
+                    {
+                        const plus = -2
+                        let font_size = element.style.fontSize
+                        if(font_size == "")
+                        {
+                            font_size = window.getComputedStyle(document.documentElement).getPropertyValue('font-size')
+                        }
+                        font_size = parseFloat(font_size)
+                        if(font_size + plus > 0)
+                        {
+                            element.style.fontSize = String(font_size + plus) + "px"
+                        }
+                    });
+                }
+                else if(keyCode == 190)
+                {
+                    // 文字サイズを大きく
+                    edit_select_text(function(element)
+                    {
+                        const plus = 2
+                        let font_size = element.style.fontSize
+                        if(font_size == "")
+                        {
+                            font_size = window.getComputedStyle(document.documentElement).getPropertyValue('font-size')
+                        }
+                        font_size = parseFloat(font_size)
+                        if(font_size + plus > 0)
+                        {
+                            element.style.fontSize = String(font_size + plus) + "px"
+                        }
+                    });
+                }
             }
         }
     }
