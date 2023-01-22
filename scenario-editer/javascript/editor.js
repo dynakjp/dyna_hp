@@ -83,7 +83,7 @@ document.getElementById("button-font-big").onclick = function()
     });
 }
 
-document.getElementById("button-font-normal").onclick = function()
+document.getElementById("button-font-mideum").onclick = function()
 {
     edit_select_text(function(element){element.style.fontWeight = "normal";});
 }
@@ -850,10 +850,24 @@ $(document).keydown(function(event){
     var ctrlClick = event.ctrlKey;
     // Altキーがクリックされたか (true or false)
     var altClick = event.altKey;
-    
+    // Shiftキーがクリックされたか
+    var shiftClick = event.shiftKey
     selected = window.getSelection();
     
     // キーを制御する
+    if(ctrlClick && !altClick && keyCode == 83)
+    {
+        if(!shiftClick)
+        {
+            save_file()
+            event.keyCode = null;
+            return false;
+        }
+        else
+        {
+            save_as_file()
+        }
+    }
     if(input_keybord == undefined && selected.isCollapsed == false)
     {
         // 範囲選択されていてinput中でない
@@ -871,6 +885,63 @@ $(document).keydown(function(event){
             else if(keyCode == 32)
             {
                 delete_select_text(selected)
+            }
+        }
+        else(ctrlClick && !altClick)
+        {
+            // ショートカットキー
+            if(shiftClick)
+            {
+                if(keyCode == 188)
+                {
+                    // 文字サイズを小さく
+                    edit_select_text(function(element)
+                    {
+                        const plus = -2
+                        let font_size = element.style.fontSize
+                        if(font_size == "")
+                        {
+                            font_size = window.getComputedStyle(document.documentElement).getPropertyValue('font-size')
+                        }
+                        font_size = parseFloat(font_size)
+                        if(font_size + plus > 0)
+                        {
+                            element.style.fontSize = String(font_size + plus) + "px"
+                        }
+                    });
+                }
+                else if(keyCode == 190)
+                {
+                    // 文字サイズを大きく
+                    edit_select_text(function(element)
+                    {
+                        const plus = 2
+                        let font_size = element.style.fontSize
+                        if(font_size == "")
+                        {
+                            font_size = window.getComputedStyle(document.documentElement).getPropertyValue('font-size')
+                        }
+                        font_size = parseFloat(font_size)
+                        if(font_size + plus > 0)
+                        {
+                            element.style.fontSize = String(font_size + plus) + "px"
+                        }
+                    });
+                }
+            
+            }
+            else
+            {
+                if(keyCode == 66)
+                {
+                    // 太字
+                    edit_select_text(function(element){element.style.fontWeight = "bold";});
+                }
+                else if(keyCode == 77)
+                {
+                    //太さを元に戻す
+                    edit_select_text(function(element){element.style.fontWeight = "normal";});
+                }
             }
         }
     }
