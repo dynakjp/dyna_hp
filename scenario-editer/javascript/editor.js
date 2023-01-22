@@ -856,6 +856,19 @@ $(document).keydown(function(event){
     selected = window.getSelection();
     
     // キーを制御する
+    if(ctrlClick && !altClick && keyCode == 83)
+    {
+        if(!shiftClick)
+        {
+            save_file()
+            event.keyCode = null;
+            return false;
+        }
+        else
+        {
+            save_as_file()
+        }
+    }
     if(input_keybord == undefined && selected.isCollapsed == false)
     {
         // 範囲選択されていてinput中でない
