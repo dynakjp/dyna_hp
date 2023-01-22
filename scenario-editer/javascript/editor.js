@@ -83,7 +83,7 @@ document.getElementById("button-font-big").onclick = function()
     });
 }
 
-document.getElementById("button-font-normal").onclick = function()
+document.getElementById("button-font-mideum").onclick = function()
 {
     edit_select_text(function(element){element.style.fontWeight = "normal";});
 }
