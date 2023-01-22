@@ -852,7 +852,6 @@ $(document).keydown(function(event){
     var altClick = event.altKey;
     // Shiftキーがクリックされたか
     var shiftClick = event.shiftKey
-    console.log(keyCode,ctrlClick,shiftClick,altClick)
     selected = window.getSelection();
     
     // キーを制御する
@@ -893,7 +892,6 @@ $(document).keydown(function(event){
             // ショートカットキー
             if(shiftClick)
             {
-                console.log("here",keyCode == 188)
                 if(keyCode == 188)
                 {
                     // 文字サイズを小さく
