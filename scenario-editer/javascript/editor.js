@@ -917,6 +917,20 @@ $(document).keydown(function(event){
                         }
                     });
                 }
+            
+            }
+            else
+            {
+                if(keyCode == 66)
+                {
+                    // 太字
+                    edit_select_text(function(element){element.style.fontWeight = "bold";});
+                }
+                else if(keyCode == 77)
+                {
+                    //太さを元に戻す
+                    edit_select_text(function(element){element.style.fontWeight = "normal";});
+                }
             }
         }
     }
