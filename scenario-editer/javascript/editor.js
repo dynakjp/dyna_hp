@@ -306,8 +306,14 @@ function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
+    range = selected.getRangeAt(0)
     if(selected.isCollapsed)
     {
+        if(range.startContainer.parentElement.getAttribute("link") != null && event.ctrlKey == true)
+        {
+            select_brock(Number(range.startContainer.parentElement.getAttribute("link")))
+            return
+        }
         // 範囲選択がされていない場合、入力状態へ
         // キーボード入力部の作成
         input_keybord = document.createElement("input")
