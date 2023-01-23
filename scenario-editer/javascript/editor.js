@@ -635,6 +635,15 @@ function add_link(element, target)
     element.setAttribute("link", Number(target))
 }
 
+function check_text_style(one, two)
+{
+    if(one.style.fontSize != two.style.fontSize || one.style.fontWeight != two.style.fontWeight || one.getAttribute("link") != two.getAttribute("link"))
+    {
+        return false
+    }
+    return true
+}
+
 function synthesis_text(element_li)
 {
     // 行のコンテンツを1つずつ見て以下の処理
@@ -667,7 +676,7 @@ function synthesis_text(element_li)
                     i ++
                 }
             }
-            else if(last != -1 && element_li.children[last].style.fontSize == element_li.children[i].style.fontSize && element_li.children[last].style.fontWeight == element_li.children[i].style.fontWeight && element_li.children[last].style.color == element_li.children[i].style.color)
+            else if(last != -1 && check_text_style(element_li.children[last], element_li.children[i]))
             {
                 // 最後のラベルとスタイルが同じなら合成する
                 element_li.children[last].textContent += element_li.children[i].textContent
