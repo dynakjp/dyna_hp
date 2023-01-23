@@ -272,7 +272,7 @@ function copy_text_style(one, two)
     one.style.fontSize = two.style.fontSize
     one.style.fontWeight = two.style.fontWeight
     one.style.color = two.style.color
-    one.style.textDecoration = one.style.textDecoration
+    one.style.textDecoration = two.style.textDecoration
 }
 
 function text_size(element, select)
