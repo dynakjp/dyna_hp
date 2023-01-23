@@ -598,6 +598,11 @@ function export_data()
                 {
                     head += ",bold"
                 }
+                if(element.getAttribute("link") != null)
+                {
+                    head += ",link="
+                    head += element.getAttribute("link")
+                }
                 head += ">"
                 data.push(head + element.textContent)
             }
