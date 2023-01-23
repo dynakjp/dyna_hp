@@ -619,9 +619,20 @@ function make_label(str, styles)
             {
                 element_a.style.fontWeight = "bold"
             }
+            else if(style.indexOf("link=") == 0)
+            {
+                make_link(element_a, style.slice(style.indexOf("=") + 1))
+            }
         }
     }
     return element_a
+}
+
+function make_link(element, target)
+{
+    element.style.color = "blue"
+    element.style.textDecoration = "underline"
+    element.setAttribute("link", Number(target))
 }
 
 function synthesis_text(element_li)
