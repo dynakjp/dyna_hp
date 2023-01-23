@@ -271,6 +271,8 @@ function copy_text_style(one, two)
     // 現状扱うスタイル　(サイズ、太さ)
     one.style.fontSize = two.style.fontSize
     one.style.fontWeight = two.style.fontWeight
+    one.style.color = two.style.color
+    one.style.textDecoration = one.style.textDecoration
 }
 
 function text_size(element, select)
