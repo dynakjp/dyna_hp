@@ -621,14 +621,14 @@ function make_label(str, styles)
             }
             else if(style.indexOf("link=") == 0)
             {
-                make_link(element_a, style.slice(style.indexOf("=") + 1))
+                add_link(element_a, style.slice(style.indexOf("=") + 1))
             }
         }
     }
     return element_a
 }
 
-function make_link(element, target)
+function add_link(element, target)
 {
     element.style.color = "blue"
     element.style.textDecoration = "underline"
