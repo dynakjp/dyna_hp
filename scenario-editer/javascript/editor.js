@@ -273,6 +273,10 @@ function copy_text_style(one, two)
     one.style.fontWeight = two.style.fontWeight
     one.style.color = two.style.color
     one.style.textDecoration = two.style.textDecoration
+    if(two.getAttribute("link") != null)
+    {
+        one.setAttribute("link", two.getAttribute("link"))
+    }
 }
 
 function text_size(element, select)
