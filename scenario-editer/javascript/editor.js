@@ -486,6 +486,10 @@ function click_row_text()
     {
         // その行の一番最後のラベルの一番後ろにカーソルを合わせる
         let parent = event.target
+        if(parent.tagName != "LI")
+        {
+            return
+        }
         let i = parent.childElementCount - 1
         select = new Range();
         // 後ろから前に生きつつ<a>を探す
@@ -511,16 +515,13 @@ function click_row_text()
             }
             i--
         }
-        if(parent.tagName == "LI")
-        {
-            let element_a = make_label("")
-            parent.children[parent.childElementCount - 1].before(element_a)
-            select.setStart(element_a, 0)
-            select.setEnd(element_a, 0)
-            document.getSelection().removeAllRanges();
-            document.getSelection().addRange(select);
-            element_a.click()
-        }
+        let element_a = make_label("")
+        parent.children[parent.childElementCount - 1].before(element_a)
+        select.setStart(element_a, 0)
+        select.setEnd(element_a, 0)
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(select);
+        element_a.click()
     }
 }
 
