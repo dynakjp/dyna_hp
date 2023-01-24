@@ -702,9 +702,21 @@ function make_link_window(element)
     const rect = element.getBoundingClientRect()
     const size = text_size(element)
     const data = get_data(element.getAttribute("link"))
+
+    let left = rect.x + (size[0] / 2)
+    let top = rect.y + size[1]
+    if(window.screen.width / 2 < left)
+    {
+        left -= 250
+    }
+    if(window.screen.height / 2 < top)
+    {
+        top -= (size[1] + 100)
+    }
+
     link_window = document.createElement("div")
-    link_window.style.left = String(rect.x + (size[0] / 2)) + "px"
-    link_window.style.top = String(rect.y + size[1]) + "px"
+    link_window.style.left = String(left) + "px"
+    link_window.style.top = String(top) + "px"
     link_window.classList.add("link-window")
     document.getElementById("editor-content").appendChild(link_window)
     
