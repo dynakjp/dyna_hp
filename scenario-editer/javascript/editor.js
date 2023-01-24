@@ -2,6 +2,7 @@ let tag_list = []
 let selected = window.getSelection()
 let input_keybord = undefined
 let composition
+let link_window
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -315,6 +316,8 @@ function edit_text()
     {
         if(range.startContainer.parentElement.getAttribute("link") != null && event.ctrlKey == true)
         {
+            document.getElementById("editor-content").removeChild(link_window)
+            link_window = null
             select_brock(Number(range.startContainer.parentElement.getAttribute("link")))
             return
         }
@@ -648,6 +651,51 @@ function add_link(element, target)
     element.style.color = "blue"
     element.style.textDecoration = "underline"
     element.setAttribute("link", Number(target))
+    element.onmouseover = function(event)
+    {
+        event.target.style.backgroundColor = "skyblue"
+        make_link_window(event.target)
+    }
+    element.onmouseout = function(event)
+    {
+        event.target.style.backgroundColor = ""
+        document.getElementById("editor-content").removeChild(link_window)
+        link_window = null
+    }
+}
+
+function make_link_window(element)
+{
+    const rect = element.getBoundingClientRect()
+    const size = text_size(element)
+    const data = get_data(element.getAttribute("link"))
+    link_window = document.createElement("div")
+    link_window.style.left = String(rect.x + (size[0] / 2)) + "px"
+    link_window.style.top = String(rect.y + size[1]) + "px"
+    link_window.classList.add("link-window")
+    document.getElementById("editor-content").appendChild(link_window)
+    
+    let title = document.createElement("span")
+    title.textContent = data[3]
+    title.classList.add("link-window-title")
+    link_window.appendChild(title)
+    link_window.appendChild(document.createElement("br"))
+
+    let content = document.createElement("span")
+    content.textContent = ""
+    content.classList.add("link-window-content")
+    link_window.appendChild(content)
+    for(let i = 5; i < data.length && content.getBoundingClientRect().height <= 54; i++)
+    {
+        if(data[i].indexOf("<text") == 0)
+        {
+            content.textContent += data[i].slice(data[i].indexOf(">") + 1)
+        }
+    }
+    while(content.getBoundingClientRect().height > 54)
+    {
+        content.textContent = content.textContent.slice(0, content.textContent.length - 1)
+    }
 }
 
 function check_text_style(one, two)
