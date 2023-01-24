@@ -29,7 +29,7 @@ ul
 
 .editor-buttons
 {
-    margin-right: 10px;
+    margin-right: 15px;
 }
 
 .editor-input
@@ -44,4 +44,26 @@ ul
 .editor-row{
     /* 行のどこに触れていてもカーソルがテキストモードになるように */
     cursor: text;
+}
+
+.link-window{
+    background-color: white;
+    width: 250px;
+    position: absolute;
+    border: solid 1px;
+    border-color: skyblue;
+    padding: 3px;
+}
+
+.link-window-title{
+    padding-left: 10px;
+    font-size: 18px;
+}
+
+.link-window-content{
+    font-size: 12px;
+    line-height: 1.5;
+    display: block;
+    overflow-wrap: break-word;
+    color: gray;
 }

@@ -183,12 +183,7 @@ function make_tree()
         
         // treeタイトルを押すと右のエディタに内容を表示する
         element_a.onclick = function(event){
-            save_data()
-            let own = event.target.parentElement
-            const block_no = Number(own.children[2].textContent)
-            select_block_no = block_no
-            const data = get_data(block_no)
-            import_data(data)
+            select_brock(Number(event.target.parentElement.children[2].textContent))
         }
 
         element_li.draggable = "true"
@@ -199,6 +194,14 @@ function make_tree()
         element_li.appendChild(block_no)
         tree.appendChild(element_li)
     }
+    reload_select_link()
+}
+
+function select_brock(block_no)
+{
+    save_data()
+    select_block_no = block_no
+    import_data(get_data(block_no))
 }
 
 function move_tree(element)

@@ -2,6 +2,7 @@ let tag_list = []
 let selected = window.getSelection()
 let input_keybord = undefined
 let composition
+let link_window
 
 // ブロックタイトルの入力がされた
 document.getElementById("input-block-title").onchange = function()
@@ -92,6 +93,23 @@ document.getElementById("button-font-bold").onclick = function()
 {
     edit_select_text(function(element){element.style.fontWeight = "bold";});
 } 
+
+document.getElementById("button-add-text-link").onclick = function()
+{
+    edit_select_text(function(element){add_link(element, element.getAttribute("link"));});
+}
+
+document.getElementById("button-remove-text-link").onclick = function()
+{
+    edit_select_text(function(element)
+    {
+        element.style.color = ""
+        element.style.textDecoration = ""
+        element.removeAttribute("link")
+        element.onmouseover = function(){}
+        element.onmouseout = function(){}
+    })
+}
 
 
 function edit_select_text(func)
@@ -271,6 +289,12 @@ function copy_text_style(one, two)
     // 現状扱うスタイル　(サイズ、太さ)
     one.style.fontSize = two.style.fontSize
     one.style.fontWeight = two.style.fontWeight
+    one.style.color = two.style.color
+    one.style.textDecoration = two.style.textDecoration
+    if(two.getAttribute("link") != null)
+    {
+        one.setAttribute("link", two.getAttribute("link"))
+    }
 }
 
 function text_size(element, select)
@@ -304,8 +328,16 @@ function edit_text()
 {
     // 選択部分の更新
     selected = window.getSelection();
+    range = selected.getRangeAt(0)
     if(selected.isCollapsed)
     {
+        if(range.startContainer.parentElement.getAttribute("link") != null && event.ctrlKey == true)
+        {
+            document.getElementById("editor-content").removeChild(link_window)
+            link_window = null
+            select_brock(Number(range.startContainer.parentElement.getAttribute("link")))
+            return
+        }
         // 範囲選択がされていない場合、入力状態へ
         // キーボード入力部の作成
         input_keybord = document.createElement("input")
@@ -586,6 +618,11 @@ function export_data()
                 {
                     head += ",bold"
                 }
+                if(element.getAttribute("link") != null)
+                {
+                    head += ",link="
+                    head += element.getAttribute("link")
+                }
                 head += ">"
                 data.push(head + element.textContent)
             }
@@ -617,9 +654,102 @@ function make_label(str, styles)
             {
                 element_a.style.fontWeight = "bold"
             }
+            else if(style.indexOf("link=") == 0)
+            {
+                add_link(element_a, style.slice(style.indexOf("=") + 1))
+            }
         }
     }
     return element_a
+}
+
+function reload_select_link()
+{
+    let select = document.getElementById("select-text-link")
+    while(select.firstChild)
+    {
+        select.removeChild(select.firstChild)
+    }
+    for(let i = 0; i < data_array.length; i++)
+    {
+        let option = document.createElement("option")
+        option.value = data_array[i][0]
+        option.text =  data_array[i][3]
+        select.appendChild(option)
+    }
+}
+
+function add_link(element, target)
+{
+    element.style.color = "blue"
+    element.style.textDecoration = "underline"
+    element.setAttribute("link", Number(target))
+    element.onmouseover = function(event)
+    {
+        event.target.style.backgroundColor = "skyblue"
+        make_link_window(event.target)
+    }
+    element.onmouseout = function(event)
+    {
+        event.target.style.backgroundColor = ""
+        document.getElementById("editor-content").removeChild(link_window)
+        link_window = null
+    }
+}
+
+function make_link_window(element)
+{
+    const rect = element.getBoundingClientRect()
+    const size = text_size(element)
+    const data = get_data(element.getAttribute("link"))
+
+    let left = rect.x + (size[0] / 2)
+    let top = rect.y + size[1]
+    if(window.screen.width / 2 < left)
+    {
+        left -= 250
+    }
+    if(window.screen.height / 2 < top)
+    {
+        top -= (size[1] + 100)
+    }
+
+    link_window = document.createElement("div")
+    link_window.style.left = String(left) + "px"
+    link_window.style.top = String(top) + "px"
+    link_window.classList.add("link-window")
+    document.getElementById("editor-content").appendChild(link_window)
+    
+    let title = document.createElement("span")
+    title.textContent = data[3]
+    title.classList.add("link-window-title")
+    link_window.appendChild(title)
+    link_window.appendChild(document.createElement("br"))
+
+    let content = document.createElement("span")
+    content.textContent = ""
+    content.classList.add("link-window-content")
+    link_window.appendChild(content)
+    for(let i = 5; i < data.length && content.getBoundingClientRect().height <= 54; i++)
+    {
+        if(data[i].indexOf("<text") == 0)
+        {
+            content.textContent += data[i].slice(data[i].indexOf(">") + 1)
+        }
+    }
+    while(content.getBoundingClientRect().height > 54)
+    {
+        content.textContent = content.textContent.slice(0, content.textContent.length - 1)
+    }
+}
+
+function check_text_style(one, two)
+{
+    if(one.style.fontSize != two.style.fontSize || one.style.fontWeight != two.style.fontWeight || one.getAttribute("link") != two.getAttribute("link"))
+    {
+        return false
+    }
+    return true
 }
 
 function synthesis_text(element_li)
@@ -654,7 +784,7 @@ function synthesis_text(element_li)
                     i ++
                 }
             }
-            else if(last != -1 && element_li.children[last].style.fontSize == element_li.children[i].style.fontSize && element_li.children[last].style.fontWeight == element_li.children[i].style.fontWeight && element_li.children[last].style.color == element_li.children[i].style.color)
+            else if(last != -1 && check_text_style(element_li.children[last], element_li.children[i]))
             {
                 // 最後のラベルとスタイルが同じなら合成する
                 element_li.children[last].textContent += element_li.children[i].textContent
