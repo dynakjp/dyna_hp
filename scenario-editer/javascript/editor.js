@@ -507,9 +507,19 @@ function click_row_text()
                 document.getSelection().removeAllRanges();
                 document.getSelection().addRange(select);
                 parent.children[i].click();
-                break
+                return
             }
             i--
+        }
+        if(parent.tagName == "LI")
+        {
+            let element_a = make_label("")
+            parent.children[parent.childElementCount - 1].before(element_a)
+            select.setStart(element_a, 0)
+            select.setEnd(element_a, 0)
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(select);
+            element_a.click()
         }
     }
 }
