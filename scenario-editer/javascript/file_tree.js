@@ -194,6 +194,7 @@ function make_tree()
         element_li.appendChild(block_no)
         tree.appendChild(element_li)
     }
+    reload_select_link()
 }
 
 function select_brock(block_no)

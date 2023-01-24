@@ -94,6 +94,23 @@ document.getElementById("button-font-bold").onclick = function()
     edit_select_text(function(element){element.style.fontWeight = "bold";});
 } 
 
+document.getElementById("button-add-text-link").onclick = function()
+{
+    edit_select_text(function(element){add_link(element, element.getAttribute("link"));});
+}
+
+document.getElementById("button-remove-text-link").onclick = function()
+{
+    edit_select_text(function(element)
+    {
+        element.style.color = ""
+        element.style.textDecoration = ""
+        element.removeAttribute("link")
+        element.onmouseover = function(){}
+        element.onmouseout = function(){}
+    })
+}
+
 
 function edit_select_text(func)
 {
@@ -644,6 +661,22 @@ function make_label(str, styles)
         }
     }
     return element_a
+}
+
+function reload_select_link()
+{
+    let select = document.getElementById("select-text-link")
+    while(select.firstChild)
+    {
+        select.removeChild(select.firstChild)
+    }
+    for(let i = 0; i < data_array.length; i++)
+    {
+        let option = document.createElement("option")
+        option.value = data_array[i][0]
+        option.text =  data_array[i][3]
+        select.appendChild(option)
+    }
 }
 
 function add_link(element, target)
