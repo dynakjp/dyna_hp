@@ -96,7 +96,7 @@ document.getElementById("button-font-bold").onclick = function()
 
 document.getElementById("button-add-text-link").onclick = function()
 {
-    edit_select_text(function(element){add_link(element, element.getAttribute("link"));});
+    edit_select_text(function(element){add_link(element, document.getElementById("select-text-link").value);});
 }
 
 document.getElementById("button-remove-text-link").onclick = function()
