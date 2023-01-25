@@ -657,7 +657,7 @@ function export_data()
             {
                 str += ",open=true"
             }
-            else if(element.getAttribute("lines") != null)
+            if(element.getAttribute("lines") != null)
             {
                 str += ",lines=" + element.getAttribute("lines")
             }
@@ -932,6 +932,10 @@ function make_view_link(link, open, lines)
     VL.appendChild(delete_button)
     VL.appendChild(document.createElement("br"))
 
+    if(open == "true")
+    {
+        icon.click()
+    }
     return VL
 }
 
