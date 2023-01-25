@@ -678,6 +678,13 @@ function new_file()
     }
 }
 
+function reset_window()
+{
+    file_handle = undefined
+    select_block_no = -1
+    reset_tree()
+    reset_editor()
+}
 // タブを閉じる際
 window.addEventListener('beforeunload', function (e) 
 {
