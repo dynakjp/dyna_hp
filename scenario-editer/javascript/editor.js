@@ -585,6 +585,40 @@ function import_data(data)
             element_li.onclick = click_row_text
             element_li.classList.add("editor-row")
         }
+        else if(status[0] == "VL")
+        {
+            let link = null
+            let open = false
+            let lines = "A"
+            for(let style of status.slice(1))
+            {
+                if(style.indexOf("link=") == 0)
+                {
+                    link = Number(style.slice(style.indexOf("=") + 1))
+                }
+                else if(style.indexOf("open=") == 0)
+                {
+                    link = style.slice(style.indexOf("=") + 1)
+                }
+                else if(style.indexOf("lines=") == 0)
+                {
+                    link = style.slice(style.indexOf("=") + 1)
+                }
+            }
+            if(link != null)
+            {
+                if(element_li.childElementCount != 0)
+                {
+                    const element_br = document.createElement("br")
+                    element_li.appendChild(element_br)
+                    editor_content_list.appendChild(element_li)
+                    element_li = document.createElement("li")
+                    element_li.onclick = click_row_text
+                    element_li.classList.add("editor-row")
+                }
+                editor_content_list.appendChild(make_view_link(link, open, lines))
+            }
+        }
         i++;
     }
 
@@ -842,7 +876,7 @@ function make_view_link(link, open, lines)
     VL.appendChild(delete_button)
     VL.appendChild(document.createElement("br"))
 
-    document.getElementById("editor-content").appendChild(VL)
+    return VL
 }
 
 function check_text_style(one, two)
