@@ -680,8 +680,18 @@ function export_data()
     return data
 }
 
-function import_data_view(data, parent)
+function import_data_view(data, parent, lines)
 {
+    if(lines == null)
+    {
+        lines = "A"
+    }
+    else if(lines != "A")
+    {
+        lines = Number(lines)
+    }
+
+    line_ct = 0
     for(const info of data.slice(5))
     {
         if(info[0] != "<")
@@ -716,6 +726,11 @@ function import_data_view(data, parent)
         if(status == "break")
         {
             parent.appendChild(document.createElement("br"))
+            line_ct ++
+            if(lines != "A" && line_ct >= lines)
+            {
+                break
+            }
         }
     }
 }
@@ -841,6 +856,7 @@ function make_view_link(link, open, lines)
     icon.textContent = "＞"
     icon.fontSize = "18px"
     icon.setAttribute("link",link)
+    icon.setAttribute("lines",lines)
     icon.onclick = function(event)
     {
         let icon = event.target
@@ -848,14 +864,32 @@ function make_view_link(link, open, lines)
         if(icon.textContent == "＞")
         {
             icon.textContent = "∨"
+            let input_lines = document.createElement("input")
+            input_lines.value = icon.getAttribute("lines")
+            input_lines.onchange = function(event)
+            {
+                let vl = event.target.parentElement
+                if(event.target.value == "A" || !isNaN(event.target.value))
+                {
+                    event.target.parentElement.children[0].setAttribute("lines", event.target.value)
+                    
+                    vl.removeChild(VL.children[VL.childElementCount - 1])
+                    let content = document.createElement("div")
+                    import_data_view(get_data(icon.getAttribute("link")), content, icon.getAttribute("lines"))
+                    vl.appendChild(content)
+                }
+            }
+            VL.children[VL.childElementCount - 1].before(input_lines)          
+
             let content = document.createElement("div")
-            import_data_view(get_data(icon.getAttribute("link")), content)
+            import_data_view(get_data(icon.getAttribute("link")), content, icon.getAttribute("lines"))
             VL.appendChild(content)
         }
         else if(icon.textContent == "∨")
         {
             icon.textContent = "＞"
             VL.removeChild(VL.children[VL.childElementCount - 1])
+            VL.removeChild(VL.children[VL.childElementCount - 2])
         }
     }
     VL.appendChild(icon)
