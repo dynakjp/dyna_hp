@@ -950,6 +950,7 @@ function make_view_link(link, open, lines)
 
     let up_button = document.createElement("button")
     up_button.textContent = "∧"
+    up_button.classList.add("lv-move")
     up_button.onclick = function(event)
     {
         let vl = event.target.parentElement
@@ -962,6 +963,7 @@ function make_view_link(link, open, lines)
 
     let down_button = document.createElement("button")
     down_button.textContent = "∨"
+    down_button.classList.add("lv-move")
     down_button.onclick = function(event)
     {
         let vl = event.target.parentElement
