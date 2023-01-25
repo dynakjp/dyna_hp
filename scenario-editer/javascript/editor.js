@@ -646,6 +646,46 @@ function export_data()
     return data
 }
 
+function import_data_view(data, parent)
+{
+    for(const info of data.slice(5))
+    {
+        if(info[0] != "<")
+        {
+            continue
+        }
+        const status = info.slice(1, info.indexOf(">")).split(",")
+        const content = info.slice(info.indexOf(">") + 1)
+
+        if(status == "text")
+        {
+            let text = document.createElement("a")
+            text.textContent = content
+            for(let style of status.slice(1))
+            {
+                if(style.indexOf("size=") == 0)
+                {
+                    text.style.fontSize = style.slice(style.indexOf("=") + 1)
+                }
+                else if(style == "bold")
+                {
+                    text.style.fontWeight = "bold"
+                }
+                else if(style.indexOf("link=") == 0)
+                {
+                    add_link(text, style.slice(style.indexOf("=") + 1))
+                    text.onclick = function(event){select_brock(event.target.getAttribute("link"));}
+                }
+            }
+            parent.appendChild(text)
+        }
+        if(status == "break")
+        {
+            parent.appendChild(document.createElement("br"))
+        }
+    }
+}
+
 function make_label(str, styles)
 {
     // 文字とスタイルを入れるとテキストを作成する
@@ -752,6 +792,57 @@ function make_link_window(element)
     {
         content.textContent = content.textContent.slice(0, content.textContent.length - 1)
     }
+}
+
+function make_view_link(link, open, lines)
+{
+    const data = get_data(link)
+    if(data == false)
+    {
+        return
+    }
+
+    let VL = document.createElement("li")
+    let icon = document.createElement("a")
+    icon.textContent = "＞"
+    icon.fontSize = "18px"
+    icon.setAttribute("link",link)
+    icon.onclick = function(event)
+    {
+        let icon = event.target
+        let VL = icon.parentElement
+        if(icon.textContent == "＞")
+        {
+            icon.textContent = "∨"
+            let content = document.createElement("div")
+            import_data_view(get_data(icon.getAttribute("link")), content)
+            VL.appendChild(content)
+        }
+        else if(icon.textContent == "∨")
+        {
+            icon.textContent = "＞"
+            VL.removeChild(VL.children[VL.childElementCount - 1])
+        }
+    }
+    VL.appendChild(icon)
+
+    let title = document.createElement("a")
+    title.textContent = data[3]
+    title.fontSize = "18px"
+    title.onclick = function(){select_brock(link);}
+    VL.appendChild(title)
+
+    let delete_button = document.createElement("button")
+    delete_button.textContent = "×"
+    delete_button.onclick = function(event)
+    {
+        let vl = event.target.parentElement
+        vl.parentElement.removeChild(vl)
+    }
+    VL.appendChild(delete_button)
+    VL.appendChild(document.createElement("br"))
+
+    document.getElementById("editor-content").appendChild(VL)
 }
 
 function check_text_style(one, two)
