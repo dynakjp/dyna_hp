@@ -649,31 +649,49 @@ function export_data()
     {
         synthesis_text(contents[i])
         let row = contents[i]
-        for(element of row.children)
+        let element = row.children[0]
+        if(element.tagName == "A" && element.classList.contains("lv-title"))
         {
-            if(element.tagName == "A")
+            let str = "<VL,link=" + element.getAttribute("link")
+            if(element.textContent != "＞")
             {
-                let head = "<text"
-                if(element.style.fontSize != "")
-                {
-                    head += ",size="
-                    head += element.style.fontSize
-                }
-                if(element.style.fontWeight == "bold")
-                {
-                    head += ",bold"
-                }
-                if(element.getAttribute("link") != null)
-                {
-                    head += ",link="
-                    head += element.getAttribute("link")
-                }
-                head += ">"
-                data.push(head + element.textContent)
+                str += ",open=true"
             }
-            else if(element.tagName == "BR")
+            else if(element.getAttribute("lines") != null)
             {
-                data.push("<break>")
+                str += ",lines=" + element.getAttribute("lines")
+            }
+            str += ">"
+            data.push(str)
+        }
+        else
+        {
+            for(element of row.children)
+            {
+                if(element.tagName == "A")
+                {
+                    let head = "<text"
+                    if(element.style.fontSize != "")
+                    {
+                        head += ",size="
+                        head += element.style.fontSize
+                    }
+                    if(element.style.fontWeight == "bold")
+                    {
+                        head += ",bold"
+                    }
+                    if(element.getAttribute("link") != null)
+                    {
+                        head += ",link="
+                        head += element.getAttribute("link")
+                    }
+                    head += ">"
+                    data.push(head + element.textContent)
+                }
+                else if(element.tagName == "BR")
+                {
+                    data.push("<break>")
+                }
             }
         }
     }
