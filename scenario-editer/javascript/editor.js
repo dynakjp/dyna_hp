@@ -948,6 +948,30 @@ function make_view_link(link, open, lines)
     title.onclick = function(){select_brock(link);}
     VL.appendChild(title)
 
+    let up_button = document.createElement("button")
+    up_button.textContent = "∧"
+    up_button.onclick = function(event)
+    {
+        let vl = event.target.parentElement
+        if(vl.previousElementSibling != null)
+        {
+            vl.previousElementSibling.before(vl)
+        }
+    }
+    VL.appendChild(up_button)
+
+    let down_button = document.createElement("button")
+    down_button.textContent = "∨"
+    down_button.onclick = function(event)
+    {
+        let vl = event.target.parentElement
+        if(vl.nextElementSibling != null)
+        {
+            vl.nextElementSibling.after(vl)
+        }
+    }
+    VL.appendChild(down_button)
+
     let delete_button = document.createElement("button")
     delete_button.textContent = "×"
     delete_button.classList.add("lv-delete")
