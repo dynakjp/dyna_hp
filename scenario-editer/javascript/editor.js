@@ -111,6 +111,12 @@ document.getElementById("button-remove-text-link").onclick = function()
     })
 }
 
+document.getElementById("button-make-VL").onclick = function()
+{
+    VL = make_view_link(document.getElementById("select-text-link").value, "false","A")
+    document.getElementById("editor-content-list").appendChild(VL)
+}
+
 
 function edit_select_text(func)
 {
@@ -585,6 +591,40 @@ function import_data(data)
             element_li.onclick = click_row_text
             element_li.classList.add("editor-row")
         }
+        else if(status[0] == "VL")
+        {
+            let link = null
+            let open = false
+            let lines = "A"
+            for(let style of status.slice(1))
+            {
+                if(style.indexOf("link=") == 0)
+                {
+                    link = Number(style.slice(style.indexOf("=") + 1))
+                }
+                else if(style.indexOf("open=") == 0)
+                {
+                    open = style.slice(style.indexOf("=") + 1)
+                }
+                else if(style.indexOf("lines=") == 0)
+                {
+                    lines = style.slice(style.indexOf("=") + 1)
+                }
+            }
+            if(link != null)
+            {
+                if(element_li.childElementCount != 0)
+                {
+                    const element_br = document.createElement("br")
+                    element_li.appendChild(element_br)
+                    editor_content_list.appendChild(element_li)
+                    element_li = document.createElement("li")
+                    element_li.onclick = click_row_text
+                    element_li.classList.add("editor-row")
+                }
+                editor_content_list.appendChild(make_view_link(link, open, lines))
+            }
+        }
         i++;
     }
 
@@ -615,35 +655,108 @@ function export_data()
     {
         synthesis_text(contents[i])
         let row = contents[i]
-        for(element of row.children)
+        let element = row.children[0]
+        if(element.tagName == "A" && element.classList.contains("lv-title"))
         {
-            if(element.tagName == "A")
+            let str = "<VL,link=" + element.getAttribute("link")
+            if(element.textContent != "＞")
             {
-                let head = "<text"
-                if(element.style.fontSize != "")
-                {
-                    head += ",size="
-                    head += element.style.fontSize
-                }
-                if(element.style.fontWeight == "bold")
-                {
-                    head += ",bold"
-                }
-                if(element.getAttribute("link") != null)
-                {
-                    head += ",link="
-                    head += element.getAttribute("link")
-                }
-                head += ">"
-                data.push(head + element.textContent)
+                str += ",open=true"
             }
-            else if(element.tagName == "BR")
+            if(element.getAttribute("lines") != null)
             {
-                data.push("<break>")
+                str += ",lines=" + element.getAttribute("lines")
+            }
+            str += ">"
+            data.push(str)
+        }
+        else
+        {
+            for(element of row.children)
+            {
+                if(element.tagName == "A")
+                {
+                    let head = "<text"
+                    if(element.style.fontSize != "")
+                    {
+                        head += ",size="
+                        head += element.style.fontSize
+                    }
+                    if(element.style.fontWeight == "bold")
+                    {
+                        head += ",bold"
+                    }
+                    if(element.getAttribute("link") != null)
+                    {
+                        head += ",link="
+                        head += element.getAttribute("link")
+                    }
+                    head += ">"
+                    data.push(head + element.textContent)
+                }
+                else if(element.tagName == "BR")
+                {
+                    data.push("<break>")
+                }
             }
         }
     }
     return data
+}
+
+function import_data_view(data, parent, lines)
+{
+    if(lines == null)
+    {
+        lines = "A"
+    }
+    else if(lines != "A")
+    {
+        lines = Number(lines)
+    }
+
+    line_ct = 0
+    for(const info of data.slice(5))
+    {
+        if(info[0] != "<")
+        {
+            continue
+        }
+        const status = info.slice(1, info.indexOf(">")).split(",")
+        const content = info.slice(info.indexOf(">") + 1)
+
+        if(status == "text")
+        {
+            let text = document.createElement("a")
+            text.textContent = content
+            for(let style of status.slice(1))
+            {
+                if(style.indexOf("size=") == 0)
+                {
+                    text.style.fontSize = style.slice(style.indexOf("=") + 1)
+                }
+                else if(style == "bold")
+                {
+                    text.style.fontWeight = "bold"
+                }
+                else if(style.indexOf("link=") == 0)
+                {
+                    add_link(text, style.slice(style.indexOf("=") + 1))
+                    text.onclick = function(event){select_brock(event.target.getAttribute("link"));}
+                }
+            }
+            parent.appendChild(text)
+        }
+        if(status == "break")
+        {
+            parent.appendChild(document.createElement("br"))
+            line_ct ++
+            if(lines != "A" && line_ct >= lines)
+            {
+                break
+            }
+        }
+    }
 }
 
 function make_label(str, styles)
@@ -752,6 +865,137 @@ function make_link_window(element)
     {
         content.textContent = content.textContent.slice(0, content.textContent.length - 1)
     }
+}
+
+function make_view_link(link, open, lines)
+{
+    const data = get_data(link)
+    if(data == false)
+    {
+        return
+    }
+
+    let VL = document.createElement("li")
+    let icon = document.createElement("a")
+    icon.textContent = "＞"
+    icon.classList.add("lv-title")
+    icon.setAttribute("link",link)
+    icon.setAttribute("lines",lines)
+    icon.onclick = function(event)
+    {
+        let icon = event.target
+        let VL = icon.parentElement
+        if(icon.textContent == "＞")
+        {
+            icon.textContent = "∨"
+            let input_lines = document.createElement("input")
+            input_lines.value = icon.getAttribute("lines")
+            input_lines.classList.add("lv-input")
+            input_lines.onchange = function(event)
+            {
+                let vl = event.target.parentElement
+                if(event.target.value == "A" || !isNaN(event.target.value))
+                {
+                    event.target.parentElement.children[0].setAttribute("lines", event.target.value)
+                    
+                    let i = 0
+                    while(i < VL.childElementCount)
+                    {
+                        let element = VL.children[i]
+                        if(element.classList.contains("lv-content"))
+                        {
+                            VL.removeChild(element)
+                        }
+                        else
+                        {
+                            i++
+                        }
+                    }
+                    let content = document.createElement("div")
+                    content.classList.add("lv-content")
+                    import_data_view(get_data(icon.getAttribute("link")), content, icon.getAttribute("lines"))
+                    vl.appendChild(content)
+                }
+            }
+            VL.children[VL.childElementCount - 1].before(input_lines)          
+
+            let content = document.createElement("div")
+            content.classList.add("lv-content")
+            import_data_view(get_data(icon.getAttribute("link")), content, icon.getAttribute("lines"))
+            VL.appendChild(content)
+        }
+        else if(icon.textContent == "∨")
+        {
+            icon.textContent = "＞"
+            let i = 0
+            while(i < VL.childElementCount)
+            {
+                let element = VL.children[i]
+                if(element.classList.contains("lv-content"))
+                {
+                    VL.removeChild(element)
+                }
+                else if(element.classList.contains("lv-input"))
+                {
+                    VL.removeChild(element)
+                }
+                else
+                {
+                    i++
+                }
+            }
+        }
+    }
+    VL.appendChild(icon)
+
+    let title = document.createElement("a")
+    title.textContent = data[3]
+    title.classList.add("lv-title")
+    title.onclick = function(){select_brock(link);}
+    VL.appendChild(title)
+
+    let up_button = document.createElement("button")
+    up_button.textContent = "∧"
+    up_button.classList.add("lv-move")
+    up_button.onclick = function(event)
+    {
+        let vl = event.target.parentElement
+        if(vl.previousElementSibling != null)
+        {
+            vl.previousElementSibling.before(vl)
+        }
+    }
+    VL.appendChild(up_button)
+
+    let down_button = document.createElement("button")
+    down_button.textContent = "∨"
+    down_button.classList.add("lv-move")
+    down_button.onclick = function(event)
+    {
+        let vl = event.target.parentElement
+        if(vl.nextElementSibling != null)
+        {
+            vl.nextElementSibling.after(vl)
+        }
+    }
+    VL.appendChild(down_button)
+
+    let delete_button = document.createElement("button")
+    delete_button.textContent = "×"
+    delete_button.classList.add("lv-delete")
+    delete_button.onclick = function(event)
+    {
+        let vl = event.target.parentElement
+        vl.parentElement.removeChild(vl)
+    }
+    VL.appendChild(delete_button)
+    VL.appendChild(document.createElement("br"))
+
+    if(open == "true")
+    {
+        icon.click()
+    }
+    return VL
 }
 
 function check_text_style(one, two)
