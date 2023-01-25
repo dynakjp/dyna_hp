@@ -645,6 +645,7 @@ function open_file()
             // ファイルを開く
             const file_data = await showOpenFileDialog();
             file = await readAsText(file_data);
+            reset_window()
             // 内容表示しツリー表示
             import_file()
             make_tree()
@@ -672,12 +673,20 @@ function new_file()
         {
             // ファイルの新規作成
             file = file_name + ",0\n0,0,text,初期作成\n\n<text>\n<break>"
+            reset_window()
             import_file()
             make_tree()
         }
     }
 }
 
+function reset_window()
+{
+    file_handle = undefined
+    select_block_no = -1
+    reset_tree()
+    reset_editor()
+}
 // タブを閉じる際
 window.addEventListener('beforeunload', function (e) 
 {
