@@ -111,6 +111,12 @@ document.getElementById("button-remove-text-link").onclick = function()
     })
 }
 
+document.getElementById("button-make-VL").onclick = function()
+{
+    VL = make_view_link(document.getElementById("select-text-link").value, "false","A")
+    document.getElementById("editor-content-list").appendChild(VL)
+}
+
 
 function edit_select_text(func)
 {
