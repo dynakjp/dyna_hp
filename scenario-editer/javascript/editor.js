@@ -892,7 +892,19 @@ function make_view_link(link, open, lines)
                 {
                     event.target.parentElement.children[0].setAttribute("lines", event.target.value)
                     
-                    vl.removeChild(VL.children[VL.childElementCount - 1])
+                    let i = 0
+                    while(i < VL.childElementCount)
+                    {
+                        let element = VL.children[i]
+                        if(element.classList.contains("lv-content"))
+                        {
+                            VL.removeChild(element)
+                        }
+                        else
+                        {
+                            i++
+                        }
+                    }
                     let content = document.createElement("div")
                     content.classList.add("lv-content")
                     import_data_view(get_data(icon.getAttribute("link")), content, icon.getAttribute("lines"))
@@ -909,8 +921,23 @@ function make_view_link(link, open, lines)
         else if(icon.textContent == "∨")
         {
             icon.textContent = "＞"
-            VL.removeChild(VL.children[VL.childElementCount - 1])
-            VL.removeChild(VL.children[VL.childElementCount - 2])
+            let i = 0
+            while(i < VL.childElementCount)
+            {
+                let element = VL.children[i]
+                if(element.classList.contains("lv-content"))
+                {
+                    VL.removeChild(element)
+                }
+                else if(element.classList.contains("lv-input"))
+                {
+                    VL.removeChild(element)
+                }
+                else
+                {
+                    i++
+                }
+            }
         }
     }
     VL.appendChild(icon)
