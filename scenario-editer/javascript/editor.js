@@ -598,11 +598,11 @@ function import_data(data)
                 }
                 else if(style.indexOf("open=") == 0)
                 {
-                    link = style.slice(style.indexOf("=") + 1)
+                    open = style.slice(style.indexOf("=") + 1)
                 }
                 else if(style.indexOf("lines=") == 0)
                 {
-                    link = style.slice(style.indexOf("=") + 1)
+                    lines = style.slice(style.indexOf("=") + 1)
                 }
             }
             if(link != null)
