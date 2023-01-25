@@ -854,7 +854,7 @@ function make_view_link(link, open, lines)
     let VL = document.createElement("li")
     let icon = document.createElement("a")
     icon.textContent = "＞"
-    icon.fontSize = "18px"
+    icon.classList.add("lv-title")
     icon.setAttribute("link",link)
     icon.setAttribute("lines",lines)
     icon.onclick = function(event)
@@ -866,6 +866,7 @@ function make_view_link(link, open, lines)
             icon.textContent = "∨"
             let input_lines = document.createElement("input")
             input_lines.value = icon.getAttribute("lines")
+            input_lines.classList.add("lv-input")
             input_lines.onchange = function(event)
             {
                 let vl = event.target.parentElement
@@ -875,6 +876,7 @@ function make_view_link(link, open, lines)
                     
                     vl.removeChild(VL.children[VL.childElementCount - 1])
                     let content = document.createElement("div")
+                    content.classList.add("lv-content")
                     import_data_view(get_data(icon.getAttribute("link")), content, icon.getAttribute("lines"))
                     vl.appendChild(content)
                 }
@@ -882,6 +884,7 @@ function make_view_link(link, open, lines)
             VL.children[VL.childElementCount - 1].before(input_lines)          
 
             let content = document.createElement("div")
+            content.classList.add("lv-content")
             import_data_view(get_data(icon.getAttribute("link")), content, icon.getAttribute("lines"))
             VL.appendChild(content)
         }
@@ -896,12 +899,13 @@ function make_view_link(link, open, lines)
 
     let title = document.createElement("a")
     title.textContent = data[3]
-    title.fontSize = "18px"
+    title.classList.add("lv-title")
     title.onclick = function(){select_brock(link);}
     VL.appendChild(title)
 
     let delete_button = document.createElement("button")
     delete_button.textContent = "×"
+    delete_button.classList.add("lv-delete")
     delete_button.onclick = function(event)
     {
         let vl = event.target.parentElement

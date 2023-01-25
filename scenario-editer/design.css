@@ -67,3 +67,34 @@ ul
     overflow-wrap: break-word;
     color: gray;
 }
+
+.lv-title{
+    font-size: 22px;
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.lv-delete{
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 0;
+    color: gray;
+    margin-top: auto;
+    margin-bottom: auto;
+    font-size: 18px;
+    text-align: center;
+}
+
+.lv-input{
+    width: 50px;
+    margin-left: 50px;
+}
+
+.lv-content{
+    border-top: 1px gray solid;
+    border-bottom: 1px gray solid;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
