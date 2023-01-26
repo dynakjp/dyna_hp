@@ -130,7 +130,7 @@ function edit_select_text(func)
         }
         else if(range.startContainer == range.endContainer && range.startContainer.parentElement.tagName == "A")
         {
-            if(range.startContainer.parentElement.parentElement.classList.contains("editor-row"))
+            if(range.startContainer.parentElement.parentElement.classList.contains("editor-row-text"))
             {
                 // 1つの要素内を選択
                 // 選択外(前方)の作成
@@ -162,7 +162,7 @@ function edit_select_text(func)
         }
         else if(range.startContainer.parentElement.parentElement == range.endContainer.parentElement.parentElement)
         {
-            if(range.startContainer.parentElement.parentElement.classList.contains("editor-row"))
+            if(range.startContainer.parentElement.parentElement.classList.contains("editor-row-text"))
             {
                 // 1行の内で選択されている
                 let select = new Range()
@@ -219,7 +219,7 @@ function edit_select_text(func)
             // 最初の要素を編集
             let element = range.startContainer.parentElement
 
-            if(element.tagName == "A" && element.parentElement.classList.contains("editor-row"))
+            if(element.tagName == "A" && element.parentElement.classList.contains("editor-row-text"))
             {
                 // 選択部分を分割し編集
                 const text = element.textContent.slice(range.startOffset)
@@ -259,7 +259,7 @@ function edit_select_text(func)
             while(element != end.parentElement)
             {
                 console.log(element)
-                if(element.classList.contains("editor-row"))
+                if(element.classList.contains("editor-row-text"))
                 {
                     for(let ele of element.children)
                     {
@@ -274,7 +274,7 @@ function edit_select_text(func)
 
             
             // 最後の行の最初から最後の要素まで編集をしていく
-            if(element.classList.contains("editor-row"))
+            if(element.classList.contains("editor-row-text"))
             {
                 element = element.children[0]
                 while(element != end)
@@ -394,7 +394,7 @@ function edit_text()
                     {
                         element_li = document.createElement("li")
                         element_li.onclick = click_row_text
-                        element_li.classList.add("editor-row")
+                        element_li.classList.add("editor-row-text")
                         element.parentElement.after(element_li)
                         element = element.nextElementSibling
                         while(element.tagName != "BR")
@@ -580,7 +580,7 @@ function import_data(data)
     let editor_content_list = document.getElementById("editor-content-list")
     let element_li = document.createElement("li")
     element_li.onclick = click_row_text
-    element_li.classList.add("editor-row")
+    element_li.classList.add("editor-row-text")
 
     // コンテンツの読み込み
     let i = 5
@@ -604,7 +604,7 @@ function import_data(data)
             editor_content_list.appendChild(element_li)
             element_li = document.createElement("li")
             element_li.onclick = click_row_text
-            element_li.classList.add("editor-row")
+            element_li.classList.add("editor-row-text")
         }
         else if(status[0] == "VL")
         {
@@ -635,7 +635,7 @@ function import_data(data)
                     editor_content_list.appendChild(element_li)
                     element_li = document.createElement("li")
                     element_li.onclick = click_row_text
-                    element_li.classList.add("editor-row")
+                    element_li.classList.add("editor-row-text")
                 }
                 editor_content_list.appendChild(make_view_link(link, open, lines))
             }
@@ -1480,7 +1480,7 @@ $(document).keydown(function(event){
                 let str = input_keybord.nextElementSibling.textContent
                 let element_li = document.createElement("li")
                 element_li.onclick = click_row_text
-                element_li.classList.add("editor-row")
+                element_li.classList.add("editor-row-text")
                 input_keybord.parentElement.after(element_li)
                 // 後ろの要素を次の行に引き継ぐ
                 let element = input_keybord.nextElementSibling
@@ -1507,7 +1507,7 @@ $(document).keydown(function(event){
                 // 新しい行を作る
                 let element_li = document.createElement("li")
                 element_li.onclick = click_row_text
-                element_li.classList.add("editor-row")
+                element_li.classList.add("editor-row-text")
                 input_keybord.parentElement.after(element_li)
                 
                 let element_a = document.createElement("a")

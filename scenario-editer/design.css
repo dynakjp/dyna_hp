@@ -41,7 +41,7 @@ ul
     margin-right: -3px;
 }
 
-.editor-row{
+.editor-row-text{
     /* 行のどこに触れていてもカーソルがテキストモードになるように */
     cursor: text;
 }
