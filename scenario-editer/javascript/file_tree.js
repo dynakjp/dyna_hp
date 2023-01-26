@@ -703,9 +703,6 @@ function make_user_log()
     let log = document.createElement("a")
     log.id = "user-log"
     log.textContent = log_array.shift()
-    log.style.position = "absolute"
-    log.style.top = "5px"
-    log.style.left = "0px"
     document.body.appendChild(log)
     window.setTimeout(delete_user_log, 3000);
 }
