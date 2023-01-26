@@ -584,7 +584,7 @@ async function save_as_file()
     await writable.write(file)
     await writable.close()
     file_handle = handle
-    await console.log("saved")
+    set_user_log(handle.name + "に保存しました")
 }
 
 document.getElementById("button-save-file").onclick = save_file
@@ -613,8 +613,8 @@ async function save_file()
         const writable = await file_handle.createWritable()
         await writable.write(file)
         await writable.close()
+        set_user_log(file_handle.name + "に保存しました")
     }
-    await console.log("saved")
 }
 
 document.getElementById("button-open-file").onclick = open_file
