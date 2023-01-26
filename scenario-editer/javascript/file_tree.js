@@ -3,6 +3,7 @@ let data_array = []
 let max_block_no = 0
 let select_block_no = -1
 let file_handle
+let log_array = []
 
 function import_file()
 {
@@ -687,6 +688,38 @@ function reset_window()
     reset_tree()
     reset_editor()
 }
+
+function set_user_log(str)
+{
+    log_array.push(str)
+    if(document.getElementById("user-log") == undefined)
+    {
+        make_user_log()
+    }
+}
+
+function make_user_log()
+{
+    let log = document.createElement("a")
+    log.id = "user-log"
+    log.textContent = log_array.shift()
+    log.style.position = "absolute"
+    log.style.top = "5px"
+    log.style.left = "0px"
+    document.body.appendChild(log)
+    window.setTimeout(delete_user_log, 3000);
+}
+
+function delete_user_log()
+{
+    document.body.removeChild(document.getElementById("user-log"))
+    if(0 < log_array.length)
+    {
+        make_user_log()
+    }
+}
+
+
 // タブを閉じる際
 window.addEventListener('beforeunload', function (e) 
 {
