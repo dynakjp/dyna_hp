@@ -3,6 +3,7 @@ let data_array = []
 let max_block_no = 0
 let select_block_no = -1
 let file_handle
+let log_array = []
 
 function import_file()
 {
@@ -583,7 +584,7 @@ async function save_as_file()
     await writable.write(file)
     await writable.close()
     file_handle = handle
-    await console.log("saved")
+    set_user_log(handle.name + "に保存しました")
 }
 
 document.getElementById("button-save-file").onclick = save_file
@@ -612,8 +613,8 @@ async function save_file()
         const writable = await file_handle.createWritable()
         await writable.write(file)
         await writable.close()
+        set_user_log(file_handle.name + "に保存しました")
     }
-    await console.log("saved")
 }
 
 document.getElementById("button-open-file").onclick = open_file
@@ -687,6 +688,35 @@ function reset_window()
     reset_tree()
     reset_editor()
 }
+
+function set_user_log(str)
+{
+    log_array.push(str)
+    if(document.getElementById("user-log") == undefined)
+    {
+        make_user_log()
+    }
+}
+
+function make_user_log()
+{
+    let log = document.createElement("a")
+    log.id = "user-log"
+    log.textContent = log_array.shift()
+    document.body.appendChild(log)
+    window.setTimeout(delete_user_log, 3000);
+}
+
+function delete_user_log()
+{
+    document.body.removeChild(document.getElementById("user-log"))
+    if(0 < log_array.length)
+    {
+        make_user_log()
+    }
+}
+
+
 // タブを閉じる際
 window.addEventListener('beforeunload', function (e) 
 {
