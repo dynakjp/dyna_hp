@@ -130,80 +130,86 @@ function edit_select_text(func)
         }
         else if(range.startContainer == range.endContainer && range.startContainer.parentElement.tagName == "A")
         {
-            // 1つの要素内を選択
-            // 選択外(前方)の作成
-            const text = range.startContainer.parentElement.textContent
-            let before_element = make_label(text.slice(0, range.startOffset))
-            copy_text_style(before_element, range.startContainer.parentElement)
-            range.startContainer.parentElement.before(before_element)
+            if(range.startContainer.parentElement.parentElement.classList.contains("editor-row-text"))
+            {
+                // 1つの要素内を選択
+                // 選択外(前方)の作成
+                const text = range.startContainer.parentElement.textContent
+                let before_element = make_label(text.slice(0, range.startOffset))
+                copy_text_style(before_element, range.startContainer.parentElement)
+                range.startContainer.parentElement.before(before_element)
 
-            // 選択された部分の作成
-            let select_element = make_label(text.slice(range.startOffset, range.endOffset))
-            copy_text_style(select_element, range.startContainer.parentElement)
-            func(select_element)
-            range.startContainer.parentElement.before(select_element)
-            
-            // 選択外(後方)の作成
-            let after_element = make_label(text.slice(range.endOffset))
-            copy_text_style(after_element, range.startContainer.parentElement)
-            range.startContainer.parentElement.before(after_element)
-            
-            // 元の要素の削除
-            range.startContainer.parentElement.parentElement.removeChild(range.startContainer.parentElement)
-            // 選択状態再決定
-            let select = new Range()
-            select.setStart(select_element.firstChild, 0)
-            select.setEnd(select_element.firstChild, select_element.firstChild.length)
-            document.getSelection().removeAllRanges();
-            document.getSelection().addRange(select);
+                // 選択された部分の作成
+                let select_element = make_label(text.slice(range.startOffset, range.endOffset))
+                copy_text_style(select_element, range.startContainer.parentElement)
+                func(select_element)
+                range.startContainer.parentElement.before(select_element)
+                
+                // 選択外(後方)の作成
+                let after_element = make_label(text.slice(range.endOffset))
+                copy_text_style(after_element, range.startContainer.parentElement)
+                range.startContainer.parentElement.before(after_element)
+                
+                // 元の要素の削除
+                range.startContainer.parentElement.parentElement.removeChild(range.startContainer.parentElement)
+                // 選択状態再決定
+                let select = new Range()
+                select.setStart(select_element.firstChild, 0)
+                select.setEnd(select_element.firstChild, select_element.firstChild.length)
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
+            }
         }
         else if(range.startContainer.parentElement.parentElement == range.endContainer.parentElement.parentElement)
         {
-            // 1行の内で選択されている
-            let select = new Range()
-            
-            // 最初の要素の編集
-            let element = range.startContainer.parentElement
-            if(element.tagName == "A")
+            if(range.startContainer.parentElement.parentElement.classList.contains("editor-row-text"))
             {
-                // ラベルなら選択部分を分けて編集
-                const text = element.textContent.slice(range.startOffset)
-                element.textContent = element.textContent.slice(0, range.startOffset)
-
-                let select_element = make_label(text)
-                copy_text_style(select_element, element)
-                func(select_element)
-                element.after(select_element)
-
-                select.setStart(select_element.firstChild, 0)
-                element = select_element.nextElementSibling
-            }
-
-            // 終わりの要素までたどっていって、テキストなら編集する
-            while(element != range.endContainer.parentElement)
-            {
+                // 1行の内で選択されている
+                let select = new Range()
+                
+                // 最初の要素の編集
+                let element = range.startContainer.parentElement
                 if(element.tagName == "A")
                 {
-                    func(element)
-                }
-                element = element.nextElementSibling
-            }
-            // 終わりの要素を編集
-            if(element.tagName == "A")
-            {
-                // ラベルなら選択部分を分けて編集
-                const text = element.textContent.slice(0, range.endOffset)
-                element.textContent = element.textContent.slice(range.endOffset)
+                    // ラベルなら選択部分を分けて編集
+                    const text = element.textContent.slice(range.startOffset)
+                    element.textContent = element.textContent.slice(0, range.startOffset)
 
-                let select_element = make_label(text)
-                copy_text_style(select_element, element)
-                func(select_element)
-                element.before(select_element)
-                select.setEnd(select_element.firstChild, select_element.firstChild.length)
+                    let select_element = make_label(text)
+                    copy_text_style(select_element, element)
+                    func(select_element)
+                    element.after(select_element)
+
+                    select.setStart(select_element.firstChild, 0)
+                    element = select_element.nextElementSibling
+                }
+
+                // 終わりの要素までたどっていって、テキストなら編集する
+                while(element != range.endContainer.parentElement)
+                {
+                    if(element.tagName == "A")
+                    {
+                        func(element)
+                    }
+                    element = element.nextElementSibling
+                }
+                // 終わりの要素を編集
+                if(element.tagName == "A")
+                {
+                    // ラベルなら選択部分を分けて編集
+                    const text = element.textContent.slice(0, range.endOffset)
+                    element.textContent = element.textContent.slice(range.endOffset)
+
+                    let select_element = make_label(text)
+                    copy_text_style(select_element, element)
+                    func(select_element)
+                    element.before(select_element)
+                    select.setEnd(select_element.firstChild, select_element.firstChild.length)
+                }
+                // 選択状態の変更
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
             }
-            // 選択状態の変更
-            document.getSelection().removeAllRanges();
-            document.getSelection().addRange(select);
         }
         else
         {
@@ -212,7 +218,8 @@ function edit_select_text(func)
             
             // 最初の要素を編集
             let element = range.startContainer.parentElement
-            if(element.tagName == "A")
+
+            if(element.tagName == "A" && element.parentElement.classList.contains("editor-row-text"))
             {
                 // 選択部分を分割し編集
                 const text = element.textContent.slice(range.startOffset)
@@ -225,21 +232,21 @@ function edit_select_text(func)
 
                 select.setStart(select_element.firstChild, 0)
                 element = select_element.nextElementSibling
+
+                // 行の端まで文字をたどっていく
+                while(element.tagName != "BR")
+                {
+                    if(element.tagName == "A")
+                    {
+                        func(element)
+                    }
+                    element = element.nextElementSibling
+                }
             }
             else if(range.startContainer.tagName == "LI")
             {
                 // 要素が行なら選択位置を変更
                 element = range.startContainer.children[range.startContainer.childElementCount - 1]
-            }
-
-            // 行の端まで文字をたどっていく
-            while(element.tagName != "BR")
-            {
-                if(element.tagName == "A")
-                {
-                    func(element)
-                }
-                element = element.nextElementSibling
             }
 
             // 最後の要素を取得しておき、そこまでの行を編集していく
@@ -251,41 +258,49 @@ function edit_select_text(func)
             }
             while(element != end.parentElement)
             {
-                for(let ele of element.children)
+                console.log(element)
+                if(element.classList.contains("editor-row-text"))
                 {
-                    if(ele.tagName == "A")
+                    for(let ele of element.children)
                     {
-                        func(ele)
+                        if(ele.tagName == "A")
+                        {
+                            func(ele)
+                        }
                     }
                 }
                 element = element.nextElementSibling
             }
 
+            
             // 最後の行の最初から最後の要素まで編集をしていく
-            element = element.children[0]
-            while(element != end)
+            if(element.classList.contains("editor-row-text"))
             {
+                element = element.children[0]
+                while(element != end)
+                {
+                    if(element.tagName == "A")
+                    {
+                        func(element)
+                    }
+                    element = element.nextElementSibling
+                }
                 if(element.tagName == "A")
                 {
-                    func(element)
-                }
-                element = element.nextElementSibling
-            }
-            if(element.tagName == "A")
-            {
-                // 最後の要素を選択部分を分割し編集する
-                const text = element.textContent.slice(0, range.endOffset)
-                element.textContent = element.textContent.slice(range.endOffset)
+                    // 最後の要素を選択部分を分割し編集する
+                    const text = element.textContent.slice(0, range.endOffset)
+                    element.textContent = element.textContent.slice(range.endOffset)
 
-                let select_element = make_label(text)
-                copy_text_style(select_element, element)
-                func(select_element)
-                element.before(select_element)
-                select.setEnd(select_element.firstChild, select_element.firstChild.length)
+                    let select_element = make_label(text)
+                    copy_text_style(select_element, element)
+                    func(select_element)
+                    element.before(select_element)
+                    select.setEnd(select_element.firstChild, select_element.firstChild.length)
+                }
+                // 選択部分を変更
+                document.getSelection().removeAllRanges();
+                document.getSelection().addRange(select);
             }
-            // 選択部分を変更
-            document.getSelection().removeAllRanges();
-            document.getSelection().addRange(select);
         }
     }
 }
@@ -379,7 +394,7 @@ function edit_text()
                     {
                         element_li = document.createElement("li")
                         element_li.onclick = click_row_text
-                        element_li.classList.add("editor-row")
+                        element_li.classList.add("editor-row-text")
                         element.parentElement.after(element_li)
                         element = element.nextElementSibling
                         while(element.tagName != "BR")
@@ -565,7 +580,7 @@ function import_data(data)
     let editor_content_list = document.getElementById("editor-content-list")
     let element_li = document.createElement("li")
     element_li.onclick = click_row_text
-    element_li.classList.add("editor-row")
+    element_li.classList.add("editor-row-text")
 
     // コンテンツの読み込み
     let i = 5
@@ -589,7 +604,7 @@ function import_data(data)
             editor_content_list.appendChild(element_li)
             element_li = document.createElement("li")
             element_li.onclick = click_row_text
-            element_li.classList.add("editor-row")
+            element_li.classList.add("editor-row-text")
         }
         else if(status[0] == "VL")
         {
@@ -620,7 +635,7 @@ function import_data(data)
                     editor_content_list.appendChild(element_li)
                     element_li = document.createElement("li")
                     element_li.onclick = click_row_text
-                    element_li.classList.add("editor-row")
+                    element_li.classList.add("editor-row-text")
                 }
                 editor_content_list.appendChild(make_view_link(link, open, lines))
             }
@@ -1465,7 +1480,7 @@ $(document).keydown(function(event){
                 let str = input_keybord.nextElementSibling.textContent
                 let element_li = document.createElement("li")
                 element_li.onclick = click_row_text
-                element_li.classList.add("editor-row")
+                element_li.classList.add("editor-row-text")
                 input_keybord.parentElement.after(element_li)
                 // 後ろの要素を次の行に引き継ぐ
                 let element = input_keybord.nextElementSibling
@@ -1492,7 +1507,7 @@ $(document).keydown(function(event){
                 // 新しい行を作る
                 let element_li = document.createElement("li")
                 element_li.onclick = click_row_text
-                element_li.classList.add("editor-row")
+                element_li.classList.add("editor-row-text")
                 input_keybord.parentElement.after(element_li)
                 
                 let element_a = document.createElement("a")
