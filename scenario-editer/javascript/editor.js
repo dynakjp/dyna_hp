@@ -740,7 +740,7 @@ function import_data_view(data, parent, lines)
         const status = info.slice(1, info.indexOf(">")).split(",")
         const content = info.slice(info.indexOf(">") + 1)
 
-        if(status == "text")
+        if(status[0] == "text")
         {
             let text = document.createElement("a")
             text.textContent = content
@@ -757,12 +757,17 @@ function import_data_view(data, parent, lines)
                 else if(style.indexOf("link=") == 0)
                 {
                     add_link(text, style.slice(style.indexOf("=") + 1))
-                    text.onclick = function(event){select_brock(event.target.getAttribute("link"));}
+                    text.onclick = function(event)
+                    {
+                        document.getElementById("editor-content").removeChild(link_window)
+                        link_window = null
+                        select_brock(event.target.getAttribute("link"));
+                    }
                 }
             }
             parent.appendChild(text)
         }
-        if(status == "break")
+        if(status[0] == "break")
         {
             parent.appendChild(document.createElement("br"))
             line_ct ++
