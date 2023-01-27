@@ -24,7 +24,14 @@ function import_file()
         data.push(data_status[3])
         // タグリスト
         i++
-        data.push(file_array[i].split(","))
+        if(file_array[i] == "")
+        {
+            data.push([])
+        }
+        else
+        {
+            data.push(file_array[i].split(","))
+        }
         // コンテンツ
         i++
         while( i < file_array.length && file_array[i][0] == "<")
