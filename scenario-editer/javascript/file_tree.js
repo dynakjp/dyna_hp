@@ -113,11 +113,19 @@ function save_data()
 function reset_tree()
 {
     // ツリー内の要素をすべて削除
+    // 閉じているブロックナンバーを出力
     let tree = document.getElementById("tree").children[0]
+    let close_items = []
     while(tree.childElementCount > 0)
     {
+        if(tree.children[0].style.display != "none" && tree.children[0].children[0].textContent == "＞")
+        {
+            // 可視状態で閉じているブロックを記録
+            close_items.push(tree.children[0].children[2].textContent)
+        }
         tree.removeChild(tree.children[0])
     }
+    return close_items
 }
 
 function make_tree()
