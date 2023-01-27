@@ -559,6 +559,7 @@ function make_block_text()
     data.push("<text>")
     data.push("<break>")
     data_array.splice(target_index, 0, data)
+    set_user_log("テキストブロック「" + data[3] + "」を作成しました")
     make_tree()
 }
 
