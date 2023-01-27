@@ -757,7 +757,12 @@ function import_data_view(data, parent, lines)
                 else if(style.indexOf("link=") == 0)
                 {
                     add_link(text, style.slice(style.indexOf("=") + 1))
-                    text.onclick = function(event){select_brock(event.target.getAttribute("link"));}
+                    text.onclick = function(event)
+                    {
+                        document.getElementById("editor-content").removeChild(link_window)
+                        link_window = null
+                        select_brock(event.target.getAttribute("link"));
+                    }
                 }
             }
             parent.appendChild(text)
