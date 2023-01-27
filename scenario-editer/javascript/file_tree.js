@@ -113,18 +113,26 @@ function save_data()
 function reset_tree()
 {
     // ツリー内の要素をすべて削除
+    // 閉じているブロックナンバーを出力
     let tree = document.getElementById("tree").children[0]
+    let close_items = []
     while(tree.childElementCount > 0)
     {
+        if(tree.children[0].style.display != "none" && tree.children[0].children[0].textContent == "＞")
+        {
+            // 可視状態で閉じているブロックを記録
+            close_items.push(tree.children[0].children[2].textContent)
+        }
         tree.removeChild(tree.children[0])
     }
+    return close_items
 }
 
 function make_tree()
 {
     //ツリーを取得　リセット
     let tree = document.getElementById("tree").children[0]
-    reset_tree()
+    let close_blocks = reset_tree()
     for(let i = 0; i < data_array.length; i++)
     {
         let data = data_array[i]
@@ -203,6 +211,16 @@ function make_tree()
         tree.appendChild(element_li)
     }
     reload_select_link()
+    // 閉じていたブロックを閉じる
+    let element = tree.children[0]
+    while(element != undefined)
+    {
+        if(element.style != "none" && close_blocks.includes(element.children[2].textContent))
+        {
+            element.children[0].click()
+        }
+        element = element.nextElementSibling
+    }
 }
 
 function select_brock(block_no)
@@ -541,6 +559,7 @@ function make_block_text()
     data.push("<text>")
     data.push("<break>")
     data_array.splice(target_index, 0, data)
+    set_user_log("テキストブロック「" + data[3] + "」を作成しました")
     make_tree()
 }
 
