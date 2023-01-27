@@ -132,7 +132,7 @@ function make_tree()
 {
     //ツリーを取得　リセット
     let tree = document.getElementById("tree").children[0]
-    reset_tree()
+    let close_blocks = reset_tree()
     for(let i = 0; i < data_array.length; i++)
     {
         let data = data_array[i]
@@ -211,6 +211,16 @@ function make_tree()
         tree.appendChild(element_li)
     }
     reload_select_link()
+    // 閉じていたブロックを閉じる
+    let element = tree.children[0]
+    while(element != undefined)
+    {
+        if(element.style != "none" && close_blocks.includes(element.children[2].textContent))
+        {
+            element.children[0].click()
+        }
+        element = element.nextElementSibling
+    }
 }
 
 function select_brock(block_no)
