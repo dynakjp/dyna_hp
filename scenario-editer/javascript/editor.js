@@ -740,7 +740,7 @@ function import_data_view(data, parent, lines)
         const status = info.slice(1, info.indexOf(">")).split(",")
         const content = info.slice(info.indexOf(">") + 1)
 
-        if(status == "text")
+        if(status[0] == "text")
         {
             let text = document.createElement("a")
             text.textContent = content
@@ -762,7 +762,7 @@ function import_data_view(data, parent, lines)
             }
             parent.appendChild(text)
         }
-        if(status == "break")
+        if(status[0] == "break")
         {
             parent.appendChild(document.createElement("br"))
             line_ct ++
