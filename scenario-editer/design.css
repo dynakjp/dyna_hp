@@ -49,6 +49,7 @@ ul
     outline: none;
     /* 入力中でも文が自然になるように */
     margin-right: -3px;
+    padding: 0;
 }
 
 .editor-row-text{
