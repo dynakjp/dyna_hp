@@ -1754,3 +1754,53 @@ $(document).keydown(function(event){
         }
     }
 });
+
+document.addEventListener("paste" , getClipBoardText);
+function getClipBoardText(e){
+    e.preventDefault();
+
+    var clipboardData = e.clipboardData;
+
+    if(clipboardData != null && input_keybord != undefined){
+
+        const text = clipboardData.getData("text/plain");
+        const datas = text.split(/\r\n|\n/)
+
+        // 1行目入力
+        let element = make_label(datas[0])
+        copy_text_style(element, input_keybord)
+        input_keybord.before(element)
+        element = input_keybord
+        let element_li
+        // 2行目以降は行作成　テキスト作成　改行作成
+        for(const data of datas.splice(1))
+        {
+            element_li = document.createElement("li")
+            element_li.onclick = click_row_text
+            element_li.classList.add("editor-row-text")
+            element.parentElement.after(element_li)
+            element = element.nextElementSibling
+            while(element.tagName != "BR")
+            {
+                const target = element
+                element = element.nextElementSibling
+                element_li.appendChild(target)
+            }
+            element_li.appendChild(document.createElement("br"))
+            synthesis_text(element_li.previousElementSibling)
+
+            element = make_label(data)
+            copy_text_style(element, input_keybord)
+            element_li.children[0].before(element)
+        }
+        // インプットの内容を消して、終了し、最後に作った要素にカーソルを持ってくる
+        input_keybord.value = ""
+        input_keybord.blur()
+
+        select.setStart(element.firstChild, element.firstChild.length)
+        select.setEnd(element.firstChild, element.firstChild.length)
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(select);
+        element.click()
+    }
+}
