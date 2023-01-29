@@ -56,6 +56,10 @@ ul
     cursor: text;
 }
 
+.editor-row-text > a{
+    white-space: pre;
+}
+
 .link-window{
     background-color: white;
     width: 250px;
