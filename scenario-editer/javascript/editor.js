@@ -1229,6 +1229,42 @@ $(document).keydown(function(event){
             save_as_file()
         }
     }
+    if(ctrlClick && !altClick && !shiftClick && keyCode == 65)
+    {
+        // 全選択
+        console.log("A")
+        let select = new Range();
+        let editor = document.getElementById("editor-content-list")
+
+        let start = editor
+        while(start.children[0] != null)
+        {
+            start = start.children[0]
+        }
+        if(start.firstChild != null)
+        {
+            start = start.firstChild
+        }
+
+        let end = editor
+        while(end.children[end.childElementCount - 1] != null)
+        {
+            end = end.children[end.childElementCount - 1]
+        }
+        if(end.lastChild != null)
+        {
+            end = end.lastChild
+        }
+
+        console.log(start)
+        console.log(end)
+        select.setStart(start, 0)
+        select.setEnd(end, 0)
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(select);
+        event.keyCode = null;
+        return false;
+    }
     if(input_keybord == undefined && selected.isCollapsed == false)
     {
         // 範囲選択されていてinput中でない
@@ -1293,7 +1329,13 @@ $(document).keydown(function(event){
             }
             else
             {
-                if(keyCode == 66)
+                if(keyCode == 88)
+                {
+                    // 切り取り
+                    document.execCommand('copy');
+                    delete_select_text(selected)
+                }
+                else if(keyCode == 66)
                 {
                     // 太字
                     edit_select_text(function(element){element.style.fontWeight = "bold";});
@@ -1716,6 +1758,12 @@ function getClipBoardText(e){
     e.preventDefault();
 
     var clipboardData = e.clipboardData;
+    selected = window.getSelection();
+
+    if(selected.isCollapsed == false)
+    {
+        delete_select_text(selected)
+    }
 
     if(clipboardData != null && input_keybord != undefined){
 
