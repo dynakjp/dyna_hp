@@ -1722,6 +1722,12 @@ function getClipBoardText(e){
     e.preventDefault();
 
     var clipboardData = e.clipboardData;
+    selected = window.getSelection();
+
+    if(selected.isCollapsed == false)
+    {
+        delete_select_text(selected)
+    }
 
     if(clipboardData != null && input_keybord != undefined){
 
