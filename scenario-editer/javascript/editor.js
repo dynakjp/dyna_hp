@@ -1293,7 +1293,13 @@ $(document).keydown(function(event){
             }
             else
             {
-                if(keyCode == 66)
+                if(keyCode == 88)
+                {
+                    // 切り取り
+                    document.execCommand('copy');
+                    delete_select_text(selected)
+                }
+                else if(keyCode == 66)
                 {
                     // 太字
                     edit_select_text(function(element){element.style.fontWeight = "bold";});
