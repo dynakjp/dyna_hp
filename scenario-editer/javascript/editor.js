@@ -1266,8 +1266,6 @@ $(document).keydown(function(event){
             end = end.parentElement
         }
 
-        console.log(start)
-        console.log(end)
         select.setStart(start, start_node)
         select.setEnd(end, 0)
         document.getSelection().removeAllRanges();
