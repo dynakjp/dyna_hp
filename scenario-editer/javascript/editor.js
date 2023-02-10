@@ -1237,6 +1237,7 @@ $(document).keydown(function(event){
         let editor = document.getElementById("editor-content-list")
 
         let start = editor
+        let start_node = 0
         while(start.children[0] != null)
         {
             start = start.children[0]
@@ -1244,6 +1245,11 @@ $(document).keydown(function(event){
         if(start.firstChild != null)
         {
             start = start.firstChild
+        }
+        else
+        {
+            start = start.parentElement
+            start_node = 1
         }
 
         let end = editor
@@ -1255,10 +1261,14 @@ $(document).keydown(function(event){
         {
             end = end.lastChild
         }
+        else
+        {
+            end = end.parentElement
+        }
 
         console.log(start)
         console.log(end)
-        select.setStart(start, 0)
+        select.setStart(start, start_node)
         select.setEnd(end, 0)
         document.getSelection().removeAllRanges();
         document.getSelection().addRange(select);
