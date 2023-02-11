@@ -1233,6 +1233,10 @@ $(document).keydown(function(event){
     {
         // 全選択
         console.log("A")
+        if(input_keybord != undefined)
+        {
+            input_keybord.blur()
+        }
         let select = new Range();
         let editor = document.getElementById("editor-content-list")
 
