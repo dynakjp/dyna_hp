@@ -1253,13 +1253,21 @@ $(document).keydown(function(event){
         }
 
         let end = editor
+        let end_node = 0
         while(end.children[end.childElementCount - 1] != null)
         {
             end = end.children[end.childElementCount - 1]
         }
-        if(end.lastChild != null)
+        console.log(end.previousElementSibling)
+        if(end.previousElementSibling != null && end.previousElementSibling.tagName == "A")
         {
-            end = end.lastChild
+            end = end.previousElementSibling
+        }
+        
+        if(end.firstChild != null)
+        {
+            end = end.firstChild
+            end_node = end.length
         }
         else
         {
@@ -1267,7 +1275,7 @@ $(document).keydown(function(event){
         }
 
         select.setStart(start, start_node)
-        select.setEnd(end, 0)
+        select.setEnd(end, end_node)
         document.getSelection().removeAllRanges();
         document.getSelection().addRange(select);
         event.keyCode = null;
