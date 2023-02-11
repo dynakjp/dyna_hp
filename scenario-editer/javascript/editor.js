@@ -1233,10 +1233,15 @@ $(document).keydown(function(event){
     {
         // 全選択
         console.log("A")
+        if(input_keybord != undefined)
+        {
+            input_keybord.blur()
+        }
         let select = new Range();
         let editor = document.getElementById("editor-content-list")
 
         let start = editor
+        let start_node = 0
         while(start.children[0] != null)
         {
             start = start.children[0]
@@ -1245,21 +1250,36 @@ $(document).keydown(function(event){
         {
             start = start.firstChild
         }
+        else
+        {
+            start = start.parentElement
+            start_node = 1
+        }
 
         let end = editor
+        let end_node = 0
         while(end.children[end.childElementCount - 1] != null)
         {
             end = end.children[end.childElementCount - 1]
         }
-        if(end.lastChild != null)
+        console.log(end.previousElementSibling)
+        if(end.previousElementSibling != null && end.previousElementSibling.tagName == "A")
         {
-            end = end.lastChild
+            end = end.previousElementSibling
+        }
+        
+        if(end.firstChild != null)
+        {
+            end = end.firstChild
+            end_node = end.length
+        }
+        else
+        {
+            end = end.parentElement
         }
 
-        console.log(start)
-        console.log(end)
-        select.setStart(start, 0)
-        select.setEnd(end, 0)
+        select.setStart(start, start_node)
+        select.setEnd(end, end_node)
         document.getSelection().removeAllRanges();
         document.getSelection().addRange(select);
         event.keyCode = null;
